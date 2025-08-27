@@ -1,0 +1,116 @@
+.root-terminal {
+    -fx-background-color: #0c100d;
+    -fx-font-family: "VT323", Consolas, "Courier Prime", monospace;
+    -fx-text-fill: #6bff8a;
+}
+
+.banner.panel {
+    -fx-padding: 12 16;
+    -fx-border-color: #18f018;
+    -fx-border-width: 3;
+    -fx-border-radius: 4;
+    -fx-background-color: #07110a;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.35), 18, 0.3, 0, 0);
+}
+
+.banner-title {
+    -fx-text-fill: #6bff8a;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-letter-spacing: 2px;
+}
+.banner-sub {
+    -fx-text-fill: #8aff97;
+    -fx-font-size: 16px;
+    -fx-opacity: 0.85;
+}
+
+.panel {
+    -fx-border-color: #18f018;
+    -fx-border-width: 3;
+    -fx-border-radius: 6;
+    -fx-background-color: #061208;
+    -fx-background-radius: 6;
+}
+
+.panel-titlebar {
+    -fx-padding: 8 10;
+    -fx-background-color: #07150a;
+    -fx-border-color: #18f018;
+    -fx-border-width: 0 0 3 0;
+}
+.panel-title {
+    -fx-text-fill: #6bff8a;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 0 10;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.5), 10, 0.4, 0, 0);
+}
+.panel-body { -fx-padding: 12; }
+
+.dot-red {
+    -fx-fill: red;       /* fill color of the circle */
+    -fx-stroke: black;   /* optional outline */
+    -fx-stroke-width: 1;
+}
+
+.dot-amber {
+    -fx-fill: orange;    /* “amber” is orange in JavaFX */
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+}
+
+.dot-green {
+    -fx-fill: green;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+}
+
+
+.terminal-area {
+    -fx-control-inner-background: #040a06;
+    -fx-text-fill: #8aff97;
+    -fx-highlight-fill: derive(#18f018, 30%);
+    -fx-highlight-text-fill: black;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+    -fx-font-size: 18px;
+}
+
+.terminal-label { -fx-text-fill: #8aff97; -fx-font-size: 18px; }
+
+.terminal-input {
+    -fx-background-color: #0a150f;
+    -fx-text-fill: #aaffaa;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+    -fx-font-size: 18px;
+}
+.terminal-input:focused {
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.45), 14, 0.4, 0, 0);
+}
+
+.primary-btn {
+    -fx-background-color: #0f280f;
+    -fx-text-fill: #76ff7a;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+    -fx-padding: 10 16;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+.primary-btn:hover { -fx-background-color: #153715; }
+
+.amber-btn {
+    -fx-background-color: #2a1f08;
+    -fx-text-fill: #ffd27a;
+    -fx-border-color: #ffbf46;
+    -fx-border-width: 2;
+    -fx-padding: 8 16;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+.amber-btn:hover { -fx-background-color: #3a2a0b; }
+
+.status-label { -fx-text-fill: #6bff8a; -fx-font-size: 16px; -fx-opacity: 0.85; }
+
