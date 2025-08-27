@@ -65,12 +65,6 @@
             <VBox spacing="12" styleClass="panel-body">
                 <TextArea fx:id="terminalArea" editable="false" wrapText="true"
                           styleClass="terminal-area" prefRowCount="12"/>
-                <HBox spacing="12">
-                    <Label text="C:\\USER\\ADMIN>  OPERATIVE NAME:" styleClass="terminal-label"/>
-                    <TextField fx:id="usernameField" promptText="Enter codename" prefColumnCount="20"
-                               styleClass="terminal-input"/>
-                </HBox>
-
                 <HBox alignment="CENTER" spacing="14">
                     <Button text="LOGIN"     onAction="#onLogin"    styleClass="amber-btn"/>
                     <Button text="REGISTER"  onAction="#onRegister" styleClass="amber-btn"/>
