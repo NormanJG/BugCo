@@ -12,7 +12,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.util.Duration;
@@ -234,7 +233,7 @@ public class HomeController {
         if (!overlayBuilt) buildOverlay();
         attachOverlayIfNeeded();
 
-        Label title = (Label) dialog.getChildren().get(0);
+        Label title = (Label) dialog.getChildren().getFirst();
         if (overlayMode == OverlayMode.LOGIN) {
             title.setText("Login");
             confirmPasswordField.setManaged(false);
