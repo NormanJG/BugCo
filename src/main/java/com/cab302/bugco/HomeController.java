@@ -6,8 +6,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.application.Platform;
-import javafx.scene.layout.StackPane;
-import javafx.beans.binding.Bindings;
 
 public class HomeController {
 
@@ -15,7 +13,6 @@ public class HomeController {
     @FXML private TextArea leaderboardArea;
     @FXML private TextArea terminalArea;
     @FXML private TextField terminalInput;
-    @FXML private StackPane imageHost;
 
     private enum FlowStep {
         NONE,
@@ -29,11 +26,6 @@ public class HomeController {
     @FXML
     private void initialize() {
         imageView.setImage(new Image(getClass().getResource("image.png").toExternalForm()));
-        imageView.setPreserveRatio(true);
-        imageView.setSmooth(true);
-        imageView.fitWidthProperty().bind(
-                Bindings.min(480, imageHost.widthProperty())
-        );
 
         terminalArea.setText(String.join("\n",
                 "C:\\USER\\ADMIN> INITIALISING TERMINAL...",
