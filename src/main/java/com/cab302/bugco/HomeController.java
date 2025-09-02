@@ -8,7 +8,6 @@ import javafx.scene.image.ImageView;
 import javafx.application.Platform;
 import javafx.scene.layout.StackPane;
 import javafx.beans.binding.Bindings;
-import javafx.scene.layout.Region;
 
 public class HomeController {
 
