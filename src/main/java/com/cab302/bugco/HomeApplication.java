@@ -12,7 +12,7 @@ import java.util.Objects;
 public class HomeApplication extends Application {
     // Constants defining the window title and size
     public static final String TITLE = "BugCo Industries ™ Bug Finder Tool";
-    public static final int WIDTH = 1200;
+    public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
 
     @Override
