@@ -147,10 +147,9 @@ public class HomeController {
                 step = FlowStep.REG_CONFIRM;
             }
             case REG_CONFIRM -> {
-                String confirm = input;
-                appendLine("> " + mask(confirm.length()));
+                appendLine("> " + mask(input.length()));
                 appendLine("");
-                if (!confirm.equals(tmpPass)) {
+                if (!input.equals(tmpPass)) {
                     appendLine("C:\\USER\\ADMIN> ERROR: PASSWORDS DO NOT MATCH.");
                     appendLine("C:\\USER\\ADMIN> RE-ENTER PASSWORD");
                     appendPrompt();
