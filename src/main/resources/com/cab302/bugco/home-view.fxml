@@ -37,8 +37,7 @@
                         <Label text="BUGCO INDUSTRIES ™" styleClass="panel-title"/>
                     </HBox>
 
-                    <!-- Host that the image will size to -->
-                    <StackPane fx:id="imageHost" styleClass="panel-body" VBox.vgrow="ALWAYS">
+                    <StackPane styleClass="panel-body" VBox.vgrow="ALWAYS">
                         <ImageView fx:id="imageView"
                                    fitWidth="220"
                                    preserveRatio="true"
