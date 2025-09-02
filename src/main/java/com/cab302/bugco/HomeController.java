@@ -23,6 +23,14 @@ public class HomeController {
     private String tmpUser = "";
     private String tmpPass = "";
 
+    public boolean isPasswordStrong(String password) {
+        if (password.length() < 12) return false;
+        if (!password.matches(".*[A-Z].*")) return false;
+        if (!password.matches(".*[a-z].*")) return false;
+        if (!password.matches(".*\\d.*")) return false;
+        return password.matches(".*[^a-zA-Z0-9].*");
+    }
+
     @FXML
     private void initialize() {
         imageView.setImage(new Image(getClass().getResource("image.png").toExternalForm()));
@@ -141,6 +149,17 @@ public class HomeController {
                 tmpPass = input;
                 appendLine("> " + mask(tmpPass.length()));
                 appendLine("");
+
+                if (!isPasswordStrong(tmpPass)) {
+                    appendLine("C:\\USER\\ADMIN> ERROR: Password must be at least 12 characters, "
+                            + "include upper & lower case, a number, and a special character.");
+                    appendLine("C:\\USER\\ADMIN> ENTER PASSWORD");
+                    appendPrompt();
+                    terminalInput.clear();
+                    step = FlowStep.REG_PASS;
+                    return;
+                }
+
                 appendLine("C:\\USER\\ADMIN> RE-ENTER PASSWORD");
                 appendPrompt();
                 terminalInput.clear();
