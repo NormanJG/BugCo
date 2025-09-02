@@ -5,78 +5,89 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
-<BorderPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
-            fx:controller="com.cab302.bugco.HomeController" prefWidth="1200" prefHeight="820"
-            styleClass="root-terminal">
+<StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.cab302.bugco.HomeController"
+           prefWidth="1200" prefHeight="820"
+           styleClass="root-terminal"
+           fx:id="rootStack">
 
-<top>
-    <VBox spacing="10" BorderPane.alignment="CENTER">
-        <HBox alignment="CENTER" styleClass="banner panel">
-            <Label text="TERMINAL ACCESS SYSTEM" styleClass="banner-title"/>
-        </HBox>
-        <HBox alignment="CENTER" styleClass="banner panel">
-            <Label text="  [Version 0.0.2]  –  Security Protocol Activated" styleClass="banner-sub"/>
-        </HBox>
-    </VBox>
-</top>
-
-<center>
-    <GridPane hgap="20" vgap="20">
-        <columnConstraints>
-            <ColumnConstraints percentWidth="40"/>
-            <ColumnConstraints percentWidth="60"/>
-        </columnConstraints>
-
-        <VBox GridPane.columnIndex="0" spacing="8" styleClass="panel">
-            <HBox spacing="8" alignment="CENTER_LEFT" styleClass="panel-titlebar">
-                <Circle fx:id="dotRed" styleClass="dot-red" radius="6"/>
-                <Circle fx:id="dotAmber" styleClass="dot-amber" radius="6"/>
-                <Circle fx:id="dotGreen" styleClass="dot-green" radius="6"/>
-                <Label text="BUGCO INDUSTRIES ™" styleClass="panel-title"/>
-            </HBox>
-            <StackPane styleClass="panel-body">
-                <ImageView fx:id="imageView"
-                           fitWidth="220" preserveRatio="true"
-                           layoutX="20" layoutY="20"/>
-            </StackPane>
-        </VBox>
-
-        <VBox GridPane.columnIndex="1" spacing="8" styleClass="panel">
-            <HBox spacing="8" alignment="CENTER_LEFT" styleClass="panel-titlebar">
-                <Circle fx:id="dotRed" styleClass="dot-red" radius="6"/>
-                <Circle fx:id="dotAmber" styleClass="dot-amber" radius="6"/>
-                <Circle fx:id="dotGreen" styleClass="dot-green" radius="6"/>
-                <Label text="BUGCO  INDUSTRIES ™  LEADERBOARD" styleClass="panel-title"/>
-            </HBox>
-            <StackPane styleClass="panel-body">
-                <TextArea fx:id="leaderboardArea" editable="false"
-                          styleClass="terminal-area" prefRowCount="18"/>
-            </StackPane>
-        </VBox>
-
-        <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2" spacing="8" styleClass="panel">
-            <HBox spacing="8" alignment="CENTER_LEFT" styleClass="panel-titlebar">
-                <Circle fx:id="dotRed" styleClass="dot-red" radius="6"/>
-                <Circle fx:id="dotAmber" styleClass="dot-amber" radius="6"/>
-                <Circle fx:id="dotGreen" styleClass="dot-green" radius="6"/>
-                <Label text="BUGCO  INDUSTRIES ™  TERMLINK TERMINAL" styleClass="panel-title"/>
-            </HBox>
-
-            <VBox spacing="12" styleClass="panel-body">
-                <TextArea fx:id="terminalArea" editable="false" wrapText="true"
-                          styleClass="terminal-area" prefRowCount="12"/>
-                <HBox alignment="CENTER" spacing="14">
-                    <Button text="LOGIN"     onAction="#onLogin"    styleClass="amber-btn"/>
-                    <Button text="REGISTER"  onAction="#onRegister" styleClass="amber-btn"/>
-                    <Button text="GAME INFO" onAction="#onGameInfo" styleClass="amber-btn"/>
+    <BorderPane fx:id="rootBorder"
+                prefWidth="1200" prefHeight="820">
+        <top>
+            <VBox spacing="10" BorderPane.alignment="CENTER">
+                <HBox alignment="CENTER" styleClass="banner panel">
+                    <Label text="TERMINAL ACCESS SYSTEM" styleClass="banner-title"/>
                 </HBox>
-
-                <Button text="INITIALISE HACKING PROTOCOLS" maxWidth="Infinity" onAction="#onStart"
-                        styleClass="primary-btn"/>
-
-                <Label text="WAITING FOR USER INPUT..." styleClass="status-label"/>
+                <HBox alignment="CENTER" styleClass="banner panel">
+                    <Label text="  [Version 0.0.2]  –  Security Protocol Activated" styleClass="banner-sub"/>
+                </HBox>
             </VBox>
-        </VBox>
-    </GridPane>
-</center>
-</BorderPane>
+        </top>
+
+        <center>
+            <GridPane hgap="20" vgap="20">
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="40"/>
+                    <ColumnConstraints percentWidth="60"/>
+                </columnConstraints>
+
+                <VBox GridPane.columnIndex="0" spacing="8" styleClass="panel">
+                    <HBox spacing="8" alignment="CENTER_LEFT" styleClass="panel-titlebar">
+                        <!-- keep these circles; do NOT bind them in controller to avoid duplicate fx:id issues -->
+                        <Circle styleClass="dot-red" radius="6"/>
+                        <Circle styleClass="dot-amber" radius="6"/>
+                        <Circle styleClass="dot-green" radius="6"/>
+                        <Label text="BUGCO INDUSTRIES ™" styleClass="panel-title"/>
+                    </HBox>
+                    <StackPane fx:id="imageHost" styleClass="panel-body">
+                        <ImageView fx:id="imageView"
+                                   preserveRatio="true"
+                                   smooth="true"
+                                   StackPane.alignment="CENTER"/>
+                    </StackPane>
+                </VBox>
+
+                <VBox GridPane.columnIndex="1" spacing="8" styleClass="panel">
+                    <HBox spacing="8" alignment="CENTER_LEFT" styleClass="panel-titlebar">
+                        <Circle styleClass="dot-red" radius="6"/>
+                        <Circle styleClass="dot-amber" radius="6"/>
+                        <Circle styleClass="dot-green" radius="6"/>
+                        <Label text="BUGCO  INDUSTRIES ™  LEADERBOARD" styleClass="panel-title"/>
+                    </HBox>
+                    <StackPane styleClass="panel-body">
+                        <TextArea fx:id="leaderboardArea" editable="false"
+                                  styleClass="terminal-area" prefRowCount="18"/>
+                    </StackPane>
+                </VBox>
+
+                <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2"
+                      spacing="8" styleClass="panel">
+                    <HBox spacing="8" alignment="CENTER_LEFT" styleClass="panel-titlebar">
+                        <Circle styleClass="dot-red" radius="6"/>
+                        <Circle styleClass="dot-amber" radius="6"/>
+                        <Circle styleClass="dot-green" radius="6"/>
+                        <Label text="BUGCO  INDUSTRIES ™  TERMLINK TERMINAL" styleClass="panel-title"/>
+                    </HBox>
+
+                    <VBox spacing="12" styleClass="panel-body">
+                        <TextArea fx:id="terminalArea" editable="false" wrapText="true"
+                                  styleClass="terminal-area" prefRowCount="12"/>
+                        <TextField fx:id="terminalInput" visible="false" managed="false"
+                                   promptText="type here and press Enter"
+                                   styleClass="terminal-input"/>
+                        <HBox alignment="CENTER" spacing="14">
+                            <Button text="LOGIN"     onAction="#onLogin"    styleClass="amber-btn"/>
+                            <Button text="REGISTER"  onAction="#onRegister" styleClass="amber-btn"/>
+                            <Button text="GAME INFO" onAction="#onGameInfo" styleClass="amber-btn"/>
+                        </HBox>
+
+                        <Button text="INITIALISE HACKING PROTOCOLS" maxWidth="Infinity"
+                                onAction="#onStart" styleClass="primary-btn"/>
+
+                        <Label text="WAITING FOR USER INPUT..." styleClass="status-label"/>
+                    </VBox>
+                </VBox>
+            </GridPane>
+        </center>
+    </BorderPane>
+</StackPane>

@@ -1,49 +1,40 @@
 package com.cab302.bugco;
 
 import javafx.fxml.FXML;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
-import javafx.util.Duration;
 import javafx.scene.image.ImageView;
+import javafx.application.Platform;
+import javafx.scene.layout.StackPane;
+import javafx.beans.binding.Bindings;
+import javafx.scene.layout.Region;
 
 public class HomeController {
-    @FXML
-    private TextArea terminalArea;
-    @FXML
-    private TextArea leaderboardArea;
-    @FXML
-    private ImageView imageView;
 
-    private enum OverlayMode { LOGIN, REGISTER }
-    private OverlayMode overlayMode = OverlayMode.LOGIN;
+    @FXML private ImageView imageView;
+    @FXML private TextArea leaderboardArea;
+    @FXML private TextArea terminalArea;
+    @FXML private TextField terminalInput;
+    @FXML private StackPane imageHost;
 
-    private boolean overlayBuilt = false;
-    private StackPane scrim;
-    private VBox dialog;
-
-    private TextField usernameField;
-    private PasswordField passwordField;
-    private PasswordField confirmPasswordField;
-    private VBox fieldsBox;
-    private Label errorLabel;
+    private enum FlowStep {
+        NONE,
+        LOGIN_USER, LOGIN_PASS,
+        REG_USER, REG_PASS, REG_CONFIRM
+    }
+    private FlowStep step = FlowStep.NONE;
+    private String tmpUser = "";
+    private String tmpPass = "";
 
     @FXML
     private void initialize() {
-        Image img = new Image(
-                getClass().getResource("image.png").toExternalForm()
+        imageView.setImage(new Image(getClass().getResource("image.png").toExternalForm()));
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        imageView.fitWidthProperty().bind(
+                Bindings.min(480, imageHost.widthProperty())
         );
-        imageView.setImage(img);
 
         terminalArea.setText(String.join("\n",
                 "C:\\USER\\ADMIN> INITIALISING TERMINAL...",
@@ -70,224 +61,148 @@ public class HomeController {
                 " > 3RD  BEEBOP123"
         ));
 
-        Platform.runLater(() -> {
-            buildOverlay();
-
-            Scene scene = terminalArea.getScene();
-            Parent root = scene.getRoot();
-
-            if (root instanceof StackPane sp) {
-                if (!sp.getChildren().contains(scrim)) sp.getChildren().add(scrim);
-            } else {
-                StackPane host = new StackPane();
-                host.getChildren().add(root);
-                scene.setRoot(host);
-                host.getChildren().add(scrim);
-            }
-        });
+        terminalInput.setOnAction(e -> handleTerminalSubmit());
+        showTerminalInput(false);
     }
 
     @FXML
     private void onLogin() {
-        overlayMode = OverlayMode.LOGIN;
-        showOverlay();
+        startLoginFlow();
     }
+
     @FXML
     private void onRegister() {
-        overlayMode = OverlayMode.REGISTER;
-        showOverlay();
+        startRegisterFlow();
     }
 
     @FXML
     private void onGameInfo() {
-        appendTerminal("Opening game brief: Identify bugs, patch systems, climb the leaderboard.");
+        appendLine("C:\\USER\\ADMIN> GAME INFO:");
+        appendLine(" - Solve hacking challenges to raise your rank.");
+        appendLine(" - Use logic, patterns, and a bit of luck.");
+        appendLine("C:\\USER\\ADMIN> ");
     }
+
     @FXML
     private void onStart() {
-        appendTerminal("Initialising hacking protocols... stand by.");
-        // TODO: route to game scene
-    }
-    private String codename() {
-        return "<unknown>";
+        appendLine("C:\\USER\\ADMIN> INITIALISING HACKING PROTOCOLS...");
+        appendLine("C:\\USER\\ADMIN> READY.");
+        appendLine("C:\\USER\\ADMIN> ");
     }
 
-    private void appendTerminal(String line) {
-        terminalArea.appendText("\n" + line);
+    private void startLoginFlow() {
+        step = FlowStep.LOGIN_USER;
+        tmpUser = "";
+        tmpPass = "";
+        showTerminalInput(true);
+        terminalInput.clear();
+        appendLine("C:\\USER\\ADMIN> INITIALISING LOGIN...");
+        appendLine("");
+        appendLine("C:\\USER\\ADMIN> ENTER USERNAME");
+        appendPrompt();
+        terminalInput.requestFocus();
     }
 
-    private void buildOverlay() {
-        if (overlayBuilt) return;
+    private void startRegisterFlow() {
+        step = FlowStep.REG_USER;
+        tmpUser = "";
+        tmpPass = "";
+        showTerminalInput(true);
+        terminalInput.clear();
+        appendLine("C:\\USER\\ADMIN> INITIALISING REGISTRATION...");
+        appendLine("");
+        appendLine("C:\\USER\\ADMIN> ENTER USERNAME");
+        appendPrompt();
+        terminalInput.requestFocus();
+    }
 
-        scrim = new StackPane();
-        scrim.setStyle("-fx-background-color: rgba(0,0,0,0.45);");
-        scrim.setVisible(false);
-        scrim.setManaged(false);
-        scrim.setPickOnBounds(true);
-        scrim.setPrefSize(Double.MAX_VALUE, Double.MAX_VALUE);
-        scrim.setAlignment(Pos.CENTER);
+    private void handleTerminalSubmit() {
+        String input = terminalInput.getText() == null ? "" : terminalInput.getText();
 
-        dialog = new VBox(14);
-        dialog.getStyleClass().add("dialog-card");
-        dialog.setMaxWidth(420);
-        dialog.setPadding(new Insets(20));
-
-        Label title = new Label("Account Details");
-        title.getStyleClass().add("dialog-title");
-
-        if (usernameField == null) {
-            usernameField = new TextField();
-            usernameField.setPromptText("Username");
-        }
-        if (passwordField == null) {
-            passwordField = new PasswordField();
-            passwordField.setPromptText("Password");
-        }
-        if (confirmPasswordField == null) {
-            confirmPasswordField = new PasswordField();
-            confirmPasswordField.setPromptText("Confirm password");
-        }
-
-        if (fieldsBox == null) {
-            fieldsBox = new VBox(10, usernameField, passwordField, confirmPasswordField);
-        } else {
-            fieldsBox.getChildren().setAll(usernameField, passwordField, confirmPasswordField);
-        }
-
-        if (errorLabel == null) {
-            errorLabel = new Label();
-            errorLabel.getStyleClass().add("error-label");
-            errorLabel.setManaged(false);
-            errorLabel.setVisible(false);
-        }
-
-        Button cancel = new Button("Cancel");
-        Button save   = new Button("Save");
-        save.getStyleClass().add("primary");
-
-        HBox actions = new HBox(10, cancel, save);
-        actions.setAlignment(Pos.CENTER_RIGHT);
-
-        dialog.getChildren().setAll(title, fieldsBox, errorLabel, actions);
-
-        if (dialog == null) {
-            throw new IllegalStateException("Dialog must not be null before adding to scrim.");
-        }
-        if (!scrim.getChildren().contains(dialog)) {
-            scrim.getChildren().add(dialog);
-        }
-
-        scrim.setOnMouseClicked(e -> { if (e.getTarget() == scrim) hideOverlay(); });
-        cancel.setOnAction(e -> hideOverlay());
-        save.setOnAction(e -> {
-            String user = usernameField.getText().trim();
-            String pass = passwordField.getText().trim();
-
-            if (user.isEmpty() || pass.isEmpty()) {
-                errorLabel.setText("Username and Password are required.");
-                errorLabel.setManaged(true);
-                errorLabel.setVisible(true);
-                return;
+        switch (step) {
+            case LOGIN_USER -> {
+                tmpUser = input.trim();
+                appendLine("> " + tmpUser);
+                appendLine("");
+                appendLine("C:\\USER\\ADMIN> ENTER PASSWORD");
+                appendPrompt();
+                terminalInput.clear();
+                step = FlowStep.LOGIN_PASS;
             }
-
-            if (overlayMode == OverlayMode.REGISTER) {
-                String confirm = confirmPasswordField.getText().trim();
-                if (!pass.equals(confirm)) {
-                    errorLabel.setText("Passwords do not match.");
-                    errorLabel.setManaged(true);
-                    errorLabel.setVisible(true);
+            case LOGIN_PASS -> {
+                tmpPass = input;
+                appendLine("> " + mask(tmpPass.length()));
+                appendLine("");
+                appendLine("C:\\USER\\ADMIN> AUTHENTICATING...");
+                appendLine("C:\\USER\\ADMIN> Logged in as " + tmpUser);
+                endFlow();
+            }
+            case REG_USER -> {
+                tmpUser = input.trim();
+                appendLine("> " + tmpUser);
+                appendLine("");
+                appendLine("C:\\USER\\ADMIN> ENTER PASSWORD");
+                appendPrompt();
+                terminalInput.clear();
+                step = FlowStep.REG_PASS;
+            }
+            case REG_PASS -> {
+                tmpPass = input;
+                appendLine("> " + mask(tmpPass.length()));
+                appendLine("");
+                appendLine("C:\\USER\\ADMIN> RE-ENTER PASSWORD");
+                appendPrompt();
+                terminalInput.clear();
+                step = FlowStep.REG_CONFIRM;
+            }
+            case REG_CONFIRM -> {
+                String confirm = input;
+                appendLine("> " + mask(confirm.length()));
+                appendLine("");
+                if (!confirm.equals(tmpPass)) {
+                    appendLine("C:\\USER\\ADMIN> ERROR: PASSWORDS DO NOT MATCH.");
+                    appendLine("C:\\USER\\ADMIN> RE-ENTER PASSWORD");
+                    appendPrompt();
+                    terminalInput.clear();
+                    step = FlowStep.REG_CONFIRM;
                     return;
                 }
-                appendTerminal("Registered: " + user);
-            } else {
-                appendTerminal("Logged in as: " + user);
+                appendLine("C:\\USER\\ADMIN> CREATING ACCOUNT...");
+                appendLine("C:\\USER\\ADMIN> Registered user " + tmpUser);
+                endFlow();
             }
-
-            errorLabel.setManaged(false);
-            errorLabel.setVisible(false);
-            hideOverlay();
-        });
-
-        overlayBuilt = true;
-    }
-
-
-    private void attachOverlayIfNeeded() {
-        if (scrim == null) return;
-        if (scrim.getScene() != null) return;
-
-        Scene scene = terminalArea.getScene();
-        if (scene == null) return;
-        Parent root = scene.getRoot();
-
-        if (root instanceof StackPane sp) {
-            if (!sp.getChildren().contains(scrim)) sp.getChildren().add(scrim);
-        } else {
-            StackPane host = new StackPane();
-            host.getChildren().add(root);
-            scene.setRoot(host);
-            host.getChildren().add(scrim);
+            default -> {}
         }
     }
 
-    private void showOverlay() {
-        if (!overlayBuilt) buildOverlay();
-        attachOverlayIfNeeded();
-
-        Label title = (Label) dialog.getChildren().getFirst();
-        if (overlayMode == OverlayMode.LOGIN) {
-            title.setText("Login");
-            confirmPasswordField.setManaged(false);
-            confirmPasswordField.setVisible(false);
-        } else {
-            title.setText("Register");
-            confirmPasswordField.setManaged(true);
-            confirmPasswordField.setVisible(true);
+    private void appendLine(String s) {
+        String text = terminalArea.getText();
+        if (!text.isEmpty() && !text.endsWith("\n")) {
+            terminalArea.appendText("\n");
         }
-
-        usernameField.clear();
-        passwordField.clear();
-        confirmPasswordField.clear();
-        errorLabel.setManaged(false);
-        errorLabel.setVisible(false);
-
-        scrim.setVisible(true);
-        dialog.setOpacity(0);
-        dialog.setScaleX(0.98);
-        dialog.setScaleY(0.98);
-        usernameField.requestFocus();
-
-        new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(dialog.opacityProperty(), 0),
-                        new KeyValue(dialog.scaleXProperty(), 0.98),
-                        new KeyValue(dialog.scaleYProperty(), 0.98)
-                ),
-                new KeyFrame(Duration.millis(160),
-                        new KeyValue(dialog.opacityProperty(), 1),
-                        new KeyValue(dialog.scaleXProperty(), 1),
-                        new KeyValue(dialog.scaleYProperty(), 1)
-                )
-        ).play();
+        terminalArea.appendText(s + "\n");
     }
 
-    private void hideOverlay() {
-        if (scrim == null || !scrim.isVisible()) return;
+    private void appendPrompt() {
+        terminalArea.appendText("> ");
+    }
 
-        Timeline t = new Timeline(
-                new KeyFrame(Duration.ZERO,
-                        new KeyValue(dialog.opacityProperty(), 1),
-                        new KeyValue(dialog.scaleXProperty(), 1),
-                        new KeyValue(dialog.scaleYProperty(), 1)
-                ),
-                new KeyFrame(Duration.millis(120),
-                        new KeyValue(dialog.opacityProperty(), 0),
-                        new KeyValue(dialog.scaleXProperty(), 0.98),
-                        new KeyValue(dialog.scaleYProperty(), 0.98)
-                )
-        );
-        t.setOnFinished(e -> {
-                scrim.setVisible(false);
-                scrim.setManaged(false);
-        });
+    private String mask(int n) {
+        return "*".repeat(Math.max(0, n));
+    }
+
+    private void showTerminalInput(boolean show) {
+        terminalInput.setVisible(show);
+        terminalInput.setManaged(show);
+        if (show) {
+            Platform.runLater(terminalInput::requestFocus);
+        }
+    }
+
+    private void endFlow() {
+        step = FlowStep.NONE;
+        terminalInput.clear();
+        showTerminalInput(false);
+        appendLine("C:\\USER\\ADMIN> ");
     }
 }
