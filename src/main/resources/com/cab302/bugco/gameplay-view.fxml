@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.cab302.bugco.GameplayController"
+            stylesheets="@styles.css"
+            styleClass="root-terminal">
+
+    <top>
+        <HBox spacing="24" styleClass="panel panel--titlebar" BorderPane.alignment="CENTER">
+            <Label fx:id="titleLabel" text="BUGCO  INDUSTRIES  ™  GAMEPLAY" styleClass="banner-title"/>
+            <Pane HBox.hgrow="ALWAYS"/>
+            <Label fx:id="usernameLabel" text="User: -" />
+            <Separator orientation="VERTICAL"/>
+            <Label fx:id="levelLabel" text="Level: -" />
+            <Separator orientation="VERTICAL"/>
+            <Label fx:id="scoreLabel" text="Score: 0" />
+        </HBox>
+    </top>
+
+    <center>
+        <VBox spacing="18" styleClass="screen-pad">
+
+            <TitledPane text="CHALLENGE PROMPT" expanded="true" collapsible="false"
+                        styleClass="terminal-pane">
+                <content>
+                    <Label fx:id="promptText" wrapText="true"/>
+                </content>
+            </TitledPane>
+
+            <TitledPane text="ANSWER" expanded="true" collapsible="false"
+                        styleClass="terminal-pane">
+                <content>
+                    <VBox spacing="12">
+                        <TextArea fx:id="answerArea" prefRowCount="6"/>
+                        <HBox spacing="10">
+                            <Button fx:id="submitButton" text="SUBMIT" onAction="#onSubmit"/>
+                            <Pane HBox.hgrow="ALWAYS"/>
+                            <Button fx:id="backButton" text="BACK TO LEVELS" onAction="#onBack"/>
+                        </HBox>
+                    </VBox>
+                </content>
+            </TitledPane>
+
+            <TitledPane text="FEEDBACK" expanded="true" collapsible="false"
+                        styleClass="terminal-pane">
+                <content>
+                    <Label fx:id="feedbackText"/>
+                </content>
+            </TitledPane>
+
+        </VBox>
+    </center>
+</BorderPane>

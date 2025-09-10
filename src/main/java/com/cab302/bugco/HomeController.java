@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.application.Platform;
+import javafx.stage.Stage;
 
 public class HomeController {
 
@@ -84,9 +85,20 @@ public class HomeController {
 
     @FXML
     private void onStart() {
-        appendLine("C:\\USER\\ADMIN> INITIALISING HACKING PROTOCOLS...");
-        appendLine("C:\\USER\\ADMIN> READY.");
-        appendLine("C:\\USER\\ADMIN> ");
+        if (!AppState.ME.isLoggedIn()) {
+            appendLine("C:\\USER\\ADMIN> INITIALISING HACKING PROTOCOLS...");
+            appendLine("C:\\USER\\ADMIN> READY.");
+            appendLine("C:\\USER\\ADMIN> ");
+            return;
+        }
+        try {
+            var stage = (Stage) terminalArea.getScene().getWindow();
+            stage.setScene(SceneFactory.loadScene("gameplay-view.fxml"));
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            appendLine("C:\\USER\\ADMIN> ERROR: Could not load gameplay-view.fxml");
+            appendLine("C:\\USER\\ADMIN> ");
+        }
     }
 
     private void startLoginFlow() {
@@ -133,6 +145,9 @@ public class HomeController {
                 appendLine("> " + mask(tmpPass.length()));
                 appendLine("");
                 appendLine("C:\\USER\\ADMIN> AUTHENTICATING...");
+
+                AppState.ME.loginAs(tmpUser); // Elie
+
                 appendLine("C:\\USER\\ADMIN> Logged in as " + tmpUser);
                 endFlow();
             }
