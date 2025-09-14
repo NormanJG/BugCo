@@ -18,7 +18,6 @@ public class HomeApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         com.cab302.bugco.db.Database.init();
-        System.out.println("DB path: " + java.nio.file.Paths.get("bugco.db").toAbsolutePath());
         FXMLLoader fxmlLoader = new FXMLLoader(HomeApplication.class.getResource("home-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), WIDTH, HEIGHT);
         scene.getStylesheets().add(
