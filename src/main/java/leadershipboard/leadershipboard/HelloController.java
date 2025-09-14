@@ -1,17 +1,14 @@
 package leadershipboard.leadershipboard;
 
 import javafx.fxml.FXML;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class HelloController {
-
 
     private List<Players> players = new ArrayList<>();
 
@@ -27,7 +24,6 @@ public class HelloController {
     @FXML
     private TableColumn<Players, String> achievementColumn;
 
-
     public void addPlayer(String username, String achievement) {
         if (username == null || username.isEmpty()) throw new IllegalArgumentException();
         players.add(new Players(username, achievement));
@@ -40,7 +36,6 @@ public class HelloController {
     public boolean isEmpty() {
         return players.isEmpty();
     }
-
 
     @FXML
     public void initialize() {
@@ -57,6 +52,3 @@ public class HelloController {
         leaderboardTable.getItems().addAll(getPlayers());
     }
 }
-
-
-
