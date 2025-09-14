@@ -39,7 +39,7 @@
 
                     <StackPane styleClass="panel-body" VBox.vgrow="ALWAYS">
                         <ImageView fx:id="imageView"
-                                   fitWidth="220"
+                                   fitWidth="370"
                                    preserveRatio="true"
                                    layoutX="20"
                                    layoutY="20"/>
