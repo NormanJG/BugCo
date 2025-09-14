@@ -1,0 +1,38 @@
+/* === Text title style === */
+.title-text {
+    -fx-text-fill: #18f018;   /* green color */
+    -fx-font-size: 14px;      /* bigger font size */
+    -fx-font-weight: bold;    /* bold text */
+}
+
+/* === Styling for the Tableview === */
+.table-view .column-header-background {
+    -fx-background-color: black;
+}
+
+.table-view .column-header,
+.table-view .filler {
+    -fx-background-color: black;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #18f018;
+    -fx-font-weight: bold;
+}
+
+/* === Styling for the footer === */
+.footer-box {
+    -fx-padding: 10;
+    -fx-alignment: center;
+}
+
+.footer-header {
+    -fx-text-fill: #18f018;
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+}
+
+.footer-line {
+    -fx-text-fill: #18f018;
+    -fx-font-size: 16px;
+}

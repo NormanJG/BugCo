@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox xmlns:fx="http://javafx.com/fxml"
+      fx:controller="leadershipboard.leadershipboard.HelloController"
+      stylesheets="@style.css"
+      style="-fx-background-color: black; -fx-border-color: #18f018; -fx-border-width: 5;"
+      spacing="10" alignment="TOP_CENTER">
+
+    <!--  Creating a customer title Bar -->
+    <HBox fx:id="customTitleBar" styleClass="custom-title-bar">
+        <Label text="TERMINAL ACCESS SYSTEM
+        [Version 0.0.3] - Security Protocol Activated" styleClass="title-text"/>
+    </HBox>
+
+    <!--  Creating the main content section -->
+    <HBox alignment="CENTER" spacing="20.0"
+          style="-fx-background-color: black; -fx-border-color: #18f018; -fx-border-width: 5;">
+        <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
+        </padding>
+
+        <!-- Creating ImageView for Logo -->
+        <StackPane prefWidth="150" prefHeight="150" style="-fx-border-color: #18f018;">
+            <ImageView fx:id="logoImage" fitWidth="150" fitHeight="150" preserveRatio="true"
+                       visible="true" opacity="1.0"/>
+        </StackPane>
+
+        <!-- Creating Leaderboard Table -->
+        <TableView fx:id="leaderboardTable" prefWidth="600" prefHeight="400"
+                   style="-fx-background-color: black; -fx-border-color: #18f018; -fx-border-width: 3;"
+                   HBox.hgrow="ALWAYS">
+            <columns>
+                <TableColumn fx:id="usernameColumn" text="Username" style="-fx-text-fill: #18f018;" prefWidth="400"/>
+                <TableColumn fx:id="achievementColumn" text="Achievement" style="-fx-text-fill: #18f018;" prefWidth="200"/>
+            </columns>
+        </TableView>
+    </HBox>
+
+    <!-- Creating the  Footer Text -->
+    <VBox alignment="CENTER" spacing="4" styleClass="footer-box">
+        <Label text="Bugco Achievements" styleClass="footer-header"/>
+        <Label text="Lock Picker" styleClass="footer-line"/>
+        <Label text="Dystopian Survivor" styleClass="footer-line"/>
+        <Label text="Wasteland Nuke" styleClass="footer-line"/>
+    </VBox>
+
+</VBox>
+
+
