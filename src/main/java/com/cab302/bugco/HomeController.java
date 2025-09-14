@@ -1,5 +1,6 @@
 package com.cab302.bugco;
 
+import com.cab302.bugco.auth.AuthService;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -15,6 +16,8 @@ public class HomeController {
     @FXML private TextArea terminalArea;
     @FXML private TextField terminalInput;
 
+    private final AuthService auth = new AuthService();
+
     private enum FlowStep {
         NONE,
         LOGIN_USER, LOGIN_PASS,
@@ -24,8 +27,12 @@ public class HomeController {
     private String tmpUser = "";
     private String tmpPass = "";
 
+    public boolean isUsernameValid(String u) {
+        return u != null && u.matches("^[A-Za-z0-9]{1,20}$");
+    }
+
     public boolean isPasswordStrong(String password) {
-        if (password.length() < 12) return false;
+        if (password == null || password.length() < 12) return false;
         if (!password.matches(".*[A-Z].*")) return false;
         if (!password.matches(".*[a-z].*")) return false;
         if (!password.matches(".*\\d.*")) return false;
@@ -133,6 +140,16 @@ public class HomeController {
         switch (step) {
             case LOGIN_USER -> {
                 tmpUser = input.trim();
+                if (!isUsernameValid(tmpUser)) {
+                    appendLine("> " + tmpUser);
+                    appendLine("");
+                    appendLine("C:\\USER\\ADMIN> ERROR: USERNAME MUST BE 1–20 LETTERS OR DIGITS (NO SPECIALS).");
+                    appendLine("C:\\USER\\ADMIN> ENTER USERNAME");
+                    appendPrompt();
+                    terminalInput.clear();
+                    step = FlowStep.LOGIN_USER;
+                    return;
+                }
                 appendLine("> " + tmpUser);
                 appendLine("");
                 appendLine("C:\\USER\\ADMIN> ENTER PASSWORD");
@@ -140,19 +157,38 @@ public class HomeController {
                 terminalInput.clear();
                 step = FlowStep.LOGIN_PASS;
             }
+
             case LOGIN_PASS -> {
                 tmpPass = input;
                 appendLine("> " + mask(tmpPass.length()));
                 appendLine("");
                 appendLine("C:\\USER\\ADMIN> AUTHENTICATING...");
 
-                AppState.ME.loginAs(tmpUser); // Elie
-
-                appendLine("C:\\USER\\ADMIN> Logged in as " + tmpUser);
-                endFlow();
+                boolean ok = auth.authenticate(tmpUser, tmpPass);
+                if (ok) {
+                    appendLine("C:\\USER\\ADMIN> Logged in as " + tmpUser);
+                    endFlow();
+                } else {
+                    appendLine("C:\\USER\\ADMIN> ERROR: INVALID CREDENTIALS.");
+                    appendLine("C:\\USER\\ADMIN> ENTER USERNAME");
+                    appendPrompt();
+                    terminalInput.clear();
+                    step = FlowStep.LOGIN_USER;
+                }
             }
+
             case REG_USER -> {
                 tmpUser = input.trim();
+                if (!isUsernameValid(tmpUser)) {
+                    appendLine("> " + tmpUser);
+                    appendLine("");
+                    appendLine("C:\\USER\\ADMIN> ERROR: USERNAME MUST BE 1–20 LETTERS OR DIGITS (NO SPECIALS).");
+                    appendLine("C:\\USER\\ADMIN> ENTER USERNAME");
+                    appendPrompt();
+                    terminalInput.clear();
+                    step = FlowStep.REG_USER;
+                    return;
+                }
                 appendLine("> " + tmpUser);
                 appendLine("");
                 appendLine("C:\\USER\\ADMIN> ENTER PASSWORD");
@@ -160,12 +196,13 @@ public class HomeController {
                 terminalInput.clear();
                 step = FlowStep.REG_PASS;
             }
+
             case REG_PASS -> {
                 tmpPass = input;
                 appendLine("> " + mask(tmpPass.length()));
                 appendLine("");
 
-                if (!isPasswordStrong(tmpPass)) {
+                if (!auth.isPasswordStrong(tmpPass)) {
                     appendLine("C:\\USER\\ADMIN> ERROR: Password must be at least 12 characters, "
                             + "include upper & lower case, a number, and a special character.");
                     appendLine("C:\\USER\\ADMIN> ENTER PASSWORD");
@@ -180,6 +217,7 @@ public class HomeController {
                 terminalInput.clear();
                 step = FlowStep.REG_CONFIRM;
             }
+
             case REG_CONFIRM -> {
                 appendLine("> " + mask(input.length()));
                 appendLine("");
@@ -191,10 +229,26 @@ public class HomeController {
                     step = FlowStep.REG_CONFIRM;
                     return;
                 }
-                appendLine("C:\\USER\\ADMIN> CREATING ACCOUNT...");
-                appendLine("C:\\USER\\ADMIN> Registered user " + tmpUser);
-                endFlow();
+                try {
+                    auth.register(tmpUser, tmpPass);
+                    appendLine("C:\\USER\\ADMIN> CREATING ACCOUNT...");
+                    appendLine("C:\\USER\\ADMIN> Registered user " + tmpUser);
+                    endFlow();
+                } catch (IllegalStateException dup) {
+                    appendLine("C:\\USER\\ADMIN> ERROR: USERNAME ALREADY EXISTS.");
+                    appendLine("C:\\USER\\ADMIN> ENTER USERNAME");
+                    appendPrompt();
+                    terminalInput.clear();
+                    step = FlowStep.REG_USER;
+                } catch (IllegalArgumentException weak) {
+                    appendLine("C:\\USER\\ADMIN> ERROR: " + weak.getMessage());
+                    appendLine("C:\\USER\\ADMIN> ENTER PASSWORD");
+                    appendPrompt();
+                    terminalInput.clear();
+                    step = FlowStep.REG_PASS;
+                }
             }
+
             default -> {}
         }
     }
