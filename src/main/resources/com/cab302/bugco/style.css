@@ -1,0 +1,278 @@
+.root {
+    -fx-background-color: #000000;
+    -fx-font-family: "Courier New", "Consolas", monospace;
+    -fx-text-fill: #4ade80;
+}
+
+.header-bar {
+    -fx-background-color: #000000;
+    -fx-border-color: rgba(74, 222, 128, 0.3);
+    -fx-border-width: 0 0 1 0;
+}
+
+.header-title {
+    -fx-text-fill: #4ade80;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+.header-version {
+    -fx-text-fill: rgba(74, 222, 128, 0.7);
+    -fx-font-size: 12px;
+}
+
+.terminal-button-red {
+    -fx-background-color: #ef4444;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 12;
+    -fx-pref-height: 12;
+}
+
+.terminal-button-yellow {
+    -fx-background-color: #eab308;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 12;
+    -fx-pref-height: 12;
+}
+
+.terminal-button-green {
+    -fx-background-color: #22c55e;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 12;
+    -fx-pref-height: 12;
+}
+
+.main-content {
+    -fx-background-color: #000000;
+}
+
+.sidebar {
+    -fx-background-color: #000000;
+    -fx-border-color: rgba(74, 222, 128, 0.3);
+    -fx-border-width: 0 1 0 0;
+}
+
+.main-panel {
+    -fx-background-color: #000000;
+}
+
+.section-label {
+    -fx-text-fill: #4ade80;
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+}
+
+.terminal-input {
+    -fx-background-color: #000000;
+    -fx-border-color: rgba(74, 222, 128, 0.5);
+    -fx-border-radius: 4;
+    -fx-text-fill: #4ade80;
+    -fx-prompt-text-fill: rgba(74, 222, 128, 0.5);
+    -fx-font-family: "Courier New", "Consolas", monospace;
+}
+
+.terminal-input:focused {
+    -fx-border-color: #4ade80;
+    -fx-background-color: rgba(74, 222, 128, 0.1);
+}
+
+.terminal-combo {
+    -fx-background-color: #000000;
+    -fx-border-color: rgba(74, 222, 128, 0.5);
+    -fx-border-radius: 4;
+    -fx-text-fill: #4ade80;
+}
+
+.terminal-combo .list-cell {
+    -fx-background-color: #000000;
+    -fx-text-fill: #4ade80;
+}
+
+.terminal-combo:showing {
+    -fx-border-color: #4ade80;
+}
+
+.logo-container {
+    -fx-background-color: #000000;
+    -fx-border-color: rgba(74, 222, 128, 0.5);
+    -fx-border-radius: 4;
+    -fx-alignment: center;
+    -fx-padding: 10;
+}
+
+.score-display {
+    -fx-text-fill: #4ade80;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.question-button {
+    -fx-background-color: #000000;
+    -fx-border-color: rgba(74, 222, 128, 0.5);
+    -fx-border-radius: 4;
+    -fx-text-fill: #4ade80;
+    -fx-pref-width: 60;
+    -fx-pref-height: 30;
+    -fx-font-family: "Courier New", "Consolas", monospace;
+}
+
+.question-button:hover {
+    -fx-background-color: rgba(74, 222, 128, 0.1);
+}
+
+.question-button-selected {
+    -fx-background-color: #4ade80;
+    -fx-border-color: #4ade80;
+    -fx-text-fill: #000000;
+    -fx-pref-width: 60;
+    -fx-pref-height: 30;
+    -fx-font-family: "Courier New", "Consolas", monospace;
+}
+
+.question-button-completed {
+    -fx-background-color: rgba(74, 222, 128, 0.3);
+    -fx-border-color: #4ade80;
+    -fx-text-fill: #4ade80;
+    -fx-pref-width: 60;
+    -fx-pref-height: 30;
+    -fx-font-family: "Courier New", "Consolas", monospace;
+}
+
+.help-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #4ade80;
+    -fx-border-color: transparent;
+    -fx-font-size: 14px;
+    -fx-pref-width: 25;
+    -fx-pref-height: 25;
+}
+
+.help-button:hover {
+    -fx-background-color: rgba(74, 222, 128, 0.1);
+}
+
+.question-container {
+    -fx-background-color: #000000;
+    -fx-border-color: rgba(74, 222, 128, 0.5);
+    -fx-border-radius: 4;
+    -fx-padding: 15;
+}
+
+.answer-container {
+    -fx-background-color: #000000;
+    -fx-border-color: rgba(74, 222, 128, 0.5);
+    -fx-border-radius: 4;
+    -fx-padding: 15;
+}
+
+.question-badge {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(74, 222, 128, 0.5);
+    -fx-border-radius: 4;
+    -fx-text-fill: #4ade80;
+    -fx-padding: 3 8 3 8;
+    -fx-font-size: 12px;
+}
+
+.difficulty-badge {
+    -fx-background-color: transparent;
+    -fx-border-color: rgba(74, 222, 128, 0.5);
+    -fx-border-radius: 4;
+    -fx-text-fill: #4ade80;
+    -fx-padding: 3 8 3 8;
+    -fx-font-size: 12px;
+}
+
+.question-title {
+    -fx-text-fill: #4ade80;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+.loading-bar {
+    -fx-background-color: rgba(74, 222, 128, 0.2);
+    -fx-background-radius: 2;
+    -fx-pref-height: 4;
+}
+
+.loading-bar-short {
+    -fx-background-color: rgba(74, 222, 128, 0.2);
+    -fx-background-radius: 2;
+    -fx-pref-height: 4;
+    -fx-pref-width: 200;
+}
+
+.code-container {
+    -fx-background-color: #1a1a1a;
+    -fx-border-color: rgba(74, 222, 128, 0.3);
+    -fx-border-radius: 4;
+}
+
+.code-display {
+    -fx-background-color: #1a1a1a;
+    -fx-text-fill: #22c55e;
+    -fx-font-family: "Courier New", "Consolas", monospace;
+    -fx-font-size: 12px;
+    -fx-control-inner-background: #1a1a1a;
+}
+
+.code-display .content {
+    -fx-background-color: #1a1a1a;
+}
+
+.answer-input {
+    -fx-background-color: #1a1a1a;
+    -fx-text-fill: #4ade80;
+    -fx-font-family: "Courier New", "Consolas", monospace;
+    -fx-font-size: 12px;
+    -fx-control-inner-background: #1a1a1a;
+    -fx-prompt-text-fill: rgba(74, 222, 128, 0.5);
+}
+
+.answer-input .content {
+    -fx-background-color: #1a1a1a;
+}
+
+.submit-button {
+    -fx-background-color: #4ade80;
+    -fx-text-fill: #000000;
+    -fx-border-color: #4ade80;
+    -fx-border-radius: 4;
+    -fx-background-radius: 4;
+    -fx-font-weight: bold;
+    -fx-padding: 8 16 8 16;
+}
+
+.submit-button:hover {
+    -fx-background-color: #22c55e;
+}
+
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: #1a1a1a;
+}
+
+.scroll-pane .corner {
+    -fx-background-color: #1a1a1a;
+}
+
+.scroll-bar {
+    -fx-background-color: #1a1a1a;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: rgba(74, 222, 128, 0.5);
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #1a1a1a;
+}
+
+.text-area .content {
+    -fx-background-color: #1a1a1a;
+}

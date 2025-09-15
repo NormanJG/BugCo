@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.cab302.bugco.MainController" style="-fx-background-color: #000000;">
+    <top>
+        <HBox spacing="10.0" style="-fx-background-color: #000000; -fx-border-color: #4ade80; -fx-border-width: 0 0 1 0;">
+            <padding>
+                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+            </padding>
+            <Region style="-fx-background-color: #ef4444; -fx-background-radius: 50%; -fx-pref-width: 12; -fx-pref-height: 12;" />
+            <Region style="-fx-background-color: #eab308; -fx-background-radius: 50%; -fx-pref-width: 12; -fx-pref-height: 12;" />
+            <Region style="-fx-background-color: #22c55e; -fx-background-radius: 50%; -fx-pref-width: 12; -fx-pref-height: 12;" />
+            <Label text="BUGCO INDUSTRIES™ - CODE FIXING TERMINAL" style="-fx-text-fill: #4ade80; -fx-font-weight: bold; -fx-font-family: 'Courier New';" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Label text="Version 1.0.2 | Security Protocol Activated" style="-fx-text-fill: rgba(74, 222, 128, 0.7); -fx-font-size: 10; -fx-font-family: 'Courier New';" />
+        </HBox>
+    </top>
+    <center>
+        <HBox style="-fx-background-color: #000000;">
+            <VBox prefWidth="280.0" spacing="15.0" style="-fx-background-color: #000000; -fx-border-color: #4ade80; -fx-border-width: 0 1 0 0;">
+                <padding>
+                    <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
+                </padding>
+
+                <Label text="USERNAME" style="-fx-text-fill: #4ade80; -fx-font-size: 12; -fx-font-family: 'Courier New'; -fx-font-weight: bold;" />
+                <TextField fx:id="usernameField" promptText="Enter username..." style="-fx-background-color: #000000; -fx-text-fill: #4ade80; -fx-border-color: #4ade80; -fx-border-radius: 4; -fx-font-family: 'Courier New';" />
+
+                <Label text="LOGO" style="-fx-text-fill: #4ade80; -fx-font-size: 12; -fx-font-family: 'Courier New'; -fx-font-weight: bold;" />
+                <VBox style="-fx-background-color: #000000; -fx-border-color: #4ade80; -fx-border-radius: 4; -fx-alignment: center; -fx-padding: 10;" prefHeight="150">
+                    <ImageView fx:id="logoImageView" fitHeight="120.0" fitWidth="120.0" preserveRatio="true" />
+                </VBox>
+
+                <Label text="SCORE" style="-fx-text-fill: #4ade80; -fx-font-size: 12; -fx-font-family: 'Courier New'; -fx-font-weight: bold;" />
+                <Label fx:id="scoreLabel" text="0 points" style="-fx-text-fill: #4ade80; -fx-font-size: 16; -fx-font-family: 'Courier New'; -fx-font-weight: bold;" />
+
+                <Label text="QUESTIONS:" style="-fx-text-fill: #4ade80; -fx-font-size: 12; -fx-font-family: 'Courier New'; -fx-font-weight: bold;" />
+                <GridPane fx:id="questionsGrid" hgap="8.0" vgap="8.0" />
+            </VBox>
+
+            <VBox spacing="20.0" style="-fx-background-color: #000000;" HBox.hgrow="ALWAYS">
+                <padding>
+                    <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+                </padding>
+
+                <VBox spacing="8.0">
+                    <Label text="DIFFICULTY (Easy/Medium/Hard)" style="-fx-text-fill: #4ade80; -fx-font-size: 12; -fx-font-family: 'Courier New'; -fx-font-weight: bold;" />
+                    <ComboBox fx:id="difficultyCombo" prefWidth="200.0" style="-fx-background-color: #000000; -fx-text-fill: #4ade80; -fx-border-color: #4ade80; -fx-border-radius: 4;" />
+                </VBox>
+
+                <VBox spacing="15.0">
+                    <Label text="QUESTION" style="-fx-text-fill: #4ade80; -fx-font-size: 12; -fx-font-family: 'Courier New'; -fx-font-weight: bold;" />
+
+                    <VBox style="-fx-background-color: #000000; -fx-border-color: #4ade80; -fx-border-radius: 4; -fx-padding: 15;" spacing="15.0">
+                        <HBox spacing="10.0">
+                            <Label fx:id="questionNumber" text="Question 1:" style="-fx-background-color: transparent; -fx-border-color: #4ade80; -fx-border-radius: 4; -fx-text-fill: #4ade80; -fx-padding: 3 8 3 8; -fx-font-size: 12; -fx-font-family: 'Courier New';" />
+                            <Label fx:id="questionDifficulty" text="Easy:" style="-fx-background-color: transparent; -fx-border-color: #4ade80; -fx-border-radius: 4; -fx-text-fill: #4ade80; -fx-padding: 3 8 3 8; -fx-font-size: 12; -fx-font-family: 'Courier New';" />
+                            <Label fx:id="questionTitle" text="Missing Semicolon" style="-fx-text-fill: #4ade80; -fx-font-size: 12; -fx-font-family: 'Courier New';" />
+                        </HBox>
+
+                        <VBox spacing="5.0">
+                            <Region style="-fx-background-color: rgba(74, 222, 128, 0.2); -fx-background-radius: 2; -fx-pref-height: 4;" />
+                            <Region style="-fx-background-color: rgba(74, 222, 128, 0.2); -fx-background-radius: 2; -fx-pref-height: 4;" />
+                            <Region style="-fx-background-color: rgba(74, 222, 128, 0.2); -fx-background-radius: 2; -fx-pref-height: 4; -fx-pref-width: 200;" />
+                        </VBox>
+
+                        <ScrollPane prefHeight="150.0" style="-fx-background-color: #1a1a1a; -fx-border-color: #4ade80; -fx-border-radius: 4;">
+                            <TextArea fx:id="codeDisplay" editable="false" wrapText="true" style="-fx-background-color: #1a1a1a; -fx-text-fill: #22c55e; -fx-font-family: 'Courier New'; -fx-control-inner-background: #1a1a1a;" />
+                        </ScrollPane>
+                    </VBox>
+                </VBox>
+
+                <VBox spacing="15.0">
+                    <Label text="REWRITE CODE WITHOUT BUGS" style="-fx-text-fill: #4ade80; -fx-font-size: 12; -fx-font-family: 'Courier New'; -fx-font-weight: bold;" />
+
+                    <VBox style="-fx-background-color: #000000; -fx-border-color: #4ade80; -fx-border-radius: 4; -fx-padding: 15;" spacing="15.0">
+                        <VBox spacing="5.0">
+                            <Region style="-fx-background-color: rgba(74, 222, 128, 0.2); -fx-background-radius: 2; -fx-pref-height: 4;" />
+                            <Region style="-fx-background-color: rgba(74, 222, 128, 0.2); -fx-background-radius: 2; -fx-pref-height: 4;" />
+                            <Region style="-fx-background-color: rgba(74, 222, 128, 0.2); -fx-background-radius: 2; -fx-pref-height: 4; -fx-pref-width: 150;" />
+                        </VBox>
+
+                        <ScrollPane prefHeight="150.0" style="-fx-background-color: #1a1a1a;">
+                            <TextArea fx:id="answerInput" promptText="Write your bug-free code here..." style="-fx-background-color: #1a1a1a; -fx-text-fill: #4ade80; -fx-font-family: 'Courier New'; -fx-control-inner-background: #1a1a1a;" />
+                        </ScrollPane>
+
+                        <HBox>
+                            <Region HBox.hgrow="ALWAYS" />
+                            <Button fx:id="submitBtn" text="Submit" onAction="#handleSubmit" style="-fx-background-color: #4ade80; -fx-text-fill: #000000; -fx-border-color: #4ade80; -fx-border-radius: 4; -fx-background-radius: 4; -fx-font-weight: bold; -fx-padding: 8 16 8 16;" />
+                        </HBox>
+                    </VBox>
+                </VBox>
+            </VBox>
+        </HBox>
+    </center>
+</BorderPane>
