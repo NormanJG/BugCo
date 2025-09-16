@@ -7,9 +7,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HelloController {
+
+
+    private List<Players> players = new ArrayList<>();
 
     @FXML
     private ImageView logoImage;
@@ -23,31 +27,64 @@ public class HelloController {
     @FXML
     private TableColumn<Players, String> achievementColumn;
 
-    @FXML
-    public void initialize() {
-        System.out.println("initialize() called");
 
-        // Loading the Bugco logo
-        if (logoImage.getImage() == null) {
-            InputStream is = getClass().getResourceAsStream("/leadershipboard/leadershipboard/logo.png");
-            System.out.println("InputStream is " + (is == null ? "null" : "NOT null"));
 
-            if (is != null) {
-                logoImage.setImage(new Image(is));
-                System.out.println("Image set successfully");
-            } else {
-                System.out.println("logo.png not found!");
+
+    public List<Players> getPlayers() {
+        return new ArrayList<>(players);
+    }
+
+    public boolean isEmpty() {
+        return players.isEmpty();
+    }
+
+    public void addPlayer(String username, String achievement) {
+        if (username == null || username.isEmpty()) throw new IllegalArgumentException();
+
+
+        for (Players p : players) {
+            if (p.getUsername().equals(username)) {
+                p.setAchievement(achievement);
+                return;
             }
         }
 
-        //Setting the leaderboard up
-        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
-        achievementColumn.setCellValueFactory(new PropertyValueFactory<>("achievement"));  // Fixed typo
 
-        //Testing static data to ensure the leaderboard works correctly
-        leaderboardTable.getItems().add(new Players("Alice", "Lock Picker"));
-        leaderboardTable.getItems().add(new Players("Bob", "Dystopian Survivor"));
-        leaderboardTable.getItems().add(new Players("Charlie", "Wasteland Nuke"));
+        players.add(new Players(username, achievement));
     }
+
+
+    @FXML
+    public void initialize() {
+        // Setup TableView columns
+        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        achievementColumn.setCellValueFactory(new PropertyValueFactory<>("achievement"));
+
+
+        addPlayer("Alice", "Lock Picker");
+        addPlayer("Bob", "Dystopian Survivor");
+        addPlayer("Charlie", "Wasteland Nuke");
+
+        leaderboardTable.getItems().addAll(getPlayers());
+
+        System.out.println(getClass().getResource("/leadershipboard/leadershipboard/logo.png"));
+
+
+
+        try {
+            Image img = new Image(HelloController.class.getResourceAsStream("/leadershipboard/leadershipboard/logo.png"));
+            if (img.isError()) {
+                System.out.println("Error loading logo image!");
+            }
+            logoImage.setImage(img);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }
+
+
+
 
