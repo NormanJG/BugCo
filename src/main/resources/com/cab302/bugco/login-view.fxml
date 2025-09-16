@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.image.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/21"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.cab302.bugco.AuthController"
+            stylesheets="@styles.css"
+            styleClass="root-terminal">
+
+    <StackPane AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
+               AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
+
+        <!-- Background Image -->
+        <ImageView fx:id="backgroundImage" preserveRatio="false">
+            <image>
+                <Image url="@background.png"/>
+            </image>
+        </ImageView>
+
+        <!-- Center column for logo + terminal panel -->
+        <VBox alignment="CENTER" spacing="24" maxWidth="720">
+
+            <!-- Terminal window -->
+            <VBox styleClass="panel" maxWidth="420">
+
+                <!-- Title bar -->
+                <HBox alignment="CENTER_LEFT" spacing="10" styleClass="panel-titlebar">
+                    <HBox spacing="6" alignment="CENTER_LEFT">
+                        <Circle radius="6" styleClass="dot-red"/>
+                        <Circle radius="6" styleClass="dot-amber"/>
+                        <Circle radius="6" styleClass="dot-green"/>
+                    </HBox>
+                    <Label text="TERMLINK ACCESS TERMINAL" styleClass="panel-title"/>
+                    <Pane HBox.hgrow="ALWAYS"/>
+                    <Label fx:id="statusLabel" text="" styleClass="status-label"/>
+                </HBox>
+
+                <!-- Body with grouped inputs -->
+                <VBox spacing="16" alignment="CENTER" styleClass="panel-body" maxWidth="420">
+
+                    <!-- Username -->
+                    <VBox spacing="6" fillWidth="true" maxWidth="Infinity">
+                        <Label text="C:\ADMIN\USERNAME" styleClass="terminal-label"/>
+                        <TextField fx:id="loginUsernameField"
+                                   promptText="username"
+                                   styleClass="terminal-input"
+                                   maxWidth="Infinity"/>
+                    </VBox>
+
+                    <!-- Password -->
+                    <VBox spacing="6" fillWidth="true" maxWidth="Infinity">
+                        <Label text="C:\ADMIN\PASSWORD" styleClass="terminal-label"/>
+                        <PasswordField fx:id="loginPasswordField"
+                                       promptText="********"
+                                       styleClass="terminal-input"
+                                       maxWidth="Infinity"/>
+                    </VBox>
+
+                    <!-- Error message -->
+                    <Label fx:id="loginErrorLabel" text="" styleClass="status-label"/>
+
+                    <!-- Buttons -->
+                    <HBox spacing="12" alignment="CENTER" maxWidth="Infinity">
+                        <Button text="LOG IN"
+                                onAction="#handleLogin"
+                                styleClass="primary-btn"
+                                HBox.hgrow="ALWAYS"
+                                maxWidth="Infinity"/>
+                        <Button text="REGISTER"
+                                onAction="#showRegister"
+                                styleClass="amber-btn"
+                                HBox.hgrow="ALWAYS"
+                                maxWidth="Infinity"/>
+                    </HBox>
+                </VBox>
+            </VBox>
+        </VBox>
+
+        <!-- Global CRT overlays -->
+        <Pane fx:id="scanlineOverlay" mouseTransparent="true" styleClass="crt-scanlines"/>
+        <Pane mouseTransparent="true" styleClass="crt-curve"/>
+    </StackPane>
+</AnchorPane>
