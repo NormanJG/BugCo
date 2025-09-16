@@ -16,5 +16,9 @@ public class Players {
     public String getAchievement() {
         return achievement;
     }
+
+    public void setAchievement(String achievement) {
+        this.achievement = achievement;
+    }
 }
 

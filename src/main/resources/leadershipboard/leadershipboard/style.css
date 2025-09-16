@@ -1,11 +1,11 @@
-/* === Text title style === */
+
 .title-text {
-    -fx-text-fill: #18f018;   /* green color */
-    -fx-font-size: 14px;      /* bigger font size */
-    -fx-font-weight: bold;    /* bold text */
+    -fx-text-fill: #18f018;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
 }
 
-/* === Styling for the Tableview === */
+
 .table-view .column-header-background {
     -fx-background-color: black;
 }
@@ -20,7 +20,7 @@
     -fx-font-weight: bold;
 }
 
-/* === Styling for the footer === */
+
 .footer-box {
     -fx-padding: 10;
     -fx-alignment: center;
