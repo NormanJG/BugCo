@@ -7,9 +7,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class HelloController {
+
+
+    private List<Players> players = new ArrayList<>();
 
     @FXML
     private ImageView logoImage;
@@ -23,31 +27,36 @@ public class HelloController {
     @FXML
     private TableColumn<Players, String> achievementColumn;
 
+
+    public void addPlayer(String username, String achievement) {
+        if (username == null || username.isEmpty()) throw new IllegalArgumentException();
+        players.add(new Players(username, achievement));
+    }
+
+    public List<Players> getPlayers() {
+        return new ArrayList<>(players); // return a copy
+    }
+
+    public boolean isEmpty() {
+        return players.isEmpty();
+    }
+
+
     @FXML
     public void initialize() {
-        System.out.println("initialize() called");
-
-        // Loading the Bugco logo
-        if (logoImage.getImage() == null) {
-            InputStream is = getClass().getResourceAsStream("/leadershipboard/leadershipboard/logo.png");
-            System.out.println("InputStream is " + (is == null ? "null" : "NOT null"));
-
-            if (is != null) {
-                logoImage.setImage(new Image(is));
-                System.out.println("Image set successfully");
-            } else {
-                System.out.println("logo.png not found!");
-            }
-        }
-
-        //Setting the leaderboard up
+        // JavaFX UI setup
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
-        achievementColumn.setCellValueFactory(new PropertyValueFactory<>("achievement"));  // Fixed typo
+        achievementColumn.setCellValueFactory(new PropertyValueFactory<>("achievement"));
 
-        //Testing static data to ensure the leaderboard works correctly
-        leaderboardTable.getItems().add(new Players("Alice", "Lock Picker"));
-        leaderboardTable.getItems().add(new Players("Bob", "Dystopian Survivor"));
-        leaderboardTable.getItems().add(new Players("Charlie", "Wasteland Nuke"));
+        // Sample static data
+        addPlayer("Alice", "Lock Picker");
+        addPlayer("Bob", "Dystopian Survivor");
+        addPlayer("Charlie", "Wasteland Nuke");
+
+        // Display data in TableView
+        leaderboardTable.getItems().addAll(getPlayers());
     }
 }
+
+
 
