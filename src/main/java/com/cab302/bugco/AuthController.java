@@ -7,6 +7,7 @@ import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -16,9 +17,6 @@ import javafx.scene.Scene;
 import javafx.util.Duration;
 import java.io.IOException;
 import java.util.Objects;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.control.Slider;
 
 public class AuthController {
 
@@ -26,6 +24,7 @@ public class AuthController {
     @FXML private VBox loginPane;
     @FXML private VBox registerPane;
     @FXML private Pane scanlineOverlay;
+    @FXML private ImageView backgroundImage;
 
     // Login fields
     @FXML private TextField loginUsernameField;
@@ -40,7 +39,7 @@ public class AuthController {
 
     @FXML
     private void initialize() {
-        // Subtle opacity wobble (CRT flicker)
+        // CRT flicker
         Timeline flicker = new Timeline(
                 new KeyFrame(Duration.seconds(0.0),  new KeyValue(scanlineOverlay.opacityProperty(), 0.90)),
                 new KeyFrame(Duration.seconds(0.12), new KeyValue(scanlineOverlay.opacityProperty(), 0.80)),
@@ -49,6 +48,10 @@ public class AuthController {
         flicker.setCycleCount(Animation.INDEFINITE);
         flicker.setAutoReverse(true);
         flicker.play();
+        var parent = (javafx.scene.layout.Region) backgroundImage.getParent();
+        backgroundImage.fitWidthProperty().bind(parent.widthProperty());
+        backgroundImage.fitHeightProperty().bind(parent.heightProperty());
+        backgroundImage.setPreserveRatio(false);
     }
 
     @FXML
@@ -69,7 +72,7 @@ public class AuthController {
         String pwd   = loginPasswordField.getText();
 
         if (username.isEmpty() || pwd.isEmpty()) {
-            loginErrorLabel.setText("Please enter username and password.");
+            loginErrorLabel.setText("Please Enter a Username and Password.");
             return;
         }
         goToHome(loginPane);

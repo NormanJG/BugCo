@@ -18,6 +18,7 @@ public class HomeApplication extends Application {
     public static final String TITLE = "BugCo Industries ™ Bug Finder Tool";
     public static final int WIDTH = 1200;
     public static final int HEIGHT = 720;
+    private MediaPlayer backgroundPlayer;
 
     @Override
     public void start(Stage stage) throws IOException {
@@ -34,13 +35,17 @@ public class HomeApplication extends Application {
                 new Image(iconUrl, 128, 128, true, true),
                 new Image(iconUrl, 256, 256, true, true)
         );
-        String url = getClass().getResource("music.mp3").toExternalForm();
-        MediaPlayer player = new MediaPlayer(new Media(url));
-        player.setCycleCount(MediaPlayer.INDEFINITE);
-        player.setVolume(0.05);
-        player.play();
+        try {
+            String url = Objects.requireNonNull(getClass().getResource("music.wav")).toExternalForm();
+            backgroundPlayer = new MediaPlayer(new Media(url));
+            backgroundPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+            backgroundPlayer.setVolume(0.35);
+            backgroundPlayer.play();
+        } catch (Exception e) {
+            e.printStackTrace(); // If file missing/unsupported
+        }
         final AudioClip click = new AudioClip(
-                getClass().getResource("click.mp3").toExternalForm()
+                Objects.requireNonNull(getClass().getResource("click.mp3")).toExternalForm()
         );
         click.setVolume(0.3); //
 

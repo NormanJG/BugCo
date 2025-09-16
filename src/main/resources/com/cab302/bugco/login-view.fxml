@@ -15,18 +15,15 @@
     <StackPane AnchorPane.topAnchor="0" AnchorPane.bottomAnchor="0"
                AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 
+        <!-- Background Image -->
+        <ImageView fx:id="backgroundImage" preserveRatio="false">
+            <image>
+                <Image url="@background.png"/>
+            </image>
+        </ImageView>
+
         <!-- Center column for logo + terminal panel -->
         <VBox alignment="CENTER" spacing="24" maxWidth="720">
-
-            <!-- Logo -->
-            <ImageView fitHeight="180" preserveRatio="true" pickOnBounds="false">
-                <image>
-                    <Image url="@image.png"/>
-                </image>
-                <VBox.margin>
-                    <Insets bottom="18"/>
-                </VBox.margin>
-            </ImageView>
 
             <!-- Terminal window -->
             <VBox styleClass="panel" maxWidth="420">
@@ -50,7 +47,7 @@
                     <VBox spacing="6" fillWidth="true" maxWidth="Infinity">
                         <Label text="C:\ADMIN\USERNAME" styleClass="terminal-label"/>
                         <TextField fx:id="loginUsernameField"
-                                   promptText="enter username"
+                                   promptText="username"
                                    styleClass="terminal-input"
                                    maxWidth="Infinity"/>
                     </VBox>
