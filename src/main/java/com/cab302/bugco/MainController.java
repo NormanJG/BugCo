@@ -165,4 +165,47 @@ public class MainController {
     private void updateScore() {
         scoreLabel.setText(currentScore + " points");
     }
+
+    // Testing methods - added for unit testing
+    public int getCurrentScore() {
+        return currentScore;
+    }
+
+    public void setCurrentScore(int score) {
+        this.currentScore = score;
+    }
+
+    public String getCorrectAnswer(int questionIndex) {
+        if (questionIndex >= 0 && questionIndex < correctAnswers.length) {
+            return correctAnswers[questionIndex];
+        }
+        return null;
+    }
+
+    public String getQuestionType(int questionIndex) {
+        if (questionIndex >= 0 && questionIndex < questionTypes.length) {
+            return questionTypes[questionIndex];
+        }
+        return null;
+    }
+
+    public boolean validateAnswer(String userAnswer, int questionIndex) {
+        if (questionIndex < 0 || questionIndex >= correctAnswers.length) {
+            return false;
+        }
+
+        String expected = correctAnswers[questionIndex];
+        String questionType = questionTypes[questionIndex];
+
+        if (questionType.equals("choice")) {
+            return userAnswer.equalsIgnoreCase(expected);
+        } else {
+            return userAnswer.equals(expected) ||
+                    userAnswer.replaceAll("\\s+", "").equals(expected.replaceAll("\\s+", ""));
+        }
+    }
+
+    public void addScore(int points) {
+        currentScore += points;
+    }
 }
