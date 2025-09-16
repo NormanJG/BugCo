@@ -5,6 +5,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.scene.image.Image;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.AudioClip;
+import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -30,6 +34,22 @@ public class HomeApplication extends Application {
                 new Image(iconUrl, 128, 128, true, true),
                 new Image(iconUrl, 256, 256, true, true)
         );
+        String url = getClass().getResource("music.mp3").toExternalForm();
+        MediaPlayer player = new MediaPlayer(new Media(url));
+        player.setCycleCount(MediaPlayer.INDEFINITE);
+        player.setVolume(0.05);
+        player.play();
+        final AudioClip click = new AudioClip(
+                getClass().getResource("click.mp3").toExternalForm()
+        );
+        click.setVolume(0.3); //
+
+        scene.addEventFilter(MouseEvent.MOUSE_PRESSED, e -> {
+            // only left clicks
+            if (e.isPrimaryButtonDown()) {
+                click.play();
+            }
+        });
         stage.setTitle(TITLE);
         stage.setScene(scene);
         stage.show();

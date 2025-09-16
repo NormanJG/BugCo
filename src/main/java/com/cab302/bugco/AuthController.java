@@ -16,6 +16,9 @@ import javafx.scene.Scene;
 import javafx.util.Duration;
 import java.io.IOException;
 import java.util.Objects;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.control.Slider;
 
 public class AuthController {
 
@@ -34,7 +37,6 @@ public class AuthController {
     @FXML private TextField regUsernameField;
     @FXML private PasswordField regPasswordField;
     @FXML private Label regErrorLabel;
-
 
     @FXML
     private void initialize() {
