@@ -57,14 +57,15 @@
 }
 .panel-body { -fx-padding: 12; }
 
+/* Mock Terminal Control Buttons */
 .dot-red {
-    -fx-fill: red;       /* fill color of the circle */
-    -fx-stroke: black;   /* optional outline */
+    -fx-fill: red;
+    -fx-stroke: black;
     -fx-stroke-width: 1;
 }
 
 .dot-amber {
-    -fx-fill: orange;    /* “amber” is orange in JavaFX */
+    -fx-fill: orange;
     -fx-stroke: black;
     -fx-stroke-width: 1;
 }
@@ -144,10 +145,9 @@
     -fx-font-size: 26px;
     -fx-font-weight: bold;
     -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.5), 14, 0.35, 0, 0);
-    /* subtle letter spacing similar to your banner-title */
 }
 
-/* Terminal window frame (use your .panel styling) */
+/* Terminal Window Frame */
 .terminal {
     -fx-border-color: #18f018;
     -fx-border-width: 3;
@@ -205,11 +205,6 @@
     -fx-font-size: 12.5px;
 }
 
-/* Window dots (your file had .dot-red/amber/green; add classnames used by FXML) */
-.dot.red    { -fx-fill: red;    -fx-stroke: black; -fx-stroke-width: 1; }
-.dot.yellow { -fx-fill: orange; -fx-stroke: black; -fx-stroke-width: 1; }
-.dot.green  { -fx-fill: green;  -fx-stroke: black; -fx-stroke-width: 1; }
-
 /* ToggleButtons styled like tabs */
 .toggle-button.tablike {
     -fx-background-color: rgba(24,240,24,0.10);
@@ -225,9 +220,8 @@
     -fx-background-color: rgba(24,240,24,0.22);
 }
 
-/* Inputs inside the terminal */
+/* Inputs inside the Login Terminal */
 .term-input {
-    /* reuse your .terminal-input look */
     -fx-background-color: #0a150f;
     -fx-text-fill: #aaffaa;
     -fx-border-color: #18f018;
@@ -239,9 +233,8 @@
     -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.45), 14, 0.4, 0, 0);
 }
 
-/* Primary neon button inside terminal */
+/* Primary neon button inside Login Terminal */
 .term-button {
-    /* based on your .primary-btn */
     -fx-background-color: #0f280f;
     -fx-text-fill: #76ff7a;
     -fx-border-color: #18f018;
@@ -256,11 +249,11 @@
 .term-button:hover  { -fx-background-color: #153715; }
 .term-button:pressed{ -fx-background-color: #1a441a; }
 
-/* Add subtle scanlines + vignette. Pure CSS. */
+/* Add subtle scanlines + vignette */
 .crt-scanlines {
     /* Multiple stacked backgrounds: scanlines layer, then vignette */
     -fx-background-color:
-        /* 1) Scanlines (thin dark stripe every 3px) */
+        /* 1) Scanlines */
         linear-gradient(from 0% 0% to 0% 100%,
                         rgba(0,0,0,0.18) 49%,
                         rgba(0,0,0,0.40) 50%,
@@ -273,9 +266,9 @@
     /* Make scanlines repeat vertically */
     -fx-background-repeat: repeat, no-repeat;
     -fx-background-size: auto 3px, cover;
-    -fx-background-radius: 6;     /* match your .panel radius */
-    -fx-opacity: 0.9;              /* keep it subtle */
-    -fx-blend-mode: MULTIPLY;      /* darken the content slightly */
+    -fx-background-radius: 6;
+    -fx-opacity: 0.9;
+    -fx-blend-mode: MULTIPLY;
 }
 
 /* Glow on text inside the panel */
