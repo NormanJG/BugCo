@@ -72,15 +72,9 @@
                         <TextArea fx:id="terminalArea" editable="false" wrapText="true"
                                   styleClass="terminal-area" prefRowCount="12"/>
 
-                        <!-- input for terminal-driven flow -->
-                        <TextField fx:id="terminalInput" visible="false" managed="false"
-                                   promptText="type here and press Enter"
-                                   styleClass="terminal-input"/>
-
                         <HBox alignment="CENTER" spacing="14">
-                            <Button text="LOGIN"     onAction="#onLogin"    styleClass="amber-btn"/>
-                            <Button text="REGISTER"  onAction="#onRegister" styleClass="amber-btn"/>
                             <Button text="GAME INFO" onAction="#onGameInfo" styleClass="amber-btn"/>
+                            <Button text="LOGOUT" onAction="#onLogout" styleClass="amber-btn"/>
                         </HBox>
 
                         <Button text="INITIALISE HACKING PROTOCOLS" maxWidth="Infinity"
