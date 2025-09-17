@@ -16,10 +16,8 @@
                AnchorPane.leftAnchor="0" AnchorPane.rightAnchor="0">
 
         <!-- Background Image -->
-        <ImageView fx:id="backgroundImage" preserveRatio="false">
-            <image>
-                <Image url="@background.png"/>
-            </image>
+        <ImageView fx:id="backgroundImage">
+            <Image url="@background.png"/>
         </ImageView>
 
         <!-- Center column for logo + terminal panel -->
@@ -37,14 +35,13 @@
                     </HBox>
                     <Label text="TERMLINK ACCESS TERMINAL" styleClass="panel-title"/>
                     <Pane HBox.hgrow="ALWAYS"/>
-                    <Label fx:id="statusLabel" text="" styleClass="status-label"/>
                 </HBox>
 
                 <!-- Body with grouped inputs -->
                 <VBox spacing="16" alignment="CENTER" styleClass="panel-body" maxWidth="420">
 
                     <!-- Username -->
-                    <VBox spacing="6" fillWidth="true" maxWidth="Infinity">
+                    <VBox spacing="6" maxWidth="Infinity">
                         <Label text="C:\ADMIN\USERNAME" styleClass="terminal-label"/>
                         <TextField fx:id="loginUsernameField"
                                    promptText="username"
@@ -53,7 +50,7 @@
                     </VBox>
 
                     <!-- Password -->
-                    <VBox spacing="6" fillWidth="true" maxWidth="Infinity">
+                    <VBox spacing="6" maxWidth="Infinity">
                         <Label text="C:\ADMIN\PASSWORD" styleClass="terminal-label"/>
                         <PasswordField fx:id="loginPasswordField"
                                        promptText="********"
@@ -62,7 +59,7 @@
                     </VBox>
 
                     <!-- Error message -->
-                    <Label fx:id="loginErrorLabel" text="" styleClass="status-label"/>
+                    <Label fx:id="loginErrorLabel" styleClass="status-label"/>
 
                     <!-- Buttons -->
                     <HBox spacing="12" alignment="CENTER" maxWidth="Infinity">
