@@ -1,7 +1,8 @@
 .root-terminal {
     -fx-background-color: #0c100d;
-    -fx-font-family: "VT323", Consolas, "Courier Prime", monospace;
-    -fx-text-fill: #6bff8a;
+    -fx-font-family: "Share Tech Mono", monospace;
+    -fx-font-weight: 400;
+    -fx-font-style: normal;
 }
 
 .banner.panel {
@@ -28,10 +29,18 @@
 .panel {
     -fx-border-color: #18f018;
     -fx-border-width: 3;
-    -fx-border-radius: 6;
     -fx-background-color: #061208;
     -fx-background-radius: 6;
 }
+
+.panel-image {
+    -fx-position: absolute;
+    -fx-width: 301px;
+    -fx-height: 301px;
+    -fx-background: url(image.png);
+}
+
+
 
 .panel-titlebar {
     -fx-padding: 8 10;
@@ -74,17 +83,21 @@
     -fx-highlight-text-fill: black;
     -fx-border-color: #18f018;
     -fx-border-width: 2;
-    -fx-font-size: 18px;
+    -fx-font-size: 12px;
 }
 
-.terminal-label { -fx-text-fill: #8aff97; -fx-font-size: 18px; }
+.terminal-label {
+    -fx-font-family: "Courier Prime", monospace;
+    -fx-text-fill: #8aff97;
+    -fx-font-size: 13px;
+}
 
 .terminal-input {
     -fx-background-color: #0a150f;
     -fx-text-fill: #aaffaa;
     -fx-border-color: #18f018;
     -fx-border-width: 2;
-    -fx-font-size: 18px;
+    -fx-font-size: 12px;
 }
 .terminal-input:focused {
     -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.45), 14, 0.4, 0, 0);
@@ -106,57 +119,200 @@
     -fx-text-fill: #ffd27a;
     -fx-border-color: #ffbf46;
     -fx-border-width: 2;
-    -fx-padding: 8 16;
-    -fx-font-size: 16px;
+    -fx-padding: 10 16;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
 }
 .amber-btn:hover { -fx-background-color: #3a2a0b; }
 
 .status-label { -fx-text-fill: #6bff8a; -fx-font-size: 16px; -fx-opacity: 0.85; }
 
-/* for gamePlayCSS */
+/* ============================
+   Auth screen
+   ============================ */
 
-.root-terminal { -fx-background-color: #000000; -fx-font-family: "Consolas", "Courier New", monospace; }
-.screen-pad    { -fx-padding: 16; }
+/* App background + mono font */
+.app-bg {
+    -fx-background-color: #0c100d;
+    -fx-font-family: "Share Tech Mono", monospace;
+    -fx-font-weight: 400;
+}
 
-.panel           { -fx-border-color: #00ff66; -fx-border-width: 2; -fx-background-color: #001600; }
-.panel--titlebar { -fx-padding: 10 14; }
-.banner-title    { -fx-text-fill: #00ff66; -fx-font-size: 18px; -fx-font-weight: bold; }
+/* Big neon heading above the terminal */
+.term-title {
+    -fx-text-fill: #6bff8a;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.5), 14, 0.35, 0, 0);
+    /* subtle letter spacing similar to your banner-title */
+}
 
-.terminal-pane > .title {
-    -fx-background-color: #000000;
-    -fx-text-fill: #00ff66;
-    -fx-border-color: #00ff66;
+/* Terminal window frame (use your .panel styling) */
+.terminal {
+    -fx-border-color: #18f018;
+    -fx-border-width: 3;
+    -fx-border-radius: 6;
+    -fx-background-color: #061208;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.35), 18, 0.3, 0, 0);
+}
+
+/* Title bar across the top of the terminal */
+.terminal-titlebar {
+    -fx-padding: 8 10;
+    -fx-background-color: #07150a;
+    -fx-border-color: #18f018;
+    -fx-border-width: 0 0 3 0;
+}
+
+/* Small caption inside the titlebar */
+.term-caption {
+    -fx-text-fill: #8aff97;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 0 10;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.5), 10, 0.4, 0, 0);
+}
+
+/* Terminal screen body */
+.terminal-screen {
+    -fx-padding: 12;
+    -fx-background-color: linear-gradient(to bottom, rgba(0,0,0,0.25), rgba(0,0,0,0.45));
+}
+
+/* Terminal text lines */
+.term-line {
+    -fx-text-fill: #8aff97;
+    -fx-font-size: 12.5px;
+}
+.term-muted {
+    -fx-text-fill: #6bff8a;
+    -fx-opacity: 0.85;
+    -fx-font-size: 12.5px;
+}
+.term-alert {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-weight: bold;
+    -fx-font-size: 12.5px;
+}
+.term-status {
+    -fx-text-fill: #6bff8a;
+    -fx-opacity: 0.85;
+    -fx-font-size: 16px;
+}
+.term-error {
+    -fx-text-fill: #ff6b6b;
+    -fx-font-size: 12.5px;
+}
+
+/* Window dots (your file had .dot-red/amber/green; add classnames used by FXML) */
+.dot.red    { -fx-fill: red;    -fx-stroke: black; -fx-stroke-width: 1; }
+.dot.yellow { -fx-fill: orange; -fx-stroke: black; -fx-stroke-width: 1; }
+.dot.green  { -fx-fill: green;  -fx-stroke: black; -fx-stroke-width: 1; }
+
+/* ToggleButtons styled like tabs */
+.toggle-button.tablike {
+    -fx-background-color: rgba(24,240,24,0.10);
+    -fx-text-fill: #8aff97;
+    -fx-border-color: #18f018;
     -fx-border-width: 2;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-font-family: "Share Tech Mono", monospace;
+    -fx-font-size: 12.5px;
+}
+.toggle-button.tablike:selected {
+    -fx-background-color: rgba(24,240,24,0.22);
+}
+
+/* Inputs inside the terminal */
+.term-input {
+    /* reuse your .terminal-input look */
+    -fx-background-color: #0a150f;
+    -fx-text-fill: #aaffaa;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+    -fx-font-size: 12px;
+    -fx-font-family: "Share Tech Mono", monospace;
+}
+.term-input:focused {
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.45), 14, 0.4, 0, 0);
+}
+
+/* Primary neon button inside terminal */
+.term-button {
+    /* based on your .primary-btn */
+    -fx-background-color: #0f280f;
+    -fx-text-fill: #76ff7a;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+    -fx-padding: 10 16;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+    -fx-font-family: "Share Tech Mono", monospace;
+}
+.term-button:hover  { -fx-background-color: #153715; }
+.term-button:pressed{ -fx-background-color: #1a441a; }
+
+/* Add subtle scanlines + vignette. Pure CSS. */
+.crt-scanlines {
+    /* Multiple stacked backgrounds: scanlines layer, then vignette */
+    -fx-background-color:
+        /* 1) Scanlines (thin dark stripe every 3px) */
+        linear-gradient(from 0% 0% to 0% 100%,
+                        rgba(0,0,0,0.18) 49%,
+                        rgba(0,0,0,0.40) 50%,
+                        rgba(0,0,0,0.18) 51%),
+        /* 2) Vignette */
+        radial-gradient(center 50% 50%, radius 100%,
+                        rgba(0,0,0,0.00) 60%,
+                        rgba(0,0,0,0.35) 100%);
+    -fx-background-insets: 0, 0;
+    /* Make scanlines repeat vertically */
+    -fx-background-repeat: repeat, no-repeat;
+    -fx-background-size: auto 3px, cover;
+    -fx-background-radius: 6;     /* match your .panel radius */
+    -fx-opacity: 0.9;              /* keep it subtle */
+    -fx-blend-mode: MULTIPLY;      /* darken the content slightly */
+}
+
+/* Glow on text inside the panel */
+.crt-text {
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.25), 8, 0.35, 0, 0);
+}
+
+/* Dark corners */
+.crt-curve {
+    -fx-background-color:
+        radial-gradient(center 50% 50%, radius 120%,
+                        rgba(0,0,0,0.00) 70%,
+                        rgba(0,0,0,0.20) 100%);
+    -fx-background-radius: 6;
     -fx-background-insets: 0;
 }
-.terminal-pane > *.content {
-    -fx-background-color: #000000;
-    -fx-border-color: #00ff66;
+
+/* Audio */
+.audio-bar {
+    -fx-background-color: rgba(0,0,0,0.55);
+    -fx-border-color: #18f018;
     -fx-border-width: 2;
     -fx-background-radius: 10;
     -fx-border-radius: 10;
-    -fx-padding: 14;
-    -fx-background-insets: 0;
-    -fx-margin: 6;
+    -fx-padding: 6 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 18, 0.2, 0, 0);
 }
-
-.label, .button, .text-area { -fx-text-fill: #00ff66; }
-.button {
-    -fx-background-color: #000000;
-    -fx-border-color: #00ff66;
-    -fx-border-width: 2;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
-    -fx-padding: 8 16;
-}
-.text-area {
-    -fx-control-inner-background: #000000;
-    -fx-border-color: #00ff66;
-    -fx-border-width: 2;
+.audio-bar .button {
+    -fx-background-color: #0f280f;
+    -fx-text-fill: #e8ffe8;
+    -fx-border-color: #18f018;
+    -fx-border-width: 1.5;
     -fx-background-radius: 8;
     -fx-border-radius: 8;
+    -fx-padding: 4 8;
 }
+.audio-bar .button:hover { -fx-background-color: #153715; }
 
-.ok  { -fx-text-fill: #00ff66; }
-.err { -fx-text-fill: #ffcc33; }
+
+
