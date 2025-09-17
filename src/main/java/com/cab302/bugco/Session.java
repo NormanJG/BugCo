@@ -3,7 +3,7 @@ package com.cab302.bugco;
 public final class Session {
     private static String currentUser;
 
-    private Session() {} // no instances
+    private Session() {}
 
     public static void setCurrentUser(String username) { currentUser = username; }
     public static String getCurrentUser() { return currentUser; }

@@ -78,8 +78,6 @@
                                    styleClass="terminal-input"/>
 
                         <HBox alignment="CENTER" spacing="14">
-                            <Button text="LOGIN"     onAction="#onLogin"    styleClass="amber-btn"/>
-                            <Button text="REGISTER"  onAction="#onRegister" styleClass="amber-btn"/>
                             <Button text="GAME INFO" onAction="#onGameInfo" styleClass="amber-btn"/>
                         </HBox>
 

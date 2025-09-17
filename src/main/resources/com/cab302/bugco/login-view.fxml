@@ -72,7 +72,7 @@
                                 HBox.hgrow="ALWAYS"
                                 maxWidth="Infinity"/>
                         <Button text="REGISTER"
-                                onAction="#showRegister"
+                                onAction="#handleRegister"
                                 styleClass="amber-btn"
                                 HBox.hgrow="ALWAYS"
                                 maxWidth="Infinity"/>

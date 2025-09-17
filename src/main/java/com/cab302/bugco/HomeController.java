@@ -1,5 +1,6 @@
 package com.cab302.bugco;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -57,5 +58,10 @@ public class HomeController {
 
     private void appendTerminal(String line) {
         terminalArea.appendText("\n" + line);
+    }
+
+    public void onGameInfo(ActionEvent actionEvent) {
+        appendTerminal("Find all the bugs... before they find you.");
+        // TODO: navigate to game info
     }
 }
