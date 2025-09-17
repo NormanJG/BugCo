@@ -2,6 +2,7 @@ package com.cab302.bugco;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Parent;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
@@ -63,5 +64,30 @@ public class HomeController {
     public void onGameInfo(ActionEvent actionEvent) {
         appendTerminal("Find all the bugs... before they find you.");
         // TODO: navigate to game info
+    }
+
+    @FXML
+    private void onLogout() {
+        try {
+            Session.logout();
+
+            var url = getClass().getResource("/com/cab302/bugco/login-view.fxml");
+            if (url == null) throw new IllegalStateException("login-view.fxml not found on classpath");
+
+            var root = javafx.fxml.FXMLLoader.load(url);
+
+            javafx.scene.Scene scene = terminalArea.getScene();
+            scene.setRoot((Parent) root);
+
+            var css = getClass().getResource("/com/cab302/bugco/styles.css");
+            if (css != null) {
+                String cssUrl = css.toExternalForm();
+                if (!scene.getStylesheets().contains(cssUrl)) scene.getStylesheets().add(cssUrl);
+            }
+
+            ((javafx.stage.Stage) scene.getWindow()).setTitle("BugCo – Login");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

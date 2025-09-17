@@ -79,6 +79,7 @@
 
                         <HBox alignment="CENTER" spacing="14">
                             <Button text="GAME INFO" onAction="#onGameInfo" styleClass="amber-btn"/>
+                            <Button text="LOGOUT" onAction="#onLogout" styleClass="amber-btn"/>
                         </HBox>
 
                         <Button text="INITIALISE HACKING PROTOCOLS" maxWidth="Infinity"
