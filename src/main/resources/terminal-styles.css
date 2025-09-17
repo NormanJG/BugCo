@@ -311,3 +311,15 @@
     -fx-background-color: #004d00;   /* slightly lighter green on hover */
     -fx-cursor: hand;
 }
+
+.hint-terminal {
+    -fx-background-color: #003300;   /* dark green like terminals */
+    -fx-text-fill: #39ff14;          /* neon green text */
+    -fx-padding: 5px 10px;
+    -fx-border-color: #39ff14;
+    -fx-border-width: 2px;
+    -fx-font-family: "Consolas", monospace;
+    -fx-font-size: 12px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
