@@ -82,7 +82,7 @@ public class AuthController {
             showInline("Username must be letters or numbers");
             return;
         }
-        if (!userValid && !passValid) {
+        if (!userValid) {
             showInline("Username and Password invalid");
             return;
         }

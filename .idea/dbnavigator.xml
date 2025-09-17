@@ -24,7 +24,7 @@
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="23df78cb-2359-4bc2-872f-77ba17cdea11">
-      <console name="Connection" type="STANDARD" schema="bugco" session="Main"><![CDATA[SELECT id, username, created_at FROM users;]]></console>
+      <console name="Connection" type="STANDARD" schema="bugco" session="Main"><![CDATA[SELECT id, username, created_at, password_hash FROM users;]]></console>
     </connection>
   </component>
   <component name="DBNavigator.Project.DatabaseEditorStateManager">
