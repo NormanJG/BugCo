@@ -8,6 +8,8 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.Objects;
+
 public class HomeController {
 
     @FXML private TextArea terminalArea;
@@ -17,7 +19,7 @@ public class HomeController {
 
     @FXML
     private void initialize() {
-        Image img = new Image(getClass().getResource("image.png").toExternalForm());
+        Image img = new Image(Objects.requireNonNull(getClass().getResource("image.png")).toExternalForm());
         if (imageView != null) imageView.setImage(img);
 
         if (welcomeLabel != null) {
