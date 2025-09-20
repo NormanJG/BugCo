@@ -12,12 +12,10 @@ import java.util.Objects;
 public class HomeApplication extends Application {
     // Constants defining the window title and size
     public static final String TITLE = "BugCo Industries ™ Bug Finder Tool";
-    public static final int WIDTH = 1280;
     public static final int HEIGHT = 720;
 
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HomeApplication.class.getResource("home-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), WIDTH, HEIGHT);
         scene.getStylesheets().add(
                 Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm()

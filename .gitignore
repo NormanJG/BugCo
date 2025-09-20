@@ -11,6 +11,8 @@ target/
 *.iws
 *.iml
 *.ipr
+.idea/workspace.xml
+.idea/**/dataSources.local.xml
 
 ### Eclipse ###
 .apt_generated
@@ -36,3 +38,7 @@ build/
 
 ### Mac OS ###
 .DS_Store
+
+### Database ###
+db/bugco.db
+*.db

@@ -1,7 +1,5 @@
 .root-terminal {
     -fx-background-color: #0c100d;
-    -fx-font-family: "VT323", Consolas, "Courier Prime", monospace;
-    -fx-text-fill: #6bff8a;
 }
 
 .banner.panel {
@@ -28,7 +26,6 @@
 .panel {
     -fx-border-color: #18f018;
     -fx-border-width: 3;
-    -fx-border-radius: 6;
     -fx-background-color: #061208;
     -fx-background-radius: 6;
 }
@@ -49,13 +46,10 @@
 .panel-body { -fx-padding: 12; }
 
 .dot-red {
-    -fx-fill: red;       /* fill color of the circle */
-    -fx-stroke: black;   /* optional outline */
     -fx-stroke-width: 1;
 }
 
 .dot-amber {
-    -fx-fill: orange;    /* “amber” is orange in JavaFX */
     -fx-stroke: black;
     -fx-stroke-width: 1;
 }
@@ -74,17 +68,14 @@
     -fx-highlight-text-fill: black;
     -fx-border-color: #18f018;
     -fx-border-width: 2;
-    -fx-font-size: 18px;
 }
 
-.terminal-label { -fx-text-fill: #8aff97; -fx-font-size: 18px; }
 
 .terminal-input {
     -fx-background-color: #0a150f;
     -fx-text-fill: #aaffaa;
     -fx-border-color: #18f018;
     -fx-border-width: 2;
-    -fx-font-size: 18px;
 }
 .terminal-input:focused {
     -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.45), 14, 0.4, 0, 0);
@@ -106,57 +97,25 @@
     -fx-text-fill: #ffd27a;
     -fx-border-color: #ffbf46;
     -fx-border-width: 2;
-    -fx-padding: 8 16;
-    -fx-font-size: 16px;
     -fx-font-weight: bold;
 }
 .amber-btn:hover { -fx-background-color: #3a2a0b; }
 
 .status-label { -fx-text-fill: #6bff8a; -fx-font-size: 16px; -fx-opacity: 0.85; }
 
-/* for gamePlayCSS */
 
-.root-terminal { -fx-background-color: #000000; -fx-font-family: "Consolas", "Courier New", monospace; }
-.screen-pad    { -fx-padding: 16; }
 
-.panel           { -fx-border-color: #00ff66; -fx-border-width: 2; -fx-background-color: #001600; }
-.panel--titlebar { -fx-padding: 10 14; }
-.banner-title    { -fx-text-fill: #00ff66; -fx-font-size: 18px; -fx-font-weight: bold; }
 
-.terminal-pane > .title {
-    -fx-background-color: #000000;
-    -fx-text-fill: #00ff66;
-    -fx-border-color: #00ff66;
+    -fx-border-width: 2;
+}
     -fx-border-width: 2;
     -fx-background-insets: 0;
 }
-.terminal-pane > *.content {
-    -fx-background-color: #000000;
-    -fx-border-color: #00ff66;
-    -fx-border-width: 2;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
-    -fx-padding: 14;
-    -fx-background-insets: 0;
-    -fx-margin: 6;
-}
 
-.label, .button, .text-area { -fx-text-fill: #00ff66; }
-.button {
-    -fx-background-color: #000000;
-    -fx-border-color: #00ff66;
     -fx-border-width: 2;
     -fx-background-radius: 10;
     -fx-border-radius: 10;
-    -fx-padding: 8 16;
 }
-.text-area {
-    -fx-control-inner-background: #000000;
-    -fx-border-color: #00ff66;
-    -fx-border-width: 2;
     -fx-background-radius: 8;
     -fx-border-radius: 8;
 }
-
-.ok  { -fx-text-fill: #00ff66; }
-.err { -fx-text-fill: #ffcc33; }

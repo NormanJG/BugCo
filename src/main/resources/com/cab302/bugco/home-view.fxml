@@ -39,7 +39,6 @@
 
                     <StackPane styleClass="panel-body" VBox.vgrow="ALWAYS">
                         <ImageView fx:id="imageView"
-                                   fitWidth="220"
                                    preserveRatio="true"
                                    layoutX="20"
                                    layoutY="20"/>
@@ -72,14 +71,7 @@
                         <TextArea fx:id="terminalArea" editable="false" wrapText="true"
                                   styleClass="terminal-area" prefRowCount="12"/>
 
-                        <!-- input for terminal-driven flow -->
-                        <TextField fx:id="terminalInput" visible="false" managed="false"
-                                   promptText="type here and press Enter"
-                                   styleClass="terminal-input"/>
-
                         <HBox alignment="CENTER" spacing="14">
-                            <Button text="LOGIN"     onAction="#onLogin"    styleClass="amber-btn"/>
-                            <Button text="REGISTER"  onAction="#onRegister" styleClass="amber-btn"/>
                             <Button text="GAME INFO" onAction="#onGameInfo" styleClass="amber-btn"/>
                         </HBox>
 
