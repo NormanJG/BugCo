@@ -68,7 +68,7 @@ public class HomeController {
             // GET CURRENT SCENE
             Scene scene = terminalArea.getScene();
 
-            // apply gameplay CSS if exists (keeps style clean)
+            // apply gameplay CSS if exists
             var css = getClass().getResource("/com/cab302/bugco/gameplay.css");
             if (css != null) {
                 String cssUrl = css.toExternalForm();
