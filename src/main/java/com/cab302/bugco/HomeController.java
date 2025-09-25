@@ -7,6 +7,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.Node;
+import javafx.stage.Stage;
+import com.cab302.bugco.BugcoTerminalApp;
 
 import java.util.Objects;
 
@@ -54,9 +57,17 @@ public class HomeController {
     }
 
     @FXML
-    private void onStart() {
+    private void onStart(ActionEvent event) {
         appendTerminal("Initialising hacking protocols... stand by.");
-        // TODO: navigate to game scene
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        // Launch BugcoTerminalApp in the same Stage
+        BugcoTerminalApp app = new BugcoTerminalApp();
+        try {
+            app.start(stage);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void appendTerminal(String line) {

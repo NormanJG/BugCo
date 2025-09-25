@@ -1,0 +1,325 @@
+/* JavaFX Terminal Retro Styling */
+@import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+
+/* Root terminal styling */
+.root-terminal {
+    -fx-background-color: #0c100d;
+    -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+    -fx-text-fill: #6bff8a;
+}
+
+/* Banner panel */
+.banner-panel {
+    -fx-padding: 12 16 12 16;
+    -fx-border-color: #18f018;
+    -fx-border-width: 3;
+    -fx-border-radius: 4;
+    -fx-background-color: #07110a;
+    -fx-background-radius: 4;
+    -fx-effect: dropshadow(gaussian, rgba(24, 240, 24, 0.35), 18, 0, 0, 0);
+}
+
+.banner-title {
+    -fx-text-fill: #6bff8a;
+    -fx-font-size: 26px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(24, 240, 24, 0.5), 10, 0, 0, 0);
+}
+
+.banner-sub {
+    -fx-text-fill: #8aff97;
+    -fx-font-size: 16px;
+    -fx-opacity: 0.85;
+}
+
+/* Terminal panel */
+.terminal-panel {
+    -fx-border-color: #18f018;
+    -fx-border-width: 3;
+    -fx-border-radius: 6;
+    -fx-background-color: #061208;
+    -fx-background-radius: 6;
+}
+
+.panel-titlebar {
+    -fx-padding: 8 10 8 10;
+    -fx-background-color: #07150a;
+    -fx-background-radius: 6 6 0 0;
+    -fx-border-color: transparent transparent #18f018 transparent;
+    -fx-border-width: 0 0 3 0;
+}
+
+.panel-title {
+    -fx-text-fill: #6bff8a;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-padding: 0 0 0 10;
+    -fx-effect: dropshadow(gaussian, rgba(24, 240, 24, 0.5), 10, 0, 0, 0);
+}
+
+.panel-body {
+    -fx-padding: 12;
+}
+
+/* Terminal dots */
+.dot-red {
+    -fx-fill: #ef4444;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+}
+
+.dot-amber {
+    -fx-fill: #f59e0b;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+}
+
+.dot-green {
+    -fx-fill: #22c55e;
+    -fx-stroke: black;
+    -fx-stroke-width: 1;
+}
+
+/* Terminal text area */
+.terminal-area {
+    -fx-background-color: #061208;
+    -fx-text-fill: #18f018;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+    -fx-font-size: 18px;
+    -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+}
+
+.terminal-area:focused {
+    -fx-effect: dropshadow(gaussian, rgba(24, 240, 24, 0.45), 14, 0, 0, 0);
+}
+
+/* Terminal labels */
+.terminal-label {
+    -fx-text-fill: #8aff97;
+    -fx-font-size: 18px;
+    -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+}
+
+/* Terminal input fields */
+.terminal-input {
+    -fx-background-color: #0a150f;
+    -fx-text-fill: #aaffaa;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+    -fx-font-size: 18px;
+    -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-padding: 6 12 6 12;
+}
+
+.terminal-input:focused {
+    -fx-effect: dropshadow(gaussian, rgba(24, 240, 24, 0.45), 14, 0, 0, 0);
+}
+
+/* ComboBox specific styling */
+.terminal-input.combo-box {
+    -fx-background-color: #0a150f;
+}
+
+.terminal-input.combo-box .arrow-button {
+    -fx-background-color: #18f018;
+}
+
+.terminal-input.combo-box .arrow {
+    -fx-background-color: #061208;
+}
+
+.terminal-input.combo-box .list-view {
+    -fx-background-color: #061208;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+}
+
+.terminal-input.combo-box .list-cell {
+    -fx-background-color: #061208;
+    -fx-text-fill: #8aff97;
+    -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+    -fx-font-size: 18px;
+}
+
+.terminal-input.combo-box .list-cell:hover {
+    -fx-background-color: rgba(24, 240, 24, 0.1);
+}
+
+/* Primary button */
+.primary-btn {
+    -fx-background-color: #0f280f;
+    -fx-text-fill: #76ff7a;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+    -fx-padding: 10 16 10 16;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+}
+
+.primary-btn:hover {
+    -fx-background-color: #153715;
+    -fx-cursor: hand;
+}
+
+/* Question buttons */
+.question-btn {
+    -fx-background-color: #061208;
+    -fx-text-fill: #6bff8a;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+    -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+    -fx-font-size: 16px;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+    -fx-padding: 6 12 6 12;
+    -fx-min-width: 50;
+}
+
+.question-btn:hover {
+    -fx-background-color: #0a1f0b;
+    -fx-effect: dropshadow(gaussian, rgba(24, 240, 24, 0.3), 8, 0, 0, 0);
+    -fx-cursor: hand;
+}
+
+.question-btn:selected {
+    -fx-background-color: #18f018;
+    -fx-text-fill: #061208;
+}
+
+/* Help button */
+.help-btn {
+    -fx-min-width: 24;
+    -fx-max-width: 24;
+    -fx-min-height: 24;
+    -fx-max-height: 24;
+    -fx-padding: 0;
+}
+
+/* Question badges */
+.question-badge {
+    -fx-border-color: #18f018;
+    -fx-border-width: 1;
+    -fx-text-fill: #6bff8a;
+    -fx-background-color: transparent;
+    -fx-padding: 4 8 4 8;
+    -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+    -fx-font-size: 14px;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+}
+
+/* Placeholder lines */
+.placeholder-line {
+    -fx-background-color: rgba(24, 240, 24, 0.2);
+    -fx-background-radius: 2;
+    -fx-pref-width: 300;
+    -fx-max-width: 300;
+}
+
+/* Status label */
+.status-label {
+    -fx-text-fill: #6bff8a;
+    -fx-font-size: 16px;
+    -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+    -fx-opacity: 0.85;
+}
+
+/* Scrollbars */
+.scroll-bar {
+    -fx-background-color: #061208;
+}
+
+.scroll-bar .track {
+    -fx-background-color: #040a06;
+    -fx-border-color: #18f018;
+    -fx-border-width: 1;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #18f018;
+    -fx-background-radius: 4;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #20ff20;
+}
+
+/* TextField and TextArea prompt text */
+.terminal-input .text {
+    -fx-fill: #aaffaa;
+}
+
+.terminal-area .text {
+    -fx-fill: #18f018;
+}
+
+.terminal-input .prompt-text,
+.terminal-area .prompt-text {
+    -fx-fill: rgba(170, 255, 170, 0.6);
+    -fx-font-style: italic;
+}
+
+/* Focus indicators */
+.terminal-input:focused,
+.terminal-area:focused,
+.question-btn:focused {
+    -fx-effect: dropshadow(gaussian, rgba(24, 240, 24, 0.45), 14, 0, 0, 0);
+}
+
+/* Selection colors */
+.terminal-area .selection {
+    -fx-fill: rgba(24, 240, 24, 0.3);
+}
+
+.terminal-input .selection {
+    -fx-fill: rgba(24, 240, 24, 0.3);
+}
+
+
+.question-btn.correct {
+    -fx-background-color: #4CAF50; /* green highlight */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.hint-button {
+    -fx-background-color: #003300;   /* dark green background */
+    -fx-text-fill: #39ff14;          /* neon green text */
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+    -fx-min-width: 24px;
+    -fx-min-height: 24px;
+    -fx-max-width: 24px;
+    -fx-max-height: 24px;
+    -fx-padding: 0;
+    -fx-alignment: center;
+    -fx-border-color: #39ff14;       /* neon green outline */
+    -fx-border-width: 2px;
+}
+
+.hint-button:hover {
+    -fx-background-color: #004d00;   /* slightly lighter green on hover */
+    -fx-cursor: hand;
+}
+
+.hint-terminal {
+    -fx-background-color: #003300;   /* dark green like terminals */
+    -fx-text-fill: #39ff14;          /* neon green text */
+    -fx-padding: 5px 10px;
+    -fx-border-color: #39ff14;
+    -fx-border-width: 2px;
+    -fx-font-family: "Consolas", monospace;
+    -fx-font-size: 12px;
+    -fx-background-radius: 5px;
+    -fx-border-radius: 5px;
+}
