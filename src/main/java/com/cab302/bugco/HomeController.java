@@ -9,6 +9,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
+import java.util.List;
 import java.util.Objects;
 
 public class HomeController {
@@ -17,6 +18,8 @@ public class HomeController {
     @FXML private TextArea leaderboardArea;
     @FXML private ImageView imageView;
     @FXML private Label welcomeLabel;
+
+    private final GameService game = GameService.getInstance();
 
     @FXML
     private void initialize() {
@@ -39,19 +42,50 @@ public class HomeController {
                 "C:\\USER\\ADMIN> "
         ));
 
-        leaderboardArea.setText(String.join("\n",
+//        leaderboardArea.setText(String.join("\n",
+//                "C:\\USER\\ADMIN> INITIALISING LEADERBOARD..",
+//                "",
+//                "! EASY CHALLENGE !",
+//                " > 1ST  NORMAN",
+//                " > 2ND  BEEBOP123",
+//                " > 3RD  MR.RUFUS",
+//                "",
+//                "! HARD CHALLENGE !",
+//                " > 1ST  NORMAN",
+//                " > 2ND  MR.RUFUS",
+//                " > 3RD  BEEBOP123"
+//        ));
+        refreshLeaderboard();
+    }
+
+    private void refreshLeaderboard() {
+        // GET EASY LINES FROM SERVICE
+        List<String> easy = game.getLeaderboardLines(10);
+        String easyBlock = String.join("\n",
                 "C:\\USER\\ADMIN> INITIALISING LEADERBOARD..",
                 "",
-                "! EASY CHALLENGE !",
+                "! EASY CHALLENGE !"
+        ) + (easy.isEmpty()
+                ? "\n > NO SCORES YET"
+                : "\n" + String.join("\n", easy)
+        );
+
+        String mediumBlock = String.join("\n",
+                "",
+                "! MEDIUM CHALLENGE !",
                 " > 1ST  NORMAN",
                 " > 2ND  BEEBOP123",
-                " > 3RD  MR.RUFUS",
+                " > 3RD  MR.RUFUS"
+        );
+
+        String hardBlock = String.join("\n",
                 "",
                 "! HARD CHALLENGE !",
                 " > 1ST  NORMAN",
                 " > 2ND  MR.RUFUS",
                 " > 3RD  BEEBOP123"
-        ));
+        );
+        leaderboardArea.setText(easyBlock + mediumBlock + hardBlock);
     }
 
     @FXML
