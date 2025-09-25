@@ -1,4 +1,13 @@
 package com.cab302.bugco;
 
-public record Challenge(int id, Difficulty difficulty, String prompt, String correctAnswer, int basePoints) {
-}
+// one question item
+public record Challenge(
+        long id,
+        Difficulty difficulty,
+        int ordinal,
+        String title,
+        String prompt,
+        String buggyCode,
+        String correctAnswer,
+        int basePoints
+) {}
