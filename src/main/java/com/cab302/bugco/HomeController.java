@@ -16,13 +16,48 @@ import javafx.scene.layout.Pane;
 
 import java.util.Objects;
 
+import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;import com.cab302.bugco.db.Database;
+import com.cab302.bugco.db.Database;
+
+import com.cab302.bugco.Players;
+
 public class HomeController {
 
-    @FXML private TextArea terminalArea;
-    @FXML private TextArea leaderboardArea;
-    @FXML private Pane imagePane;
-    @FXML private ImageView imageView;
-    @FXML private Label welcomeLabel;
+    @FXML
+    private TextArea terminalArea;
+    @FXML
+    private TextArea leaderboardArea;
+    @FXML
+    private Pane imagePane;
+    @FXML
+    private ImageView imageView;
+    @FXML
+    private Label welcomeLabel;
+
+    private ObservableList<Players> players = FXCollections.observableArrayList();
+
+    @FXML
+    private ImageView logoImage;
+
+    @FXML
+    private TableView<Players> leaderboardTable;
+
+    @FXML
+    private TableColumn<Players, String> usernameColumn;
+
+    @FXML
+    private TableColumn<Players, String> achievementColumn;
+
 
     @FXML
     private void initialize() {
@@ -55,20 +90,15 @@ public class HomeController {
                 "C:\\USER\\ADMIN> "
         ));
 
-        leaderboardArea.setText(String.join("\n",
-                "C:\\USER\\ADMIN> INITIALISING LEADERBOARD..",
-                "",
-                "! EASY CHALLENGE !",
-                " > 1ST  NORMAN",
-                " > 2ND  BEEBOP123",
-                " > 3RD  MR.RUFUS",
-                "",
-                "! HARD CHALLENGE !",
-                " > 1ST  NORMAN",
-                " > 2ND  MR.RUFUS",
-                " > 3RD  BEEBOP123"
-        ));
+
+        // Setup TableView columns
+        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        achievementColumn.setCellValueFactory(new PropertyValueFactory<>("achievement"));
+
+        leaderboardTable.setItems(players);
+
     }
+
 
     @FXML
     private void onStart(ActionEvent event) {
@@ -96,14 +126,17 @@ public class HomeController {
         }
     }
 
+
     private void appendTerminal(String line) {
         terminalArea.appendText("\n" + line);
     }
+
 
     public void onGameInfo(ActionEvent actionEvent) {
         appendTerminal("Find all the bugs... before they find you.");
         // TODO: navigate to game info
     }
+
 
     @FXML
     private void onLogout() {
@@ -130,4 +163,52 @@ public class HomeController {
             e.printStackTrace();
         }
     }
+
+
+    public List<Players> getPlayers() {
+        return new ArrayList<>(players);
+    }
+
+
+    public boolean isEmpty() {
+        return players.isEmpty();
+    }
+
+
+    public void addPlayer(String username, String achievement) {
+        if (username == null || username.isEmpty()) throw new IllegalArgumentException();
+
+
+        for (Players p : players) {
+            if (p.getUsername().equals(username)) {
+                p.setAchievement(achievement);
+                return;
+            }
+        }
+
+
+        players.add(new Players(username, achievement));
+    }
+
+
+    private void loadPlayersFromDB() {
+        players.clear();
+        List<Players> dbPlayers = Database.getAllPlayers();
+        players.addAll(dbPlayers);
+    }
+
+
+    public void updateAchievement(String username, String newAchievement) {
+        for (Players p : players) {
+            if (p.getUsername().equals(username)) {
+                p.setAchievement(newAchievement);
+                leaderboardTable.refresh();
+                Database.updatePlayerAchievement(username, newAchievement);
+                break;
+            }
+        }
+    }
+
 }
+
+

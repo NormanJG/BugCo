@@ -58,13 +58,28 @@
                         <Label text="BUGCO  INDUSTRIES ™  LEADERBOARD" styleClass="panel-title"/>
                     </HBox>
 
-                    <StackPane styleClass="panel-body" VBox.vgrow="ALWAYS" maxHeight="Infinity">
-                        <TextArea fx:id="leaderboardArea" editable="false"
-                                  styleClass="terminal-area"
-                                  wrapText="true"
-                                  VBox.vgrow="ALWAYS" maxHeight="Infinity"/>
-                    </StackPane>
+
+
+
+
+
+
+
+                    <TableView fx:id="leaderboardTable" prefWidth="600" prefHeight="400"
+                               VBox.vgrow="ALWAYS"
+                               style="-fx-background-color: black; -fx-border-color: #18f018; -fx-border-width: 3;">
+                        <columns>
+                            <TableColumn fx:id="usernameColumn" text="Username" prefWidth="400"/>
+                            <TableColumn fx:id="achievementColumn" text="Achievement" prefWidth="200"/>
+                        </columns>
+                    </TableView>
                 </VBox>
+
+
+
+
+
+
 
                 <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2"
                       spacing="8" styleClass="panel" maxHeight="Infinity" maxWidth="Infinity" VBox.vgrow="ALWAYS">
