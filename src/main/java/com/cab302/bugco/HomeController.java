@@ -2,14 +2,15 @@ package com.cab302.bugco;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.Node;
 import javafx.stage.Stage;
-import com.cab302.bugco.BugcoTerminalApp;
 
 import java.util.Objects;
 
@@ -22,7 +23,8 @@ public class HomeController {
 
     @FXML
     private void initialize() {
-        Image img = new Image(Objects.requireNonNull(getClass().getResource("image.png")).toExternalForm());
+        Image img = new Image(Objects.requireNonNull(
+                getClass().getResource("image.png")).toExternalForm());
         if (imageView != null) imageView.setImage(img);
 
         if (welcomeLabel != null) {
@@ -61,10 +63,22 @@ public class HomeController {
         appendTerminal("Initialising hacking protocols... stand by.");
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        // Launch BugcoTerminalApp in the same Stage
-        BugcoTerminalApp app = new BugcoTerminalApp();
         try {
-            app.start(stage);
+            // ✅ Pass the logged-in user into the constructor
+            String currentUser = Session.isLoggedIn() ? Session.getCurrentUser() : "Guest";
+            BugcoTerminalApp app = new BugcoTerminalApp(currentUser);
+
+            Parent terminalRoot = app.createContent(); // ✅ no args here
+            Scene scene = new Scene(terminalRoot, 1400, 900);
+
+            // attach stylesheet
+            String css = Objects.requireNonNull(
+                    getClass().getResource("/terminal-styles.css")
+            ).toExternalForm();
+            scene.getStylesheets().add(css);
+
+            stage.setScene(scene);
+            stage.show();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -87,18 +101,19 @@ public class HomeController {
             var url = getClass().getResource("/com/cab302/bugco/login-view.fxml");
             if (url == null) throw new IllegalStateException("login-view.fxml not found on classpath");
 
-            var root = javafx.fxml.FXMLLoader.load(url);
+            var root = FXMLLoader.load(url);
 
-            javafx.scene.Scene scene = terminalArea.getScene();
+            Scene scene = terminalArea.getScene();
             scene.setRoot((Parent) root);
 
             var css = getClass().getResource("/com/cab302/bugco/styles.css");
             if (css != null) {
                 String cssUrl = css.toExternalForm();
-                if (!scene.getStylesheets().contains(cssUrl)) scene.getStylesheets().add(cssUrl);
+                if (!scene.getStylesheets().contains(cssUrl))
+                    scene.getStylesheets().add(cssUrl);
             }
 
-            ((javafx.stage.Stage) scene.getWindow()).setTitle("BugCo – Login");
+            ((Stage) scene.getWindow()).setTitle("BugCo – Login");
         } catch (Exception e) {
             e.printStackTrace();
         }

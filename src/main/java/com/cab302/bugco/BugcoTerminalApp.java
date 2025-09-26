@@ -1,13 +1,14 @@
 package com.cab302.bugco;
 
+import com.cab302.bugco.db.ProgressDAO;
 import javafx.animation.PauseTransition;
-import javafx.application.Application;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
@@ -17,68 +18,63 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Node;
 
 import java.io.InputStream;
 import java.util.*;
 
-public class BugcoTerminalApp extends Application {
+public class BugcoTerminalApp {
 
-    // State variables using JavaFX Properties
+    // Passed in from the main app
+    private final String username;
+
+    public BugcoTerminalApp(String username) {
+        this.username = username;
+    }
+
+    // State
     private final IntegerProperty selectedQuestion = new SimpleIntegerProperty(1);
     private final StringProperty difficulty = new SimpleStringProperty("Easy");
     private final StringProperty codeAnswer = new SimpleStringProperty("");
 
-    // UI Components
+    // UI refs
     private TextArea codeAnswerArea;
     private Label questionTitleLabel;
     private Label difficultyBadgeLabel;
     private ComboBox<String> difficultyCombo;
     private List<ToggleButton> questionButtons;
-    private Label hintLabel; // inline hint terminal
-    private Question currentQuestion; // track current question
-    private Button submitButton; // need reference for dynamic text changes
+    private Label hintLabel;
+    private Question currentQuestion;
+    private Button submitButton;
 
     // Data
     private Map<String, List<Question>> questionsByDifficulty;
     private final Map<String, Set<Integer>> solvedQuestionsByDifficulty = new HashMap<>();
     private final Map<String, Map<Integer, String>> solvedAnswersByDifficulty = new HashMap<>();
 
-    // Question model class
+    // Model
     public static class Question {
         private final int id;
         private final String title;
         private final String difficulty;
-
         public Question(int id, String title, String difficulty) {
-            this.id = id;
-            this.title = title;
-            this.difficulty = difficulty;
+            this.id = id; this.title = title; this.difficulty = difficulty;
         }
-
         public int getId() { return id; }
         public String getTitle() { return title; }
         public String getDifficulty() { return difficulty; }
     }
 
-    @Override
-    public void start(Stage primaryStage) {
+    // Entry point for HomeController
+    public Parent createContent() {
         initializeData();
 
         VBox root = new VBox();
         root.getStyleClass().add("root-terminal");
 
-        // Header Banner
         HBox header = createHeader();
-
-        // Main content area
         HBox mainContent = new HBox();
-
-        // Left sidebar
         VBox sidebar = createSidebar();
-
-        // Main content panel
         VBox contentPanel = createContentPanel();
 
         mainContent.getChildren().addAll(sidebar, contentPanel);
@@ -87,41 +83,30 @@ public class BugcoTerminalApp extends Application {
         root.getChildren().addAll(header, mainContent);
         VBox.setVgrow(mainContent, Priority.ALWAYS);
 
-        Scene scene = new Scene(root, 1400, 900);
-
-        // Load CSS
-        try {
-            String cssPath = getClass().getResource("/terminal-styles.css").toExternalForm();
-            scene.getStylesheets().add(cssPath);
-        } catch (Exception e) {
-            System.out.println("Warning: Could not load terminal-styles.css - " + e.getMessage());
-        }
-
-        primaryStage.setTitle("BUGCO INDUSTRIES™ - CODE FIXING TERMINAL");
-        primaryStage.setScene(scene);
-        primaryStage.setMinWidth(1200);
-        primaryStage.setMinHeight(800);
-        primaryStage.show();
-
-        // Initialize UI state and bind properties
         initializeBindings();
-        rebuildSidebar();
-        updateQuestionDisplay();
+        // NOTE: rebuildSidebar() + updateQuestionDisplay() are triggered safely later
+
+        return root;
     }
 
-    private void initializeData() {
-        questionsByDifficulty = new HashMap<>();
+    // ---------- helpers ----------
 
+    private void initializeData() {
+        // Generate dummy questions
+        questionsByDifficulty = new HashMap<>();
         for (String diff : List.of("Easy", "Medium", "Hard")) {
             List<Question> set = new ArrayList<>();
-            for (int i = 1; i <= 9; i++) {
-                set.add(new Question(i, diff + " Question " + i, diff));
-            }
+            for (int i = 1; i <= 9; i++) set.add(new Question(i, diff + " Question " + i, diff));
             questionsByDifficulty.put(diff, set);
+        }
 
-            // Initialize solved maps per difficulty
-            solvedQuestionsByDifficulty.put(diff, new HashSet<>());
-            solvedAnswersByDifficulty.put(diff, new HashMap<>());
+        // Load saved progress from DB
+        Map<String, Map<Integer, String>> saved = ProgressDAO.loadProgress(username);
+
+        for (String diff : List.of("Easy", "Medium", "Hard")) {
+            Map<Integer, String> answers = saved.getOrDefault(diff, Map.of());
+            solvedQuestionsByDifficulty.put(diff, new HashSet<>(answers.keySet()));
+            solvedAnswersByDifficulty.put(diff, new HashMap<>(answers));
         }
 
         questionButtons = new ArrayList<>();
@@ -134,18 +119,13 @@ public class BugcoTerminalApp extends Application {
         header.setPadding(new Insets(12, 16, 12, 16));
         header.setSpacing(20);
 
-        HBox leftSection = new HBox();
+        HBox leftSection = new HBox(10);
         leftSection.setAlignment(Pos.CENTER_LEFT);
-        leftSection.setSpacing(10);
 
-        HBox dots = new HBox();
-        dots.setSpacing(3);
-        Circle redDot = new Circle(6);
-        redDot.getStyleClass().add("dot-red");
-        Circle amberDot = new Circle(6);
-        amberDot.getStyleClass().add("dot-amber");
-        Circle greenDot = new Circle(6);
-        greenDot.getStyleClass().add("dot-green");
+        HBox dots = new HBox(3);
+        Circle redDot = new Circle(6);   redDot.getStyleClass().add("dot-red");
+        Circle amberDot = new Circle(6); amberDot.getStyleClass().add("dot-amber");
+        Circle greenDot = new Circle(6); greenDot.getStyleClass().add("dot-green");
         dots.getChildren().addAll(redDot, amberDot, greenDot);
 
         Label title = new Label("BUGCO INDUSTRIES™ - CODE FIXING TERMINAL");
@@ -158,7 +138,6 @@ public class BugcoTerminalApp extends Application {
 
         header.getChildren().addAll(leftSection, version);
         HBox.setHgrow(leftSection, Priority.ALWAYS);
-
         return header;
     }
 
@@ -174,13 +153,12 @@ public class BugcoTerminalApp extends Application {
         titleLabel.getStyleClass().add("panel-title");
         titleBar.getChildren().add(titleLabel);
 
-        VBox body = new VBox();
+        VBox body = new VBox(24);
         body.getStyleClass().add("panel-body");
         body.setPadding(new Insets(12));
-        body.setSpacing(24);
 
-        VBox usernameSection = new VBox();
-        usernameSection.setSpacing(8);
+        // Username
+        VBox usernameSection = new VBox(8);
         Label usernameLabel = new Label("USERNAME");
         usernameLabel.getStyleClass().add("terminal-label");
 
@@ -189,14 +167,13 @@ public class BugcoTerminalApp extends Application {
         usernameDisplay.setPadding(new Insets(12));
         usernameDisplay.setAlignment(Pos.CENTER_LEFT);
 
-        Label usernameText = new Label("Hanan");
+        Label usernameText = new Label(username);
         usernameText.getStyleClass().add("terminal-label");
         usernameDisplay.getChildren().add(usernameText);
-
         usernameSection.getChildren().addAll(usernameLabel, usernameDisplay);
 
-        VBox logoSection = new VBox();
-        logoSection.setSpacing(8);
+        // Logo
+        VBox logoSection = new VBox(8);
         Label logoLabel = new Label("LOGO");
         logoLabel.getStyleClass().add("terminal-label");
 
@@ -206,8 +183,7 @@ public class BugcoTerminalApp extends Application {
         logoContainer.setAlignment(Pos.CENTER);
         logoContainer.setPrefHeight(200);
 
-        try {
-            InputStream logoStream = getClass().getResourceAsStream("/com/cab302/bugco/image.png");
+        try (InputStream logoStream = getClass().getResourceAsStream("/com/cab302/bugco/image.png")) {
             if (logoStream != null) {
                 Image logoImage = new Image(logoStream);
                 ImageView logoImageView = new ImageView(logoImage);
@@ -224,8 +200,8 @@ public class BugcoTerminalApp extends Application {
 
         logoSection.getChildren().addAll(logoLabel, logoContainer);
 
-        VBox questionsSection = new VBox();
-        questionsSection.setSpacing(8);
+        // Questions placeholder
+        VBox questionsSection = new VBox(8);
         Label questionsLabel = new Label("QUESTIONS:");
         questionsLabel.getStyleClass().add("terminal-label");
         questionsSection.getChildren().add(questionsLabel);
@@ -233,7 +209,6 @@ public class BugcoTerminalApp extends Application {
 
         body.getChildren().addAll(usernameSection, logoSection, questionsSection);
         sidebar.getChildren().addAll(titleBar, body);
-
         return sidebar;
     }
 
@@ -241,7 +216,6 @@ public class BugcoTerminalApp extends Application {
         VBox contentPanel = new VBox();
         contentPanel.getStyleClass().add("terminal-panel");
 
-        // Title bar with menu aligned right
         HBox titleBar = new HBox();
         titleBar.getStyleClass().add("panel-titlebar");
         titleBar.setPadding(new Insets(8, 10, 8, 10));
@@ -254,22 +228,16 @@ public class BugcoTerminalApp extends Application {
 
         Button mainMenuButton = new Button("Main Menu");
         mainMenuButton.getStyleClass().add("primary-btn");
-
         mainMenuButton.setOnAction(e -> {
             try {
-                FXMLLoader loader = new FXMLLoader(
-                        getClass().getResource("/com/cab302/bugco/home-view.fxml")
-                );
+                FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/bugco/home-view.fxml"));
                 Parent homeRoot = loader.load();
 
                 Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
                 Scene scene = new Scene(homeRoot);
 
-                // ✅ Attach the main menu stylesheet
                 try {
-                    String cssPath = getClass()
-                            .getResource("/com/cab302/bugco/styles.css") // adjust this filename!
-                            .toExternalForm();
+                    String cssPath = getClass().getResource("/com/cab302/bugco/styles.css").toExternalForm();
                     scene.getStylesheets().add(cssPath);
                 } catch (Exception cssEx) {
                     System.out.println("Warning: could not load main menu CSS - " + cssEx.getMessage());
@@ -281,15 +249,14 @@ public class BugcoTerminalApp extends Application {
                 ex.printStackTrace();
             }
         });
+
         titleBar.getChildren().addAll(titleLabel, spacer, mainMenuButton);
 
-        VBox body = new VBox();
+        VBox body = new VBox(24);
         body.getStyleClass().add("panel-body");
         body.setPadding(new Insets(12));
-        body.setSpacing(24);
 
-        VBox difficultySection = new VBox();
-        difficultySection.setSpacing(8);
+        VBox difficultySection = new VBox(8);
         Label difficultyLabel = new Label("DIFFICULTY (Easy/Medium/Hard)");
         difficultyLabel.getStyleClass().add("terminal-label");
 
@@ -308,29 +275,24 @@ public class BugcoTerminalApp extends Application {
         VBox.setVgrow(codeSection, Priority.ALWAYS);
 
         contentPanel.getChildren().addAll(titleBar, body);
-
         return contentPanel;
     }
 
     private VBox createQuestionArea() {
-        VBox questionArea = new VBox();
-        questionArea.setSpacing(16);
+        VBox questionArea = new VBox(16);
 
-        HBox questionHeader = new HBox();
-        questionHeader.setSpacing(8);
+        HBox questionHeader = new HBox(8);
         questionHeader.setAlignment(Pos.CENTER_LEFT);
 
         Label questionLabel = new Label("QUESTION");
         questionLabel.getStyleClass().add("terminal-label");
         questionHeader.getChildren().add(questionLabel);
 
-        VBox questionContent = new VBox();
+        VBox questionContent = new VBox(12);
         questionContent.getStyleClass().add("terminal-panel");
         questionContent.setPadding(new Insets(16));
-        questionContent.setSpacing(12);
 
-        HBox badgeBox = new HBox();
-        badgeBox.setSpacing(8);
+        HBox badgeBox = new HBox(8);
 
         Label questionBadge = new Label();
         questionBadge.getStyleClass().add("question-badge");
@@ -339,7 +301,6 @@ public class BugcoTerminalApp extends Application {
         difficultyBadgeLabel = new Label();
         difficultyBadgeLabel.getStyleClass().add("question-badge");
 
-        // Hint button + inline terminal
         Button hintButton = new Button("?");
         hintButton.getStyleClass().add("hint-button");
 
@@ -351,8 +312,7 @@ public class BugcoTerminalApp extends Application {
             if (currentQuestion != null) {
                 hintLabel.setVisible(!hintLabel.isVisible());
                 if (hintLabel.isVisible()) {
-                    int qId = currentQuestion.getId();
-                    hintLabel.setText("This is a hint for question " + qId);
+                    hintLabel.setText("This is a hint for question " + currentQuestion.getId());
                 }
             }
         });
@@ -369,16 +329,14 @@ public class BugcoTerminalApp extends Application {
     }
 
     private VBox createCodeSection() {
-        VBox codeSection = new VBox();
-        codeSection.setSpacing(16);
+        VBox codeSection = new VBox(16);
 
         Label codeLabel = new Label("REWRITE CODE WITHOUT BUGS");
         codeLabel.getStyleClass().add("terminal-label");
 
-        VBox codeContent = new VBox();
+        VBox codeContent = new VBox(16);
         codeContent.getStyleClass().add("terminal-panel");
         codeContent.setPadding(new Insets(16));
-        codeContent.setSpacing(16);
 
         codeAnswerArea = new TextArea();
         codeAnswerArea.getStyleClass().add("terminal-area");
@@ -394,7 +352,7 @@ public class BugcoTerminalApp extends Application {
 
         HBox buttonBox = new HBox();
         buttonBox.setAlignment(Pos.CENTER_RIGHT);
-        submitButton = new Button("Submit"); // assign to field for dynamic text
+        submitButton = new Button("Submit");
         submitButton.getStyleClass().add("primary-btn");
         submitButton.setOnAction(e -> handleSubmit());
         buttonBox.getChildren().add(submitButton);
@@ -406,16 +364,16 @@ public class BugcoTerminalApp extends Application {
     }
 
     private void initializeBindings() {
-        selectedQuestion.addListener((obs, oldVal, newVal) -> updateQuestionDisplay());
-
-        difficulty.addListener((obs, oldVal, newVal) -> {
+        selectedQuestion.addListener((obs, o, n) -> updateQuestionDisplay());
+        difficulty.addListener((obs, o, n) -> {
             rebuildSidebar();
             selectedQuestion.set(1);
         });
     }
 
     private void rebuildSidebar() {
-        VBox sidebar = (VBox) ((HBox) ((VBox) ((Scene) questionTitleLabel.getScene()).getRoot()).getChildren().get(1)).getChildren().get(0);
+        VBox sidebar = (VBox) ((HBox) ((VBox) ((Scene) questionTitleLabel.getScene())
+                .getRoot()).getChildren().get(1)).getChildren().get(0);
         VBox body = (VBox) sidebar.getChildren().get(1);
         VBox questionsSection = (VBox) body.lookup("#questions-section");
 
@@ -442,10 +400,8 @@ public class BugcoTerminalApp extends Application {
             final int questionId = q.getId();
             btn.setOnAction(e -> selectedQuestion.set(questionId));
 
-            if (solvedSet.contains(q.getId())) {
-                if (!btn.getStyleClass().contains("correct")) {
-                    btn.getStyleClass().add("correct");
-                }
+            if (solvedSet.contains(q.getId()) && !btn.getStyleClass().contains("correct")) {
+                btn.getStyleClass().add("correct");
             }
 
             questionButtons.add(btn);
@@ -466,7 +422,6 @@ public class BugcoTerminalApp extends Application {
                 .filter(q -> q.getId() == selectedQuestion.get())
                 .findFirst()
                 .orElse(null);
-
         if (currentQuestion == null) return;
 
         questionTitleLabel.setText(currentQuestion.getTitle());
@@ -486,38 +441,33 @@ public class BugcoTerminalApp extends Application {
             codeAnswerArea.setPromptText("Write your bug-free code here...");
         }
 
-        // Hide hint when changing question
-        if (hintLabel != null) {
-            hintLabel.setVisible(false);
-        }
+        if (hintLabel != null) hintLabel.setVisible(false);
     }
 
     private void handleSubmit() {
         List<Question> currentSet = questionsByDifficulty.getOrDefault(difficulty.get(), List.of());
         Set<Integer> solvedSet = solvedQuestionsByDifficulty.get(difficulty.get());
         Map<Integer, String> answersMap = solvedAnswersByDifficulty.get(difficulty.get());
-
         if (currentSet.isEmpty()) return;
 
-        Question currentQuestion = currentSet.stream()
+        Question current = currentSet.stream()
                 .filter(q -> q.getId() == selectedQuestion.get())
-                .findFirst()
-                .orElse(null);
-
-        if (currentQuestion == null || solvedSet.contains(currentQuestion.getId())) return;
+                .findFirst().orElse(null);
+        if (current == null || solvedSet.contains(current.getId())) return;
 
         String input = codeAnswerArea.getText().trim();
         PauseTransition pause = new PauseTransition(Duration.seconds(3));
 
-        if (input.equals(String.valueOf(currentQuestion.getId()))) { // Correct answer check
-            solvedSet.add(currentQuestion.getId());
-            answersMap.put(currentQuestion.getId(), input);
+        if (input.equals(String.valueOf(current.getId()))) {
+            solvedSet.add(current.getId());
+            answersMap.put(current.getId(), input);
+
+            // ✅ Persist progress in DB
+            ProgressDAO.saveProgress(username, difficulty.get(), current.getId(), input);
 
             for (ToggleButton btn : questionButtons) {
-                if (btn.getText().equals("Q" + currentQuestion.getId())) {
-                    if (!btn.getStyleClass().contains("correct")) {
-                        btn.getStyleClass().add("correct");
-                    }
+                if (btn.getText().equals("Q" + current.getId())) {
+                    if (!btn.getStyleClass().contains("correct")) btn.getStyleClass().add("correct");
                     break;
                 }
             }
@@ -526,19 +476,14 @@ public class BugcoTerminalApp extends Application {
             pause.setOnFinished(e -> submitButton.setText("Submit"));
             pause.play();
 
-            int currentIndex = currentSet.indexOf(currentQuestion);
+            int currentIndex = currentSet.indexOf(current);
             int nextIndex = (currentIndex + 1) % currentSet.size();
             selectedQuestion.set(currentSet.get(nextIndex).getId());
-
         } else {
-            System.out.println("Incorrect answer for Q" + currentQuestion.getId());
+            System.out.println("Incorrect answer for Q" + current.getId());
             submitButton.setText("Try Again");
             pause.setOnFinished(e -> submitButton.setText("Submit"));
             pause.play();
         }
-    }
-
-    public static void main(String[] args) {
-        launch(args);
     }
 }
