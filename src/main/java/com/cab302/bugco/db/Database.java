@@ -48,6 +48,14 @@ public final class Database {
         try (Connection c = get(); Statement st = c.createStatement()) {
             st.executeUpdate(ddlUsers);
             st.executeUpdate(ddlProgress);
+
+
+            try {
+                st.executeUpdate("ALTER TABLE progress ADD COLUMN achievement TEXT");
+                System.out.println("DB: added missing 'achievement' column");
+            } catch (SQLException ignore) {
+
+            }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to init DB", e);
         }
@@ -65,8 +73,20 @@ public final class Database {
 
     public static List<Players> getAllPlayers() {
         List<Players> result = new ArrayList<>();
-        String sql = "SELECT username, achievement FROM progress"; // Or your table storing achievements
-        try (Connection conn = get(); Statement stmt = conn.createStatement(); ResultSet rs = stmt.executeQuery(sql)) {
+        String sql = """
+        SELECT p.username, p.achievement
+        FROM progress p
+        INNER JOIN (
+            SELECT username, MAX(id) AS latest_id
+            FROM progress
+            GROUP BY username
+        ) grouped ON p.username = grouped.username AND p.id = grouped.latest_id
+    """;
+
+        try (Connection conn = get();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+
             while (rs.next()) {
                 result.add(new Players(rs.getString("username"), rs.getString("achievement")));
             }
@@ -89,11 +109,3 @@ public final class Database {
 
     }
 }
-
-
-
-
-
-
-
-

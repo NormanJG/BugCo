@@ -96,7 +96,7 @@ public class HomeController {
         achievementColumn.setCellValueFactory(new PropertyValueFactory<>("achievement"));
 
         leaderboardTable.setItems(players);
-
+        loadPlayersFromDB();
     }
 
 
@@ -196,6 +196,10 @@ public class HomeController {
         players.addAll(dbPlayers);
     }
 
+    public void refreshLeaderboard() {
+        loadPlayersFromDB();
+        leaderboardTable.refresh();
+    }
 
     public void updateAchievement(String username, String newAchievement) {
         for (Players p : players) {
@@ -209,5 +213,3 @@ public class HomeController {
     }
 
 }
-
-

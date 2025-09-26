@@ -361,6 +361,9 @@ public class BugcoTerminalApp {
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/cab302/bugco/home-view.fxml"));
                 Parent homeRoot = loader.load();
 
+                HomeController controller = loader.getController();
+                controller.refreshLeaderboard();
+
                 Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
                 Scene scene = stage.getScene();
 
@@ -615,25 +618,26 @@ public class BugcoTerminalApp {
         boolean isCorrect = false;
 
         if (difficulty.get().equals("Easy") || difficulty.get().equals("Medium")) {
-
+            // For Easy/Medium, just match the question number
             isCorrect = input.equals(String.valueOf(current.getId()));
         } else if (difficulty.get().equals("Hard")) {
-
-            String correctAnswer = solvedAnswersByDifficulty
-                    .getOrDefault("Hard", Map.of())
-                    .get(current.getId());
-            if (correctAnswer != null && input.equals(correctAnswer)) {
-                isCorrect = true;
-            }
+            // For Hard, match the expected code solution
+            String expected = solvedAnswersByDifficulty.get("Hard").get(current.getId());
+            isCorrect = input.equals(expected);
         }
 
         if (isCorrect) {
             solvedSet.add(current.getId());
             answersMap.put(current.getId(), input);
 
-
+            // Persist progress in DB
             ProgressDAO.saveProgress(username, difficulty.get(), current.getId(), input);
 
+            // Update leaderboard achievement
+            String achievementText = "Solved Q" + current.getId() + " in " + difficulty.get();
+            Database.updatePlayerAchievement(username, achievementText);
+
+            // Mark sidebar button green
             for (ToggleButton btn : questionButtons) {
                 if (btn.getText().equals("Q" + current.getId())) {
                     if (!btn.getStyleClass().contains("correct")) btn.getStyleClass().add("correct");
@@ -641,14 +645,17 @@ public class BugcoTerminalApp {
                 }
             }
 
+            // Show success feedback
             submitButton.setText("Correct");
             pause.setOnFinished(e -> submitButton.setText("Submit"));
             pause.play();
 
+            // Auto-advance to next question
             int currentIndex = currentSet.indexOf(current);
             int nextIndex = (currentIndex + 1) % currentSet.size();
             selectedQuestion.set(currentSet.get(nextIndex).getId());
         } else {
+            // Show failure feedback
             System.out.println("Incorrect answer for Q" + current.getId());
             submitButton.setText("Try Again");
             pause.setOnFinished(e -> submitButton.setText("Submit"));
