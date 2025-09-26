@@ -57,4 +57,15 @@ class AuthControllerUsernameTest {
         assertFalse(call("Üser"));
         assertFalse(call("名字123"));
     }
+
+    @Test
+    void rejects_null() {
+        assertFalse(call(null));
+    }
+
+    @Test
+    void rejects_veryLongUsernames() {
+        String over200 = "A".repeat(201);
+        assertFalse(call(over200));
+    }
 }

@@ -10,7 +10,9 @@ import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.Node;
+import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import javafx.scene.layout.Pane;
 
 import java.util.Objects;
 
@@ -18,14 +20,24 @@ public class HomeController {
 
     @FXML private TextArea terminalArea;
     @FXML private TextArea leaderboardArea;
+    @FXML private Pane imagePane;
     @FXML private ImageView imageView;
     @FXML private Label welcomeLabel;
 
     @FXML
     private void initialize() {
-        Image img = new Image(Objects.requireNonNull(
-                getClass().getResource("image.png")).toExternalForm());
-        if (imageView != null) imageView.setImage(img);
+        Image img = new Image(Objects.requireNonNull(getClass().getResource("image.png")).toExternalForm());
+        imageView.setImage(img);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        imageView.setViewport(null);
+        imageView.fitWidthProperty().bind(imagePane.widthProperty());
+        imageView.setFitHeight(0);
+
+        Rectangle clip = new Rectangle();
+        clip.widthProperty().bind(imagePane.widthProperty());
+        clip.heightProperty().bind(imagePane.heightProperty());
+        imagePane.setClip(clip);
 
         if (welcomeLabel != null) {
             String who = Session.isLoggedIn() ? Session.getCurrentUser() : "Guest";

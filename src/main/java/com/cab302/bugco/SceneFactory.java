@@ -16,7 +16,7 @@ public final class SceneFactory {
                 "FXML not found: " + fxmlName);
         Parent root = FXMLLoader.load(url);
 
-        Scene scene = new Scene(root, HomeApplication.WIDTH, HomeApplication.HEIGHT);
+        Scene scene = new Scene(root);
         String css = Objects.requireNonNull(SceneFactory.class.getResource("styles.css"))
                 .toExternalForm();
         scene.getStylesheets().add(css);
