@@ -50,6 +50,18 @@ public class ProgressDAO {
         return result;
     }
 
+
+    public static void resetProgress(String username, String difficulty) {
+        String sql = "DELETE FROM progress WHERE username = ? AND difficulty = ?";
+        try (Connection c = Database.get(); PreparedStatement ps = c.prepareStatement(sql)) {
+            ps.setString(1, username);
+            ps.setString(2, difficulty);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     // READ – just solved IDs per difficulty
     public static Map<String, Set<Integer>> loadSolvedQuestions(String username) {
         Map<String, Set<Integer>> solved = new HashMap<>();

@@ -106,12 +106,12 @@ public class HomeController {
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         try {
-            // ✅ Pass the logged-in user into the constructor
+
             String currentUser = Session.isLoggedIn() ? Session.getCurrentUser() : "Guest";
             BugcoTerminalApp app = new BugcoTerminalApp(currentUser);
 
-            Parent terminalRoot = app.createContent(); // ✅ no args here
-            Scene scene = new Scene(terminalRoot, 1400, 900);
+            Parent terminalRoot = app.createContent();
+            Scene scene = stage.getScene();
 
             // attach stylesheet
             String css = Objects.requireNonNull(
@@ -119,8 +119,7 @@ public class HomeController {
             ).toExternalForm();
             scene.getStylesheets().add(css);
 
-            stage.setScene(scene);
-            stage.show();
+            scene.setRoot(terminalRoot);
         } catch (Exception e) {
             e.printStackTrace();
         }

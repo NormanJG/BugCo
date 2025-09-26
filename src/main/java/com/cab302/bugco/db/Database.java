@@ -47,7 +47,7 @@ public final class Database {
 
         try (Connection c = get(); Statement st = c.createStatement()) {
             st.executeUpdate(ddlUsers);
-            st.executeUpdate(ddlProgress); // ✅ now this works
+            st.executeUpdate(ddlProgress);
         } catch (SQLException e) {
             throw new RuntimeException("Failed to init DB", e);
         }

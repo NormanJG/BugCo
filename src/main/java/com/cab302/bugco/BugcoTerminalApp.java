@@ -1,5 +1,6 @@
 package com.cab302.bugco;
 
+import com.cab302.bugco.db.Database;
 import com.cab302.bugco.db.ProgressDAO;
 import javafx.animation.PauseTransition;
 import javafx.beans.property.IntegerProperty;
@@ -41,6 +42,7 @@ public class BugcoTerminalApp {
     private TextArea codeAnswerArea;
     private Label questionTitleLabel;
     private Label difficultyBadgeLabel;
+    private Label questionDescriptionLabel;
     private ComboBox<String> difficultyCombo;
     private List<ToggleButton> questionButtons;
     private Label hintLabel;
@@ -56,12 +58,22 @@ public class BugcoTerminalApp {
     public static class Question {
         private final int id;
         private final String title;
+        private final String description; // buggy code or explanation
+        private final String hint;        // shown only when ? clicked
         private final String difficulty;
-        public Question(int id, String title, String difficulty) {
-            this.id = id; this.title = title; this.difficulty = difficulty;
+
+        public Question(int id, String title, String description, String hint, String difficulty) {
+            this.id = id;
+            this.title = title;
+            this.description = description;
+            this.hint = hint;
+            this.difficulty = difficulty;
         }
+
         public int getId() { return id; }
         public String getTitle() { return title; }
+        public String getDescription() { return description; }
+        public String getHint() { return hint; }
         public String getDifficulty() { return difficulty; }
     }
 
@@ -84,7 +96,9 @@ public class BugcoTerminalApp {
         VBox.setVgrow(mainContent, Priority.ALWAYS);
 
         initializeBindings();
-        // NOTE: rebuildSidebar() + updateQuestionDisplay() are triggered safely later
+        rebuildSidebar();
+        selectedQuestion.set(1);   // make sure Q1 is active
+        updateQuestionDisplay();
 
         return root;
     }
@@ -92,25 +106,123 @@ public class BugcoTerminalApp {
     // ---------- helpers ----------
 
     private void initializeData() {
-        // Generate dummy questions
         questionsByDifficulty = new HashMap<>();
-        for (String diff : List.of("Easy", "Medium", "Hard")) {
+
+        // Easy & Medium placeholders
+        for (String diff : List.of("Easy", "Medium")) {
             List<Question> set = new ArrayList<>();
-            for (int i = 1; i <= 9; i++) set.add(new Question(i, diff + " Question " + i, diff));
+            for (int i = 1; i <= 9; i++) {
+                set.add(new Question(
+                        i,
+                        diff + " Question " + i,
+                        "Buggy code for " + diff + " question " + i,
+                        "Hint for " + diff + " question " + i,
+                        diff
+                ));
+            }
             questionsByDifficulty.put(diff, set);
         }
 
+        // Hard difficulty: full questions
+        List<Question> hardSet = new ArrayList<>();
+        hardSet.add(new Question(
+                1,
+                "Fix off-by-one error in loop printing 1 to 10",
+                "for (int i = 0; i < 10; i++) {\n    System.out.println(i);\n}",
+                "Expected output: numbers 1 through 10 (inclusive).",
+                "Hard"
+        ));
+        hardSet.add(new Question(
+                2,
+                "Fix NullPointerException when accessing string length",
+                "String s = null;\nSystem.out.println(s.length());",
+                "Hint: `s` must reference a valid String before calling `length()`.",
+                "Hard"
+        ));
+        hardSet.add(new Question(
+                3,
+                "Fix string comparison to check equality correctly",
+                "String s = \"hello\";\nif (s == \"hello\") {\n    System.out.println(\"Match!\");\n}",
+                "Hint: Use .equals() for string comparison in Java.",
+                "Hard"
+        ));
+        hardSet.add(new Question(
+                4,
+                "Fix integer division so result is 2.5",
+                "int a = 5, b = 2;\nSystem.out.println(a / b);",
+                "Hint: Cast one operand to double before dividing.",
+                "Hard"
+        ));
+        hardSet.add(new Question(
+                5,
+                "Fix array loop to avoid ArrayIndexOutOfBoundsException",
+                "int[] nums = {1,2,3};\nfor (int i = 0; i <= nums.length; i++) {\n    System.out.println(nums[i]);\n}",
+                "Hint: Use i < nums.length, not <=.",
+                "Hard"
+        ));
+        hardSet.add(new Question(
+                6,
+                "Fix immutable string bug so it prints HELLO",
+                "String s = \"hello\";\ns.toUpperCase();\nSystem.out.println(s);",
+                "Hint: Strings are immutable; assign the result back to s.",
+                "Hard"
+        ));
+        hardSet.add(new Question(
+                7,
+                "Fix floating point equality check for 0.1 + 0.2",
+                "if (0.1 + 0.2 == 0.3) {\n    System.out.println(\"Equal\");\n}",
+                "Hint: Compare doubles using a tolerance (Math.abs difference).",
+                "Hard"
+        ));
+        hardSet.add(new Question(
+                8,
+                "Fix concurrency bug so counter increments are thread-safe",
+                "class Counter {\n    private int count = 0;\n    public void increment() {\n        count++;\n    }\n}",
+                "Hint: Use synchronized methods or AtomicInteger.",
+                "Hard"
+        ));
+        hardSet.add(new Question(
+                9,
+                "Fix file handling so file closes properly after reading",
+                "BufferedReader br = new BufferedReader(new FileReader(\"data.txt\"));\nString line = br.readLine();\nSystem.out.println(line);\n// missing close",
+                "Hint: Use try-with-resources to auto-close the reader.",
+                "Hard"
+        ));
+
+        questionsByDifficulty.put("Hard", hardSet);
+
         // Load saved progress from DB
         Map<String, Map<Integer, String>> saved = ProgressDAO.loadProgress(username);
-
         for (String diff : List.of("Easy", "Medium", "Hard")) {
             Map<Integer, String> answers = saved.getOrDefault(diff, Map.of());
             solvedQuestionsByDifficulty.put(diff, new HashSet<>(answers.keySet()));
             solvedAnswersByDifficulty.put(diff, new HashMap<>(answers));
         }
 
+        Map<Integer, String> hardAnswers = solvedAnswersByDifficulty.get("Hard");
+        if (hardAnswers != null) {
+            hardAnswers.putIfAbsent(1,
+                    "for (int i = 1; i <= 10; i++) {\n    System.out.println(i);\n}");
+            hardAnswers.putIfAbsent(2,
+                    "String s = \"\";\nSystem.out.println(s.length());");
+            hardAnswers.putIfAbsent(3,
+                    "String s = \"hello\";\nif (s.equals(\"hello\")) {\n    System.out.println(\"Match!\");\n}");
+            hardAnswers.putIfAbsent(4,
+                    "int a = 5, b = 2;\nSystem.out.println((double) a / b);");
+            hardAnswers.putIfAbsent(5,
+                    "int[] nums = {1,2,3};\nfor (int i = 0; i < nums.length; i++) {\n    System.out.println(nums[i]);\n}");
+            hardAnswers.putIfAbsent(6,
+                    "String s = \"hello\";\ns = s.toUpperCase();\nSystem.out.println(s);");
+            hardAnswers.putIfAbsent(7,
+                    "if (Math.abs((0.1 + 0.2) - 0.3) < 1e-9) {\n    System.out.println(\"Equal\");\n}");
+            hardAnswers.putIfAbsent(8,
+                    "class Counter {\n    private int count = 0;\n    public synchronized void increment() {\n        count++;\n    }\n}");
+            hardAnswers.putIfAbsent(9,
+                    "try (BufferedReader br = new BufferedReader(new FileReader(\"data.txt\"))) {\n    String line = br.readLine();\n    System.out.println(line);\n} catch (IOException e) {\n    e.printStackTrace();\n}");
+        }
         questionButtons = new ArrayList<>();
     }
+
 
     private HBox createHeader() {
         HBox header = new HBox();
@@ -140,11 +252,11 @@ public class BugcoTerminalApp {
         HBox.setHgrow(leftSection, Priority.ALWAYS);
         return header;
     }
-
+    private VBox sidebarRef;
     private VBox createSidebar() {
-        VBox sidebar = new VBox();
-        sidebar.getStyleClass().add("terminal-panel");
-        sidebar.setPrefWidth(320);
+        sidebarRef = new VBox();
+        sidebarRef.getStyleClass().add("terminal-panel");
+        sidebarRef.setPrefWidth(320);
 
         HBox titleBar = new HBox();
         titleBar.getStyleClass().add("panel-titlebar");
@@ -207,9 +319,25 @@ public class BugcoTerminalApp {
         questionsSection.getChildren().add(questionsLabel);
         questionsSection.setId("questions-section");
 
-        body.getChildren().addAll(usernameSection, logoSection, questionsSection);
-        sidebar.getChildren().addAll(titleBar, body);
-        return sidebar;
+
+        VBox questionsContainer = new VBox(12);
+        questionsContainer.getChildren().addAll(questionsSection);
+
+
+        Button resetButton = new Button("Reset Questions");
+        resetButton.getStyleClass().add("danger-btn");
+        resetButton.setMaxWidth(Double.MAX_VALUE); // full width
+        resetButton.setOnAction(e -> resetProgressForCurrentDifficulty());
+
+        VBox resetSection = new VBox();
+        resetSection.setPadding(new Insets(12, 0, 0, 0));
+        resetSection.getChildren().add(resetButton);
+
+
+        body.getChildren().addAll(usernameSection, logoSection, questionsContainer, resetSection);
+
+        sidebarRef.getChildren().addAll(titleBar, body);
+        return sidebarRef;
     }
 
     private VBox createContentPanel() {
@@ -234,7 +362,7 @@ public class BugcoTerminalApp {
                 Parent homeRoot = loader.load();
 
                 Stage stage = (Stage) ((Node) e.getSource()).getScene().getWindow();
-                Scene scene = new Scene(homeRoot);
+                Scene scene = stage.getScene();
 
                 try {
                     String cssPath = getClass().getResource("/com/cab302/bugco/styles.css").toExternalForm();
@@ -243,8 +371,8 @@ public class BugcoTerminalApp {
                     System.out.println("Warning: could not load main menu CSS - " + cssEx.getMessage());
                 }
 
-                stage.setScene(scene);
-                stage.show();
+                scene.setRoot(homeRoot);
+
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -283,7 +411,6 @@ public class BugcoTerminalApp {
 
         HBox questionHeader = new HBox(8);
         questionHeader.setAlignment(Pos.CENTER_LEFT);
-
         Label questionLabel = new Label("QUESTION");
         questionLabel.getStyleClass().add("terminal-label");
         questionHeader.getChildren().add(questionLabel);
@@ -293,7 +420,6 @@ public class BugcoTerminalApp {
         questionContent.setPadding(new Insets(16));
 
         HBox badgeBox = new HBox(8);
-
         Label questionBadge = new Label();
         questionBadge.getStyleClass().add("question-badge");
         questionBadge.textProperty().bind(selectedQuestion.asString("Question %d"));
@@ -310,9 +436,11 @@ public class BugcoTerminalApp {
 
         hintButton.setOnAction(e -> {
             if (currentQuestion != null) {
-                hintLabel.setVisible(!hintLabel.isVisible());
-                if (hintLabel.isVisible()) {
-                    hintLabel.setText("This is a hint for question " + currentQuestion.getId());
+                if (!hintLabel.isVisible()) {
+                    hintLabel.setText(currentQuestion.getHint());
+                    hintLabel.setVisible(true);
+                } else {
+                    hintLabel.setVisible(false);
                 }
             }
         });
@@ -322,7 +450,11 @@ public class BugcoTerminalApp {
         questionTitleLabel = new Label();
         questionTitleLabel.getStyleClass().add("terminal-label");
 
-        questionContent.getChildren().addAll(badgeBox, questionTitleLabel);
+        questionDescriptionLabel = new Label(); // NEW
+        questionDescriptionLabel.getStyleClass().add("terminal-description");
+        questionDescriptionLabel.setWrapText(true);
+
+        questionContent.getChildren().addAll(badgeBox, questionTitleLabel, questionDescriptionLabel);
         questionArea.getChildren().addAll(questionHeader, questionContent);
 
         return questionArea;
@@ -365,16 +497,18 @@ public class BugcoTerminalApp {
 
     private void initializeBindings() {
         selectedQuestion.addListener((obs, o, n) -> updateQuestionDisplay());
+
         difficulty.addListener((obs, o, n) -> {
             rebuildSidebar();
             selectedQuestion.set(1);
+            updateQuestionDisplay();
         });
     }
 
     private void rebuildSidebar() {
-        VBox sidebar = (VBox) ((HBox) ((VBox) ((Scene) questionTitleLabel.getScene())
-                .getRoot()).getChildren().get(1)).getChildren().get(0);
-        VBox body = (VBox) sidebar.getChildren().get(1);
+        if (sidebarRef == null) return;
+
+        VBox body = (VBox) sidebarRef.getChildren().get(1);
         VBox questionsSection = (VBox) body.lookup("#questions-section");
 
         if (questionsSection.getChildren().size() > 1) {
@@ -413,6 +547,25 @@ public class BugcoTerminalApp {
         questionsSection.getChildren().add(questionsGrid);
     }
 
+
+    private void resetProgressForCurrentDifficulty() {
+        String diff = difficulty.get();
+
+        // Clear in-memory progress
+        solvedQuestionsByDifficulty.get(diff).clear();
+        solvedAnswersByDifficulty.get(diff).clear();
+
+        // Clear from database
+        ProgressDAO.resetProgress(username, diff);
+
+        // Refresh sidebar & question display
+        rebuildSidebar();
+        selectedQuestion.set(1);
+        updateQuestionDisplay();
+
+        System.out.println("Progress reset for " + username + " [" + diff + "]");
+    }
+
     private void updateQuestionDisplay() {
         List<Question> currentSet = questionsByDifficulty.getOrDefault(difficulty.get(), List.of());
         Set<Integer> solvedSet = solvedQuestionsByDifficulty.get(difficulty.get());
@@ -425,6 +578,7 @@ public class BugcoTerminalApp {
         if (currentQuestion == null) return;
 
         questionTitleLabel.setText(currentQuestion.getTitle());
+        questionDescriptionLabel.setText(currentQuestion.getDescription());
         difficultyBadgeLabel.setText(currentQuestion.getDifficulty());
 
         for (int i = 0; i < questionButtons.size(); i++) {
@@ -458,11 +612,26 @@ public class BugcoTerminalApp {
         String input = codeAnswerArea.getText().trim();
         PauseTransition pause = new PauseTransition(Duration.seconds(3));
 
-        if (input.equals(String.valueOf(current.getId()))) {
+        boolean isCorrect = false;
+
+        if (difficulty.get().equals("Easy") || difficulty.get().equals("Medium")) {
+
+            isCorrect = input.equals(String.valueOf(current.getId()));
+        } else if (difficulty.get().equals("Hard")) {
+
+            String correctAnswer = solvedAnswersByDifficulty
+                    .getOrDefault("Hard", Map.of())
+                    .get(current.getId());
+            if (correctAnswer != null && input.equals(correctAnswer)) {
+                isCorrect = true;
+            }
+        }
+
+        if (isCorrect) {
             solvedSet.add(current.getId());
             answersMap.put(current.getId(), input);
 
-            // ✅ Persist progress in DB
+
             ProgressDAO.saveProgress(username, difficulty.get(), current.getId(), input);
 
             for (ToggleButton btn : questionButtons) {
@@ -485,5 +654,14 @@ public class BugcoTerminalApp {
             pause.setOnFinished(e -> submitButton.setText("Submit"));
             pause.play();
         }
+    }
+
+    /**
+     * Normalize input for comparison:
+     * - Remove all spaces/tabs/newlines
+     * - Lowercase
+     */
+    private String normalize(String code) {
+        return code.replaceAll("\\s+", "").toLowerCase();
     }
 }
