@@ -8,4 +8,5 @@ module com.cab302.bugco {
 
     opens com.cab302.bugco to javafx.fxml;
     exports com.cab302.bugco;
+    exports com.cab302.bugco.db;
 }

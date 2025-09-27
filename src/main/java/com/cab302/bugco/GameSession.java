@@ -3,14 +3,8 @@ package com.cab302.bugco;
 import com.cab302.bugco.db.Database;
 import com.cab302.bugco.db.ProgressDAO;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.*;
 
-/**
- * Handles gameplay logic for a single user session.
- */
 public class GameSession {
 
     private final String username;
@@ -50,12 +44,13 @@ public class GameSession {
         expectedHardAnswers.put(7, "if (Math.abs((0.1 + 0.2) - 0.3) < 1e-9) {\n    System.out.println(\"Equal\");\n}");
         expectedHardAnswers.put(8, "class Counter {\n    private int count = 0;\n    public synchronized void increment() {\n        count++;\n    }\n}");
         expectedHardAnswers.put(9,
-                "try (BufferedReader br = new BufferedReader(new FileReader(\"data.txt\"))) {\n" +
-                        "    String line = br.readLine();\n" +
-                        "    System.out.println(line);\n" +
-                        "} catch (IOException e) {\n" +
-                        "    e.printStackTrace();\n" +
-                        "}");
+                """
+                        try (BufferedReader br = new BufferedReader(new FileReader("data.txt"))) {
+                            String line = br.readLine();
+                            System.out.println(line);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }""");
     }
 
     public GameSession(String username, Map<String, List<Question>> questionsByDifficulty) {
@@ -83,9 +78,6 @@ public class GameSession {
         return currentDifficulty;
     }
 
-    public Question getCurrentQuestion() {
-        return getQuestion(currentDifficulty, currentQuestionId);
-    }
 
     public Question getQuestion(String difficulty, int questionId) {
         return questionsByDifficulty
@@ -111,7 +103,7 @@ public class GameSession {
 
         if (solvedSet.contains(q.getId())) return false; // already solved
 
-        String expected = null;
+        String expected;
         boolean isCorrect = false;
 
         if ("Easy".equals(difficulty)) {
@@ -172,6 +164,9 @@ public class GameSession {
     }
 
     private String normalize(String code) {
-        return code.replaceAll("\\s+", "").toLowerCase();
+        if (code == null) return "";
+        return code
+                .replaceAll("\\s+", "")   // remove whitespace
+                .toLowerCase();           // ignore case
     }
 }
