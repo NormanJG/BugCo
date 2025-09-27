@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.cab302.bugco.AccountInfoController"
+      spacing="12" styleClass="panel" prefWidth="640">
+
+    <children>
+        <VBox spacing="8" alignment="CENTER_LEFT" styleClass="panel-body">
+            <HBox spacing="8" alignment="CENTER_LEFT" styleClass="panel-titlebar">
+                <Circle styleClass="dot-red" radius="6"/>
+                <Circle styleClass="dot-amber" radius="6"/>
+                <Circle styleClass="dot-green" radius="6"/>
+                <Label text="ACCOUNT SETTINGS" styleClass="panel-title"/>
+            </HBox>
+
+            <!-- Change Password -->
+            <TitledPane text="Change Password" expanded="true">
+                <content>
+                    <VBox spacing="8" styleClass="terminal-input">
+                        <PasswordField fx:id="currentPasswordField" promptText="Current password" styleClass="terminal-input"/>
+                        <PasswordField fx:id="newPasswordField"     promptText="New password" styleClass="terminal-input"/>
+                        <PasswordField fx:id="confirmPasswordField" promptText="Confirm new password" styleClass="terminal-input"/>
+
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Button text="CHANGE PASSWORD" onAction="#handleChangePassword" styleClass="primary-btn"/>
+                        </HBox>
+                    </VBox>
+                </content>
+            </TitledPane>
+
+            <!-- Delete Account -->
+            <TitledPane text="Delete Account" expanded="false">
+                <content>
+                    <VBox spacing="8" styleClass="terminal-input">
+                        <Label text="This action cannot be undone." styleClass="status-label"/>
+                        <PasswordField fx:id="deleteConfirmPasswordField" promptText="Enter password to confirm" styleClass="terminal-input"/>
+                        <HBox spacing="10" alignment="CENTER_RIGHT">
+                            <Button text="DELETE ACCOUNT" onAction="#handleDeleteAccount" styleClass="primary-btn"/>
+                        </HBox>
+                    </VBox>
+                </content>
+            </TitledPane>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="BACK" onAction="#handleBack" styleClass="amber-btn"/>
+            </HBox>
+        </VBox>
+    </children>
+</VBox>
+

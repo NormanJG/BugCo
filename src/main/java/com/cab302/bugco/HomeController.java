@@ -142,7 +142,26 @@ public class HomeController {
         }
     }
 
+
+    @FXML
+    private void AccountInfo() {
+        try {
+            var url = getClass().getResource("/com/cab302/bugco/account-info.fxml");
+            if (url == null) throw new IllegalStateException("account-info.fxml not found");
+            Parent root = javafx.fxml.FXMLLoader.load(url);
+            javafx.scene.Scene scene = terminalArea.getScene(); // or any @FXML node’s scene
+            scene.setRoot(root);
+            var css = getClass().getResource("/com/cab302/bugco/styles.css");
+            if (css != null && !scene.getStylesheets().contains(css.toExternalForm()))
+                scene.getStylesheets().add(css.toExternalForm());
+            ((javafx.stage.Stage) scene.getWindow()).setTitle("BugCo – Account");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public List<Players> getPlayers() { return new ArrayList<>(players); }
+  
     public boolean isEmpty() { return players.isEmpty(); }
 
     public void addPlayer(String username, String achievement) {
