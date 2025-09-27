@@ -63,19 +63,6 @@ public class UserDao {
         }
     }
 
-    public boolean updatePasswordHash(long id, String newHash) {
-        String sql = "UPDATE users SET password_hash = ? WHERE id = ?";
-        try (Connection c = Database.get();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setString(1, newHash);
-            ps.setLong(2, id);
-            int n = ps.executeUpdate();
-            return n == 1;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     public boolean updatePasswordHashByUsername(String username, String newHash) {
         String sql = "UPDATE users SET password_hash = ? WHERE username = ?";
         try (var c = Database.get(); var ps = c.prepareStatement(sql)) {
