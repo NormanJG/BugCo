@@ -15,8 +15,6 @@ public class DatabaseTestUtil {
         // Switch DB into in-memory mode
         Database.useInMemoryDatabase();
 
-        // Make sure schema exists
-        Database.init();
 
         // Clear tables and insert test user
         try (Connection conn = Database.get(); Statement st = conn.createStatement()) {

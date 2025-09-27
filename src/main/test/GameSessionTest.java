@@ -28,7 +28,7 @@ class GameSessionTest {
         session = new GameSession("testuser", questionsByDifficulty);
     }
 
-    // ---------------- Example Test ----------------
+    // ---------------- Test ----------------
     @Test
     void testHelloWorldAnswer() {
         // First run
@@ -84,4 +84,13 @@ class GameSessionTest {
         session.resetProgress("Medium");
         assertFalse(session.checkAnswer("Medium", 6, "C"));
     }
+
+    @Test
+    void testResetProgressAllowsRetry() {
+        assertTrue(session.checkAnswer("Medium", 4, "B"));
+        session.resetProgress("Medium");
+        assertTrue(session.checkAnswer("Medium", 4, "b"));
+    }
+
+
 }
