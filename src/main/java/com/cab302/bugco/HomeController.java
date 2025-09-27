@@ -132,7 +132,7 @@ public class HomeController {
 
 
     public void onGameInfo(ActionEvent actionEvent) {
-        appendTerminal("Find all the bugs... before they find you.");
+        appendTerminal("Welcome to BugCo Industries, a Java-based desktop application designed to test and improve your debugging skills through interactive code challenges. Built for CAB302, this project simulates a fun and competitive environment where users identify and fix bugs in Java code snippets of varying difficulty levels.");
         // TODO: navigate to game info
     }
 
