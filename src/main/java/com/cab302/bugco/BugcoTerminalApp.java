@@ -60,6 +60,13 @@ public class BugcoTerminalApp {
     private ComboBox<String> difficultyCombo;
     private VBox sidebarRef;
 
+    private Label pointsValueLabel;
+
+    // Points breakdown labels
+    private Label easyPtsLabel;
+    private Label mediumPtsLabel;
+    private Label hardPtsLabel;
+
     // Data
     private Map<String, List<Question>> questionsByDifficulty;
     private final Map<String, Set<Integer>> solvedQuestionsByDifficulty = new HashMap<>();
@@ -300,7 +307,35 @@ public class BugcoTerminalApp {
         renameBtn.getStyleClass().add("primary-btn");
         renameBtn.setOnAction(e -> renameUsernameOverlay(usernameText)); // in-app overlay
 
-        usernameSection.getChildren().addAll(usernameLabel, usernameDisplay, renameBtn);
+        // Points row
+        HBox pointsRow = new HBox(8);
+        Label pointsLabel = new Label("POINTS");
+        pointsLabel.getStyleClass().add("terminal-label");
+        pointsValueLabel = new Label();
+        pointsValueLabel.getStyleClass().add("terminal-label");
+        refreshPointsBadge();
+        Region pointsSpacer = new Region();
+        HBox.setHgrow(pointsSpacer, Priority.ALWAYS);
+        pointsRow.getChildren().addAll(pointsLabel, pointsSpacer, pointsValueLabel);
+
+        usernameSection.getChildren().setAll(
+                usernameLabel, usernameDisplay, pointsRow, renameBtn
+        );
+
+        // Per-difficulty breakdown
+        VBox breakdownBox = new VBox(4);
+        easyPtsLabel = new Label("Easy: 0");
+        mediumPtsLabel = new Label("Medium: 0");
+        hardPtsLabel = new Label("Hard: 0");
+        easyPtsLabel.getStyleClass().add("terminal-label");
+        mediumPtsLabel.getStyleClass().add("terminal-label");
+        hardPtsLabel.getStyleClass().add("terminal-label");
+        breakdownBox.getChildren().addAll(easyPtsLabel, mediumPtsLabel, hardPtsLabel);
+        refreshPointsBreakdown();
+
+        usernameSection.getChildren().setAll(
+                usernameLabel, usernameDisplay, pointsRow, breakdownBox, renameBtn
+        );
 
         // Logo
         VBox logoSection = new VBox(8);
@@ -346,10 +381,10 @@ public class BugcoTerminalApp {
         doneRow.getChildren().addAll(doneCountLabel, viewCompleted);
 
         // Reset
-        Button resetButton = new Button("Reset Questions");
+        Button resetButton = new Button("Reset All");
         resetButton.getStyleClass().add("danger-btn");
         resetButton.setMaxWidth(Double.MAX_VALUE);
-        resetButton.setOnAction(e -> resetProgressForCurrentDifficulty());
+        resetButton.setOnAction(e -> resetAllProgressAndPoints());
 
         VBox bodyContent = new VBox(
                 usernameSection, logoSection, questionsSection, doneRow, resetButton
@@ -635,6 +670,8 @@ public class BugcoTerminalApp {
                     Session.setCurrentUser(newName);
                     myState.setMyName(newName);
                     usernameText.setText(newName);
+
+                    refreshPointsBadge();
                     openOverlay(simpleOverlayContent("Success", "Username changed: " + oldName + " -> " + newName, true));
                 } else {
                     openOverlay(simpleOverlayContent("Rename Username", "Could not change username.", true));
@@ -703,21 +740,40 @@ public class BugcoTerminalApp {
 
         questionsSection.getChildren().add(questionsGrid);
         updateDoneCountLabel();
+        refreshPointsBreakdown();
     }
 
-    private void resetProgressForCurrentDifficulty() {
-        String diff = difficulty.get();
+    private void resetAllProgressAndPoints() {  // NEW
+        String user = myState.getMyName();
 
-        solvedQuestionsByDifficulty.get(diff).clear();
-        solvedAnswersByDifficulty.get(diff).clear();
+        // 1) Clear in-memory + DB progress for each difficulty
+        for (String diff : List.of("Easy", "Medium", "Hard")) {
+            solvedQuestionsByDifficulty
+                    .computeIfAbsent(diff, k -> new HashSet<>())
+                    .clear();
+            solvedAnswersByDifficulty
+                    .computeIfAbsent(diff, k -> new HashMap<>())
+                    .clear();
+            ProgressDAO.resetProgress(user, diff); // DB clear
+        }
 
-        ProgressDAO.resetProgress(myState.getMyName(), diff);
+        // 2) Zero the user's total points in DB
+        try {
+            int current = Database.getPointsForUser(user);
+            if (current != 0) {
+                Database.addPointsForUser(user, -current); // make total 0
+            }
+        } catch (Exception ignore) { /* if DB read fails, UI will show 0 next launch */ }
 
+        // 3) Rebuild UI & refresh labels
         rebuildSidebar();
         selectedQuestion.set(1);
         updateQuestionDisplay();
+        refreshPointsBadge();
+        refreshPointsBreakdown();
 
-        System.out.println("Progress reset for " + myState.getMyName() + " [" + diff + "]");
+        // 4) Audit line
+        Database.updatePlayerAchievement(user, "Reset all progress & points");
     }
 
     private void updateQuestionDisplay() {
@@ -733,7 +789,7 @@ public class BugcoTerminalApp {
 
         // header bits
         questionTitleLabel.setText(currentQuestion.getTitle());
-        // switch prompt style: code vs normal text for clarity
+        // switch prompt style
         questionDescriptionLabel.getStyleClass().removeAll("question-code");
         if (currentQuestion.getType() == AnswerType.TEXT) {
             questionDescriptionLabel.getStyleClass().add("question-code");
@@ -847,7 +903,7 @@ public class BugcoTerminalApp {
                 openOverlay(simpleOverlayContent("Submit", "Please write your answer first.", true));
                 return;
             }
-            isCorrect = input.equals(currentQuestion.getExpectedText());
+            isCorrect = isTextCorrect(currentQuestion, input);
             toSaveAnswer = input;
         }
 
@@ -868,6 +924,9 @@ public class BugcoTerminalApp {
             // award points
             int thePoints = pointsFor(difficulty.get());
             Database.addPointsForUser(myState.getMyName(), thePoints);
+
+            refreshPointsBadge();
+            refreshPointsBreakdown();
 
             // save a short achievement text
             String achievementText = "Solved Q" + currentQuestion.getId() + " in " + difficulty.get() + " (+" + thePoints + " pts)";
@@ -906,6 +965,59 @@ public class BugcoTerminalApp {
             longTimeWait.setOnFinished(e -> submitButton.setText("Submit"));
             longTimeWait.play();
         }
+    }
+
+    // Checker for text answers
+    private boolean isTextCorrect(Question q, String inputRaw) {
+        String expectedRaw = q.getExpectedText() == null ? "" : q.getExpectedText();
+        String input = canonical(inputRaw);
+        String expected = canonical(expectedRaw);
+
+        // direct canonical match
+        if (input.equals(expected)) return true;
+
+        // very small relaxations by title/id if needed
+        if ("Fix integer division to 2.5".equals(q.getTitle())) {
+            // Accept various casts or 5.0/2 patterns
+            if (input.contains("a") && input.contains("b")) {
+                if (input.contains("(double)a/b") || input.contains("a/(double)b") || input.contains("((double)a)/b"))
+                    return true;
+            }
+            if (input.contains("5.0/2") || input.contains("5d/2")) return true;
+        }
+        if ("Null check before length()".equals(q.getTitle())) {
+            if (input.contains("s=\"\"") && input.contains("length()")) return true;
+            if (input.contains("if(s!=null)") && input.contains("s.length()")) return true;
+        }
+        if ("Equals not ==".equals(q.getTitle())) {
+            if (input.contains("s.equals(\"hello\")")) return true;
+        }
+        if ("Array bounds".equals(q.getTitle())) {
+            if (input.contains("i<n.length")) return true;
+        }
+        if ("Off-by-one (1..10 inclusive)".equals(q.getTitle())) {
+            if (input.contains("i=1") && (input.contains("i<=10") || input.contains("i<11"))) return true;
+        }
+        if ("Immutable string toUpperCase()".equals(q.getTitle())) {
+            if (input.contains("s=s.toUpperCase()")) return true;
+        }
+        if ("Thread-safe increment".equals(q.getTitle())) {
+            if (input.contains("synchronized void inc()") || input.contains("AtomicInteger")) return true;
+        }
+
+        return false;
+    }
+
+    // collapse whitespace, remove most formatting differences
+    private String canonical(String s) {
+        return s.replace("\r", "")
+                .replace("\n", "")
+                .replace("\t", "")
+                .replace(" ", "")
+                .replaceAll(";+", ";")       // collapse ;; to ;
+                .replaceAll("\\{\\s*", "{")
+                .replaceAll("\\s*\\}", "}")
+                .trim();
     }
 
     private void moveToNextUnsolved() {
@@ -948,5 +1060,28 @@ public class BugcoTerminalApp {
         if ("Easy".equals(diff)) return 5;
         if ("Medium".equals(diff)) return 10;
         return 20; // Hard
+    }
+
+    // Points earned from solved set for a specific difficulty
+    private int earnedPointsFor(String diff) {
+        int solved = solvedQuestionsByDifficulty.getOrDefault(diff, Set.of()).size();
+        return solved * pointsFor(diff);
+    }
+
+    private void refreshPointsBadge() {
+        try {
+            int pts = Database.getPointsForUser(myState.getMyName());
+            if (pointsValueLabel != null) pointsValueLabel.setText(String.valueOf(pts));
+        } catch (Exception ignore) {
+            if (pointsValueLabel != null) pointsValueLabel.setText("0");
+        }
+    }
+
+    // Refresh per-difficulty labels
+    private void refreshPointsBreakdown() {
+        if (easyPtsLabel == null) return;
+        easyPtsLabel.setText("Easy: " + earnedPointsFor("Easy"));
+        mediumPtsLabel.setText("Medium: " + earnedPointsFor("Medium"));
+        hardPtsLabel.setText("Hard: " + earnedPointsFor("Hard"));
     }
 }
