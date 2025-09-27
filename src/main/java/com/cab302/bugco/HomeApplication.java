@@ -14,17 +14,15 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class HomeApplication extends Application {
-    // Constants defining the window title and size
+    // Constant defining the window title
     public static final String TITLE = "BugCo Industries ™ Bug Finder Tool";
-    public static final int WIDTH = 1200;
-    public static final int HEIGHT = 720;
     private MediaPlayer backgroundPlayer;
 
     @Override
     public void start(Stage stage) throws IOException {
         com.cab302.bugco.db.Database.init();
         FXMLLoader fxmlLoader = new FXMLLoader(HomeApplication.class.getResource("login-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), WIDTH, HEIGHT);
+        Scene scene = new Scene(fxmlLoader.load());
         scene.getStylesheets().add(
                 Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm()
         );
@@ -58,6 +56,8 @@ public class HomeApplication extends Application {
         });
         stage.setTitle(TITLE);
         stage.setScene(scene);
+        stage.setFullScreen(true);
+        stage.setFullScreenExitHint("");
         stage.show();
     }
 

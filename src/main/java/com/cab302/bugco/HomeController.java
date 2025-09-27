@@ -2,29 +2,77 @@ package com.cab302.bugco;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.Node;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Stage;
+import javafx.scene.layout.Pane;
 
-import java.util.List;
 import java.util.Objects;
+
+import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.cell.PropertyValueFactory;
+
+import java.util.ArrayList;
+import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;import com.cab302.bugco.db.Database;
+import com.cab302.bugco.db.Database;
+
+import com.cab302.bugco.Players;
 
 public class HomeController {
 
-    @FXML private TextArea terminalArea;
-    @FXML private TextArea leaderboardArea;
-    @FXML private ImageView imageView;
-    @FXML private Label welcomeLabel;
+    @FXML
+    private TextArea terminalArea;
+    @FXML
+    private TextArea leaderboardArea;
+    @FXML
+    private Pane imagePane;
+    @FXML
+    private ImageView imageView;
+    @FXML
+    private Label welcomeLabel;
 
-    private final GameService game = GameService.getInstance();
+    private ObservableList<Players> players = FXCollections.observableArrayList();
+
+    @FXML
+    private ImageView logoImage;
+
+    @FXML
+    private TableView<Players> leaderboardTable;
+
+    @FXML
+    private TableColumn<Players, String> usernameColumn;
+
+    @FXML
+    private TableColumn<Players, String> achievementColumn;
+
 
     @FXML
     private void initialize() {
         Image img = new Image(Objects.requireNonNull(getClass().getResource("image.png")).toExternalForm());
-        if (imageView != null) imageView.setImage(img);
+        imageView.setImage(img);
+        imageView.setPreserveRatio(true);
+        imageView.setSmooth(true);
+        imageView.setViewport(null);
+        imageView.fitWidthProperty().bind(imagePane.widthProperty());
+        imageView.setFitHeight(0);
+
+        Rectangle clip = new Rectangle();
+        clip.widthProperty().bind(imagePane.widthProperty());
+        clip.heightProperty().bind(imagePane.heightProperty());
+        imagePane.setClip(clip);
 
         if (welcomeLabel != null) {
             String who = Session.isLoggedIn() ? Session.getCurrentUser() : "Guest";
@@ -42,99 +90,52 @@ public class HomeController {
                 "C:\\USER\\ADMIN> "
         ));
 
-//        leaderboardArea.setText(String.join("\n",
-//                "C:\\USER\\ADMIN> INITIALISING LEADERBOARD..",
-//                "",
-//                "! EASY CHALLENGE !",
-//                " > 1ST  NORMAN",
-//                " > 2ND  BEEBOP123",
-//                " > 3RD  MR.RUFUS",
-//                "",
-//                "! HARD CHALLENGE !",
-//                " > 1ST  NORMAN",
-//                " > 2ND  MR.RUFUS",
-//                " > 3RD  BEEBOP123"
-//        ));
-        refreshLeaderboard();
+
+        // Setup TableView columns
+        usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
+        achievementColumn.setCellValueFactory(new PropertyValueFactory<>("achievement"));
+
+        leaderboardTable.setItems(players);
+        loadPlayersFromDB();
     }
 
-    private void refreshLeaderboard() {
-        // GET EASY LINES FROM SERVICE
-        List<String> easy = game.getLeaderboardLines(10);
-        String easyBlock = String.join("\n",
-                "C:\\USER\\ADMIN> INITIALISING LEADERBOARD..",
-                "",
-                "! EASY CHALLENGE !"
-        ) + (easy.isEmpty()
-                ? "\n > NO SCORES YET"
-                : "\n" + String.join("\n", easy)
-        );
-
-        String mediumBlock = String.join("\n",
-                "",
-                "! MEDIUM CHALLENGE !",
-                " > 1ST  NORMAN",
-                " > 2ND  BEEBOP123",
-                " > 3RD  MR.RUFUS"
-        );
-
-        String hardBlock = String.join("\n",
-                "",
-                "! HARD CHALLENGE !",
-                " > 1ST  NORMAN",
-                " > 2ND  MR.RUFUS",
-                " > 3RD  BEEBOP123"
-        );
-        leaderboardArea.setText(easyBlock + mediumBlock + hardBlock);
-    }
 
     @FXML
-    private void onStart() {
+    private void onStart(ActionEvent event) {
         appendTerminal("Initialising hacking protocols... stand by.");
-        appendTerminal("OPENING GAMEPLAY...");
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         try {
-            var url = getClass().getResource("/com/cab302/bugco/gameplay-view.fxml");
-            if (url == null) throw new IllegalStateException("gameplay-view.fxml not found on classpath");
 
-            Parent next = javafx.fxml.FXMLLoader.load(url);
+            String currentUser = Session.isLoggedIn() ? Session.getCurrentUser() : "Guest";
+            BugcoTerminalApp app = new BugcoTerminalApp(currentUser);
 
-            // GET CURRENT SCENE
-            Scene scene = terminalArea.getScene();
+            Parent terminalRoot = app.createContent();
+            Scene scene = stage.getScene();
 
-            // apply gameplay CSS if exists
-            var css = getClass().getResource("/com/cab302/bugco/gameplay.css");
-            if (css != null) {
-                String cssUrl = css.toExternalForm();
-                scene.getStylesheets().setAll(cssUrl);
-            }
+            // attach stylesheet
+            String css = Objects.requireNonNull(
+                    getClass().getResource("/terminal-styles.css")
+            ).toExternalForm();
+            scene.getStylesheets().add(css);
 
-            // NEW ROOT FOR NICE TRANSITION
-            next.setOpacity(0.0);
-            scene.setRoot(next);
-
-            var fade = new javafx.animation.FadeTransition(javafx.util.Duration.millis(220), next);
-            fade.setFromValue(0.0);
-            fade.setToValue(1.0);
-            fade.play();
-
-            // SET WINDOW TITLE
-            ((javafx.stage.Stage) scene.getWindow()).setTitle("BugCo – Gameplay");
+            scene.setRoot(terminalRoot);
         } catch (Exception e) {
-            // SHOW ERROR IN TERMINAL AND PRINT STACK (for debugging)
-            appendTerminal("ERROR: Cannot open gameplay screen.");
             e.printStackTrace();
         }
     }
+
 
     private void appendTerminal(String line) {
         terminalArea.appendText("\n" + line);
     }
 
+
     public void onGameInfo(ActionEvent actionEvent) {
-        appendTerminal("Find all the bugs... before they find you.");
+        appendTerminal("Welcome to BugCo Industries, a Java-based desktop application designed to test and improve your debugging skills through interactive code challenges. Built for CAB302, this project simulates a fun and competitive environment where users identify and fix bugs in Java code snippets of varying difficulty levels.");
         // TODO: navigate to game info
     }
+
 
     @FXML
     private void onLogout() {
@@ -144,20 +145,71 @@ public class HomeController {
             var url = getClass().getResource("/com/cab302/bugco/login-view.fxml");
             if (url == null) throw new IllegalStateException("login-view.fxml not found on classpath");
 
-            var root = javafx.fxml.FXMLLoader.load(url);
+            var root = FXMLLoader.load(url);
 
-            javafx.scene.Scene scene = terminalArea.getScene();
+            Scene scene = terminalArea.getScene();
             scene.setRoot((Parent) root);
 
             var css = getClass().getResource("/com/cab302/bugco/styles.css");
             if (css != null) {
                 String cssUrl = css.toExternalForm();
-                if (!scene.getStylesheets().contains(cssUrl)) scene.getStylesheets().add(cssUrl);
+                if (!scene.getStylesheets().contains(cssUrl))
+                    scene.getStylesheets().add(cssUrl);
             }
 
-            ((javafx.stage.Stage) scene.getWindow()).setTitle("BugCo – Login");
+            ((Stage) scene.getWindow()).setTitle("BugCo – Login");
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
+
+    public List<Players> getPlayers() {
+        return new ArrayList<>(players);
+    }
+
+
+    public boolean isEmpty() {
+        return players.isEmpty();
+    }
+
+
+    public void addPlayer(String username, String achievement) {
+        if (username == null || username.isEmpty()) throw new IllegalArgumentException();
+
+
+        for (Players p : players) {
+            if (p.getUsername().equals(username)) {
+                p.setAchievement(achievement);
+                return;
+            }
+        }
+
+
+        players.add(new Players(username, achievement));
+    }
+
+
+    private void loadPlayersFromDB() {
+        players.clear();
+        List<Players> dbPlayers = Database.getAllPlayers();
+        players.addAll(dbPlayers);
+    }
+
+    public void refreshLeaderboard() {
+        loadPlayersFromDB();
+        leaderboardTable.refresh();
+    }
+
+    public void updateAchievement(String username, String newAchievement) {
+        for (Players p : players) {
+            if (p.getUsername().equals(username)) {
+                p.setAchievement(newAchievement);
+                leaderboardTable.refresh();
+                Database.updatePlayerAchievement(username, newAchievement);
+                break;
+            }
+        }
+    }
+
 }
