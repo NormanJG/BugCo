@@ -323,3 +323,133 @@
     -fx-background-radius: 5px;
     -fx-border-radius: 5px;
 }
+
+
+/* add to terminal-styles.css */
+#doneCountLabel {
+  -fx-text-fill: #8aff97;
+  -fx-font-size: 16px;
+}
+
+/* ====== MCQ Radio high-contrast ====== */
+.mcq-radio {
+    -fx-text-fill: #8aff97;
+    -fx-opacity: 1.0;
+}
+.mcq-radio .text {
+    -fx-fill: #8aff97;
+}
+.mcq-radio .radio {
+    -fx-background-color: #061208;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+}
+.mcq-radio:selected .radio {
+    -fx-background-color: #18f018;
+}
+.mcq-radio-solved {
+    -fx-opacity: 1.0;            /* keep readable when disabled */
+}
+.mcq-radio-solved .text {
+    -fx-fill: #aaffaa;
+}
+
+/* ====== Neon-styled dialog panes (alerts, text inputs) ====== */
+.neon-dialog {
+    -fx-background-color: #061208;
+    -fx-border-color: #18f018;
+    -fx-border-width: 3;
+    -fx-background-radius: 6;
+    -fx-border-radius: 6;
+}
+.neon-dialog > *.header-panel {
+    -fx-background-color: #07150a;
+    -fx-border-color: transparent transparent #18f018 transparent;
+    -fx-border-width: 0 0 3 0;
+}
+.neon-dialog .label {
+    -fx-text-fill: #8aff97;
+    -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+    -fx-font-size: 18px;
+}
+.neon-dialog .button {
+    -fx-background-color: #0f280f;
+    -fx-text-fill: #76ff7a;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+    -fx-background-radius: 4;
+    -fx-border-radius: 4;
+}
+.neon-dialog .text-field,
+.neon-dialog .text-area {
+    -fx-background-color: #0a150f;
+    -fx-text-fill: #aaffaa;
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+    -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+}
+
+/* Brighter question prompt */
+.question-prompt {
+  -fx-text-fill: #aaffaa;
+  -fx-font-size: 16px;
+  -fx-opacity: 1.0;
+}
+.question-code {
+  -fx-text-fill: #b8ffb8;
+  -fx-font-size: 16px;
+  -fx-font-family: "Consolas", "Courier New", monospace;
+  -fx-opacity: 1.0;
+}
+
+/* MCQ Radio high-contrast */
+.mcq-radio {
+  -fx-text-fill: #8aff97;
+  -fx-opacity: 1.0;
+}
+.mcq-radio .text { -fx-fill: #8aff97; }
+.mcq-radio .radio {
+  -fx-background-color: #061208;
+  -fx-border-color: #18f018;
+  -fx-border-width: 2;
+}
+.mcq-radio:selected .radio { -fx-background-color: #18f018; }
+.mcq-radio-solved { -fx-opacity: 1.0; }
+.mcq-radio-solved .text { -fx-fill: #aaffaa; }
+
+/* In-app overlay */
+.overlay-dim {
+  -fx-background-color: rgba(0,0,0,0.65);
+}
+.neon-card {
+  -fx-background-color: #061208;
+  -fx-border-color: #18f018;
+  -fx-border-width: 3;
+  -fx-background-radius: 10;
+  -fx-border-radius: 10;
+  -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.35), 30, 0.2, 0, 0);
+}
+
+/* Reuse dialog styles for overlay content */
+.neon-dialog .label {
+  -fx-text-fill: #8aff97;
+  -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+  -fx-font-size: 18px;
+}
+.neon-dialog .button {
+  -fx-background-color: #0f280f;
+  -fx-text-fill: #76ff7a;
+  -fx-border-color: #18f018;
+  -fx-border-width: 2;
+  -fx-background-radius: 6;
+  -fx-border-radius: 6;
+}
+.neon-dialog .text-field,
+.neon-dialog .text-area,
+.terminal-input {
+  -fx-background-color: #0a150f;
+  -fx-text-fill: #aaffaa;
+  -fx-border-color: #18f018;
+  -fx-border-width: 2;
+  -fx-font-family: "VT323", "Consolas", "Courier Prime", monospace;
+}
