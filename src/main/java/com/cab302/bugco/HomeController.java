@@ -7,6 +7,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.Node;
@@ -15,49 +16,33 @@ import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
 
 import java.util.Objects;
+import java.util.ArrayList;
+import java.util.Optional;
+import java.util.List;
 
-import javafx.fxml.FXML;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
-
-import java.util.ArrayList;
-import java.util.List;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;import com.cab302.bugco.db.Database;
-import com.cab302.bugco.db.Database;
+import javafx.collections.ObservableList;
 
+import com.cab302.bugco.db.Database;
 import com.cab302.bugco.Players;
 
 public class HomeController {
 
-    @FXML
-    private TextArea terminalArea;
-    @FXML
-    private TextArea leaderboardArea;
-    @FXML
-    private Pane imagePane;
-    @FXML
-    private ImageView imageView;
-    @FXML
-    private Label welcomeLabel;
+    @FXML private TextArea terminalArea;
+    @FXML private TextArea leaderboardArea;
+    @FXML private Pane imagePane;
+    @FXML private ImageView imageView;
+    @FXML private Label welcomeLabel;
 
     private ObservableList<Players> players = FXCollections.observableArrayList();
 
-    @FXML
-    private ImageView logoImage;
-
-    @FXML
-    private TableView<Players> leaderboardTable;
-
-    @FXML
-    private TableColumn<Players, String> usernameColumn;
-
-    @FXML
-    private TableColumn<Players, String> achievementColumn;
-
+    @FXML private ImageView logoImage;
+    @FXML private TableView<Players> leaderboardTable;
+    @FXML private TableColumn<Players, String> usernameColumn;
+    @FXML private TableColumn<Players, String> achievementColumn;
 
     @FXML
     private void initialize() {
@@ -76,7 +61,8 @@ public class HomeController {
 
         if (welcomeLabel != null) {
             String who = Session.isLoggedIn() ? Session.getCurrentUser() : "Guest";
-            welcomeLabel.setText("Welcome, " + who);
+            int theScore = Database.getPointsForUser(who);
+            welcomeLabel.setText("Welcome, " + who + "  |  Points: " + theScore);
         }
 
         terminalArea.setText(String.join("\n",
@@ -90,7 +76,6 @@ public class HomeController {
                 "C:\\USER\\ADMIN> "
         ));
 
-
         // Setup TableView columns
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         achievementColumn.setCellValueFactory(new PropertyValueFactory<>("achievement"));
@@ -99,42 +84,37 @@ public class HomeController {
         loadPlayersFromDB();
     }
 
-
     @FXML
     private void onStart(ActionEvent event) {
         appendTerminal("Initialising hacking protocols... stand by.");
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         try {
-
             String currentUser = Session.isLoggedIn() ? Session.getCurrentUser() : "Guest";
             BugcoTerminalApp app = new BugcoTerminalApp(currentUser);
 
             Parent terminalRoot = app.createContent();
             Scene scene = stage.getScene();
 
-            // attach stylesheet
+            scene.setRoot(terminalRoot);
+
             String css = Objects.requireNonNull(
                     getClass().getResource("/terminal-styles.css")
             ).toExternalForm();
-            scene.getStylesheets().add(css);
+            terminalRoot.getStylesheets().add(css);
 
-            scene.setRoot(terminalRoot);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-
     private void appendTerminal(String line) {
         terminalArea.appendText("\n" + line);
     }
 
-
     public void onGameInfo(ActionEvent actionEvent) {
         appendTerminal("Welcome to BugCo Industries, a Java-based desktop application designed to test and improve your debugging skills through interactive code challenges. Built for CAB302, this project simulates a fun and competitive environment where users identify and fix bugs in Java code snippets of varying difficulty levels.");
     }
-
 
     @FXML
     private void onLogout() {
@@ -162,6 +142,7 @@ public class HomeController {
         }
     }
 
+
     @FXML
     private void AccountInfo() {
         try {
@@ -179,19 +160,12 @@ public class HomeController {
         }
     }
 
-    public List<Players> getPlayers() {
-        return new ArrayList<>(players);
-    }
-
-
-    public boolean isEmpty() {
-        return players.isEmpty();
-    }
-
+    public List<Players> getPlayers() { return new ArrayList<>(players); }
+  
+    public boolean isEmpty() { return players.isEmpty(); }
 
     public void addPlayer(String username, String achievement) {
         if (username == null || username.isEmpty()) throw new IllegalArgumentException();
-
 
         for (Players p : players) {
             if (p.getUsername().equals(username)) {
@@ -199,11 +173,8 @@ public class HomeController {
                 return;
             }
         }
-
-
         players.add(new Players(username, achievement));
     }
-
 
     private void loadPlayersFromDB() {
         players.clear();
@@ -227,4 +198,43 @@ public class HomeController {
         }
     }
 
+    // Username change feature — one clean method
+    @FXML
+    private void onChangeUsername() {
+        try {
+            String oldName = Session.isLoggedIn() ? Session.getCurrentUser() : null;
+            if (oldName == null) {
+                appendTerminal("You must login first to change username.");
+                return;
+            }
+            TextInputDialog ask = new TextInputDialog(oldName);
+            ask.setTitle("Change Username");
+            ask.setHeaderText("Type your new username:");
+            ask.setContentText("New username:");
+            Optional<String> theUpdated = ask.showAndWait();
+            if (theUpdated.isEmpty()) return;
+
+            String newName = theUpdated.get().trim();
+            if (!newName.matches("^[A-Za-z0-9]{1,20}$")) {
+                appendTerminal("Username must be letters or numbers (max 20).");
+                return;
+            }
+
+            com.cab302.bugco.db.UserDao dao = new com.cab302.bugco.db.UserDao();
+            if (dao.updateUsernameByUsername(oldName, newName)) {
+                Session.setCurrentUser(newName);
+                int theScore = Database.getPointsForUser(newName);
+                welcomeLabel.setText("Welcome, " + newName + "  |  Points: " + theScore);
+                appendTerminal("Username changed: " + oldName + " -> " + newName);
+                refreshLeaderboard();
+            } else {
+                appendTerminal("Could not change username.");
+            }
+        } catch (IllegalStateException dup) {
+            appendTerminal("That username already exists. Try a different one.");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            appendTerminal("Problem changing username.");
+        }
+    }
 }
