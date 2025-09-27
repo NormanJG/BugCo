@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public class UserDao {
 
-    // --- CREATE ---
     public long insertUser(String username, String passwordHash) {
         String sql = "INSERT INTO users(username, password_hash) VALUES(?, ?)";
         try (Connection c = Database.get();
@@ -25,32 +24,6 @@ public class UserDao {
         }
     }
 
-    // --- READ ---
-    public Optional<UserRow> findById(long id) {
-        String sql = "SELECT id, username, password_hash, created_at FROM users WHERE id = ?";
-        try (Connection c = Database.get();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setLong(1, id);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() ? Optional.of(map(rs)) : Optional.empty();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Optional<UserRow> findByUsername(String username) {
-        String sql = "SELECT id, username, password_hash, created_at FROM users WHERE username = ?";
-        try (Connection c = Database.get();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setString(1, username);
-            try (ResultSet rs = ps.executeQuery()) {
-                return rs.next() ? Optional.of(map(rs)) : Optional.empty();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public boolean usernameExists(String username) {
         String sql = "SELECT 1 FROM users WHERE username = ?";
@@ -65,32 +38,6 @@ public class UserDao {
         }
     }
 
-    public long countUsers() {
-        String sql = "SELECT COUNT(*) FROM users";
-        try (Connection c = Database.get();
-             Statement st = c.createStatement();
-             ResultSet rs = st.executeQuery(sql)) {
-            return rs.next() ? rs.getLong(1) : 0L;
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public List<UserRow> listUsers(int limit, int offset) {
-        String sql = "SELECT id, username, password_hash, created_at FROM users ORDER BY id LIMIT ? OFFSET ?";
-        try (Connection c = Database.get();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setInt(1, Math.max(0, limit));
-            ps.setInt(2, Math.max(0, offset));
-            try (ResultSet rs = ps.executeQuery()) {
-                List<UserRow> out = new ArrayList<>();
-                while (rs.next()) out.add(map(rs));
-                return out;
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     /** Needed by AuthService.authenticate() */
     public String getHashForUser(String username) {
@@ -105,20 +52,6 @@ public class UserDao {
         }
     }
 
-    // --- UPDATE ---
-    public boolean updateUsername(long id, String newUsername) {
-        String sql = "UPDATE users SET username = ? WHERE id = ?";
-        try (Connection c = Database.get();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setString(1, newUsername);
-            ps.setLong(2, id);
-            int n = ps.executeUpdate();
-            return n == 1;
-        } catch (SQLException e) {
-            if (isUniqueViolation(e)) throw new IllegalStateException("Username already exists", e);
-            throw new RuntimeException(e);
-        }
-    }
 
     /** Used by HomeController.onChangeUsername() */
     public boolean updateUsernameByUsername(String oldName, String newName) {
@@ -146,14 +79,13 @@ public class UserDao {
         }
     }
 
-    // --- DELETE ---
-    public boolean deleteById(long id) {
-        String sql = "DELETE FROM users WHERE id = ?";
-        try (Connection c = Database.get();
-             PreparedStatement ps = c.prepareStatement(sql)) {
-            ps.setLong(1, id);
+    public boolean updatePasswordHashByUsername(String username, String newHash) {
+        String sql = "UPDATE users SET password_hash = ? WHERE username = ?";
+        try (var c = Database.get(); var ps = c.prepareStatement(sql)) {
+            ps.setString(1, newHash);
+            ps.setString(2, username);
             return ps.executeUpdate() == 1;
-        } catch (SQLException e) {
+        } catch (java.sql.SQLException e) {
             throw new RuntimeException(e);
         }
     }
