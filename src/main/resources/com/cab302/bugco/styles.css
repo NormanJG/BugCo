@@ -276,6 +276,26 @@
     -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.25), 8, 0.35, 0, 0);
 }
 
+/* TitledPane styling  */
+.titled-pane {
+    -fx-background-color: #0b120b;
+    -fx-text-fill: #77ff66;
+    -fx-border-color: #2aff2a;
+    -fx-border-width: 1;
+}
+
+.titled-pane > .title {
+    -fx-background-color: #0b120b;
+    -fx-text-fill: #77ff66;
+    -fx-font-family: "Consolas", "Menlo", monospace;
+    -fx-font-size: 14px;
+    -fx-padding: 6 8 6 8;
+}
+
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: #77ff66;
+}
+
 /* Dark corners */
 .crt-curve {
     -fx-background-color:

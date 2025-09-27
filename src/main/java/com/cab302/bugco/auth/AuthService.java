@@ -22,6 +22,22 @@ public class AuthService {
         userDao.insertUser(username, hash);
     }
 
+    public void changePassword(String username, String newPlain) {
+        if (!isPasswordStrong(newPlain))
+            throw new IllegalArgumentException("Password too simple");
+        if (!userDao.usernameExists(username))
+            throw new IllegalStateException("User not found");
+
+        String hash = BCrypt.hashpw(newPlain, BCrypt.gensalt(12));
+        userDao.updatePasswordHashByUsername(username, hash);
+    }
+
+
+    public void deleteAccount(String username) {
+        new com.cab302.bugco.db.UserDao().deleteByUsername(username);
+    }
+
+
     public boolean authenticate(String username, String password) {
         String stored = userDao.getHashForUser(username);
         return stored != null && org.mindrot.jbcrypt.BCrypt.checkpw(password, stored);

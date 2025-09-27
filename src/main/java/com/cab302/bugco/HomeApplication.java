@@ -38,7 +38,7 @@ public class HomeApplication extends Application {
             String url = Objects.requireNonNull(getClass().getResource("music.wav")).toExternalForm();
             backgroundPlayer = new MediaPlayer(new Media(url));
             backgroundPlayer.setCycleCount(MediaPlayer.INDEFINITE);
-            backgroundPlayer.setVolume(0.35);
+            backgroundPlayer.setVolume(0.05);
             backgroundPlayer.play();
         } catch (Exception e) {
             e.printStackTrace(); // If file missing/unsupported
