@@ -21,10 +21,26 @@ public class GameSession {
     private String currentDifficulty = "Easy";
     private int currentQuestionId = 1;
 
-    // Holds the canonical solutions for Hard questions
+    // --- Canonical expected answers ---
+    private static final Map<Integer, String> expectedEasyAnswers = new HashMap<>();
+    private static final Map<Integer, String> expectedMediumAnswers = new HashMap<>();
     private static final Map<Integer, String> expectedHardAnswers = new HashMap<>();
 
     static {
+        // Easy: expected answers are just "1", "2", ..., "9"
+        for (int i = 1; i <= 9; i++) {
+            expectedEasyAnswers.put(i, String.valueOf(i));
+        }
+
+        // Medium:
+        expectedMediumAnswers.put(1, "System.out.println(\"Hello World\");");
+        expectedMediumAnswers.put(2, "int num = 5;\nSystem.out.println(num);");
+        expectedMediumAnswers.put(3, "if (x == 10):\n    System.out.println(\"Found!\");");
+        expectedMediumAnswers.put(4, "B");
+        expectedMediumAnswers.put(5, "6");
+        expectedMediumAnswers.put(6, "A");
+
+        // Hard:
         expectedHardAnswers.put(1, "for (int i = 1; i <= 10; i++) {\n    System.out.println(i);\n}");
         expectedHardAnswers.put(2, "String s = \"\";\nSystem.out.println(s.length());");
         expectedHardAnswers.put(3, "String s = \"hello\";\nif (s.equals(\"hello\")) {\n    System.out.println(\"Match!\");\n}");
@@ -95,15 +111,21 @@ public class GameSession {
 
         if (solvedSet.contains(q.getId())) return false; // already solved
 
-        boolean isCorrect;
-        if ("Easy".equals(difficulty) || "Medium".equals(difficulty)) {
-            // For Easy/Medium, answer is just the question number (ignore whitespace)
-            String digitsOnly = input.replaceAll("\\s+", "");
-            isCorrect = digitsOnly.equals(String.valueOf(q.getId()));
-        } else {
-            // For Hard, normalize and compare with expected
-            String expected = getExpectedAnswerForHard(q.getId());
-            isCorrect = expected != null && normalize(expected).equals(normalize(input));
+        String expected = null;
+        boolean isCorrect = false;
+
+        if ("Easy".equals(difficulty)) {
+            expected = expectedEasyAnswers.get(q.getId());
+            isCorrect = expected != null &&
+                    normalize(expected).equals(normalize(input));
+        } else if ("Medium".equals(difficulty)) {
+            expected = expectedMediumAnswers.get(q.getId());
+            isCorrect = expected != null &&
+                    normalize(expected).equals(normalize(input));
+        } else if ("Hard".equals(difficulty)) {
+            expected = expectedHardAnswers.get(q.getId());
+            isCorrect = expected != null &&
+                    normalize(expected).equals(normalize(input));
         }
 
         if (isCorrect) {
@@ -147,10 +169,6 @@ public class GameSession {
 
     public Set<Integer> getSolvedQuestions(String difficulty) {
         return solvedQuestionsByDifficulty.getOrDefault(difficulty, Set.of());
-    }
-
-    public String getExpectedAnswerForHard(int questionId) {
-        return expectedHardAnswers.get(questionId);
     }
 
     private String normalize(String code) {
