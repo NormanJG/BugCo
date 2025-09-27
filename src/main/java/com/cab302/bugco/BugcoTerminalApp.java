@@ -455,7 +455,7 @@ public class BugcoTerminalApp {
 
         String inputRaw = codeAnswerArea.getText();
         String input = inputRaw == null ? "" : inputRaw.trim();
-        PauseTransition pause = new PauseTransition(Duration.seconds(3));
+        PauseTransition pause = new PauseTransition(Duration.seconds(1));
 
 
         boolean isCorrect = gameSession.checkAnswer(difficulty.get(), current.getId(), input);
