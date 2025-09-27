@@ -1,6 +1,5 @@
 package com.cab302.bugco;
 
-
 import java.util.*;
 
 public class QuestionRepository {
@@ -8,23 +7,80 @@ public class QuestionRepository {
     public static Map<String, List<Question>> loadQuestions() {
         Map<String, List<Question>> questionsByDifficulty = new HashMap<>();
 
-        // Easy & Medium placeholders
-        for (String diff : List.of("Easy", "Medium")) {
-            List<Question> set = new ArrayList<>();
-            for (int i = 1; i <= 9; i++) {
-                set.add(new Question(
-                        i,
-                        diff + " Question " + i,
-                        "Buggy code for " + diff + " question " + i,
-                        "Hint for " + diff + " question " + i,
-                        diff,
-                        String.valueOf(i) // expected answer = just the number
-                ));
-            }
-            questionsByDifficulty.put(diff, set);
+        // ---------------- Easy Questions (placeholders) ----------------
+        List<Question> easySet = new ArrayList<>();
+        for (int i = 1; i <= 9; i++) {
+            easySet.add(new Question(
+                    i,
+                    "Easy Question " + i,
+                    "Buggy code for Easy question " + i,
+                    "Hint for Easy question " + i,
+                    "Easy",
+                    String.valueOf(i) // expected answer = just the number
+            ));
         }
+        questionsByDifficulty.put("Easy", easySet);
 
-        // Hard difficulty with real buggy code + expected answers
+        // ---------------- Medium Questions (real) ----------------
+        List<Question> mediumSet = new ArrayList<>();
+
+        mediumSet.add(new Question(
+                1,
+                "Missing Semicolon",
+                "System.out.println(\"Hello World\")",
+                "Don't forget that every Java statement must end with a semicolon!",
+                "Medium",
+                "System.out.println(\"Hello World\");"
+        ));
+
+        mediumSet.add(new Question(
+                2,
+                "Wrong Variable Name",
+                "int num = 5;\nSystem.out.println(number);",
+                "Make sure the variable name you print matches the one you declared.",
+                "Medium",
+                "int num = 5;\nSystem.out.println(num);"
+        ));
+
+        mediumSet.add(new Question(
+                3,
+                "Missing Colon",
+                "if (x == 10)\n    System.out.println(\"Found!\");",
+                "Some languages use a colon (:) after if-statements.",
+                "Medium",
+                "if (x == 10):\n    System.out.println(\"Found!\");"
+        ));
+
+        mediumSet.add(new Question(
+                4,
+                "Choose the Loop Type",
+                "Which loop runs a specific number of times?\nA) while loop\nB) for loop\nC) do-while loop",
+                "Think about which loop is designed for a fixed number of iterations.",
+                "Medium",
+                "B"
+        ));
+
+        mediumSet.add(new Question(
+                5,
+                "What Prints Here?",
+                "int x = 3;\nint y = x * 2;\nSystem.out.println(y);\n\nWhat does this print?",
+                "x = 3, y = x * 2 → 6",
+                "Medium",
+                "6"
+        ));
+
+        mediumSet.add(new Question(
+                6,
+                "Which is Correct?",
+                "Which declares an integer variable?\nA) int x = 5;\nB) string x = 5;\nC) float x = 5;",
+                "In Java, 'int' is the correct type for integers.",
+                "Medium",
+                "A"
+        ));
+
+        questionsByDifficulty.put("Medium", mediumSet);
+
+        // ---------------- Hard Questions (real) ----------------
         List<Question> hardSet = new ArrayList<>();
 
         hardSet.add(new Question(
