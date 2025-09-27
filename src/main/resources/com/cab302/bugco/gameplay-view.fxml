@@ -1,55 +1,106 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.Circle?>
 
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="com.cab302.bugco.GameplayController"
-            stylesheets="@styles.css"
-            styleClass="root-terminal">
+            styleClass="gameplay-root">
 
+    <padding>
+        <Insets top="24" right="24" bottom="24" left="24"/>
+    </padding>
+
+    <!-- top bar -->
     <top>
-        <HBox spacing="24" styleClass="panel panel--titlebar" BorderPane.alignment="CENTER">
-            <Label fx:id="titleLabel" text="BUGCO  INDUSTRIES  ™  GAMEPLAY" styleClass="banner-title"/>
+        <HBox styleClass="titlebar" spacing="12" BorderPane.alignment="CENTER">
+            <padding><Insets top="10" right="14" bottom="10" left="14"/></padding>
+
+            <HBox spacing="8" alignment="CENTER_LEFT">
+                <Circle radius="6" styleClass="dot-red"/>
+                <Circle radius="6" styleClass="dot-amber"/>
+                <Circle radius="6" styleClass="dot-green"/>
+            </HBox>
+
+            <Label text="BUGCO INDUSTRIES — CODE FIX TERMINAL" styleClass="banner-title"/>
             <Pane HBox.hgrow="ALWAYS"/>
-            <Label fx:id="usernameLabel" text="User: -" />
-            <Separator orientation="VERTICAL"/>
-            <Label fx:id="levelLabel" text="Level: -" />
-            <Separator orientation="VERTICAL"/>
-            <Label fx:id="scoreLabel" text="Score: 0" />
+            <Label text="VERSION 1.0.2 | SECURITY ON" styleClass="version-badge"/>
+            <Button text="HOME" onAction="#onGoHome" styleClass="nav-btn"/>
         </HBox>
     </top>
 
+    <!-- left -->
+    <left>
+        <VBox spacing="16" styleClass="panel side-panel" prefWidth="260" BorderPane.alignment="CENTER">
+            <Label text="USERNAME" styleClass="small-cap"/>
+            <TextField fx:id="usernameField" styleClass="username-field" promptText="ENTER USERNAME..." editable="false"/>
+
+            <HBox spacing="8">
+                <Button text="RENAME ME" onAction="#onRenameMe" styleClass="q-btn" HBox.hgrow="ALWAYS"/>
+                <Button fx:id="resetPoints" text="RESET POINTS" onAction="#onResetPoints" styleClass="danger-btn" HBox.hgrow="ALWAYS"/>
+            </HBox>
+
+            <Label text="LOGO" styleClass="small-cap"/>
+            <StackPane styleClass="panel inner-panel" prefHeight="220">
+                <ImageView fx:id="logoView" fitWidth="200" preserveRatio="true"/>
+            </StackPane>
+
+            <Label text="POINTS" styleClass="small-cap"/>
+            <Label fx:id="pointsLabel" id="pointsLabel" text="POINTS: 0"/>
+
+            <Label text="PROFILE" styleClass="small-cap"/>
+            <Label fx:id="userSinceLabel" id="userSinceLabel" text="JOINED: -"/>
+            <Label fx:id="totalUsersLabel" id="totalUsersLabel" text="USERS: 0"/>
+
+            <Label text="QUESTIONS" styleClass="small-cap"/>
+            <FlowPane hgap="8" vgap="8">
+                <Button text="1" onAction="#onQ1"  styleClass="q-btn"/>
+                <Button text="2" onAction="#onQ2"  styleClass="q-btn"/>
+                <Button text="3" onAction="#onQ3"  styleClass="q-btn"/>
+                <Button text="4" onAction="#onQ4"  styleClass="q-btn"/>
+                <Button text="5" onAction="#onQ5"  styleClass="q-btn"/>
+                <Button text="6" onAction="#onQ6"  styleClass="q-btn"/>
+                <Button text="7" onAction="#onQ7"  styleClass="q-btn"/>
+                <Button text="8" onAction="#onQ8"  styleClass="q-btn"/>
+                <Button text="9" onAction="#onQ9"  styleClass="q-btn"/>
+            </FlowPane>
+        </VBox>
+    </left>
+
+    <!-- center -->
     <center>
         <VBox spacing="18" styleClass="screen-pad">
+            <padding><Insets top="16" right="16" bottom="16" left="16"/></padding>
 
-            <TitledPane text="CHALLENGE PROMPT" expanded="true" collapsible="false"
-                        styleClass="terminal-pane">
-                <content>
-                    <Label fx:id="promptText" wrapText="true"/>
-                </content>
-            </TitledPane>
+            <HBox spacing="12" alignment="CENTER_LEFT">
+                <VBox styleClass="panel terminal-pane" spacing="8">
+                    <Label text="DIFFICULTY" styleClass="small-cap"/>
+                    <ChoiceBox fx:id="difficultyBox" styleClass="difficulty-box"/>
+                </VBox>
+            </HBox>
 
-            <TitledPane text="ANSWER" expanded="true" collapsible="false"
-                        styleClass="terminal-pane">
-                <content>
-                    <VBox spacing="12">
-                        <TextArea fx:id="answerArea" prefRowCount="6"/>
-                        <HBox spacing="10">
-                            <Button fx:id="submitButton" text="SUBMIT" onAction="#onSubmit"/>
-                            <Pane HBox.hgrow="ALWAYS"/>
-                            <Button fx:id="backButton" text="BACK TO LEVELS" onAction="#onBack"/>
-                        </HBox>
-                    </VBox>
-                </content>
-            </TitledPane>
+            <VBox spacing="10" styleClass="block">
+                <HBox styleClass="block-header" spacing="8">
+                    <Label text="QUESTION" styleClass="small-cap"/>
+                    <Label fx:id="questionBadge" text="Question 1" styleClass="badge"/>
+                    <Label fx:id="levelBadge" text="Easy" styleClass="badge"/>
+                </HBox>
 
-            <TitledPane text="FEEDBACK" expanded="true" collapsible="false"
-                        styleClass="terminal-pane">
-                <content>
-                    <Label fx:id="feedbackText"/>
-                </content>
-            </TitledPane>
+                <Label fx:id="promptText" wrapText="true"/>
+                <TextArea fx:id="buggyArea" editable="false" prefRowCount="10" styleClass="code-area"/>
+            </VBox>
+
+            <VBox spacing="10" styleClass="block">
+                <Label text="WRITE FIXED CODE" styleClass="small-cap"/>
+                <TextArea fx:id="answerArea" promptText="WRITE YOUR BUG-FREE CODE HERE..." prefRowCount="10" styleClass="code-area"/>
+                <HBox alignment="BASELINE_RIGHT">
+                    <Button fx:id="submit" text="SUBMIT" onAction="#onSubmit" styleClass="primary-btn"/>
+                </HBox>
+                <Label fx:id="feedbackText" styleClass="feedback-text"/>
+            </VBox>
 
         </VBox>
     </center>
