@@ -7,12 +7,32 @@ import java.util.ArrayList;
 import com.cab302.bugco.Players;
 
 public final class Database {
-    private static final String URL = "jdbc:sqlite:bugco.db";
+    private static String URL = "jdbc:sqlite:bugco.db";
+
+
+    private static Connection sharedConnection;
 
     private Database() { }
 
     public static Connection get() throws SQLException {
+        if (sharedConnection != null && !sharedConnection.isClosed()) {
+            return sharedConnection;
+        }
+        System.out.println("DB.get() -> " + URL);
         return DriverManager.getConnection(URL);
+    }
+
+    public static void useInMemoryDatabase() {
+        URL = "jdbc:sqlite:file:testdb?mode=memory&cache=shared";
+        try {
+            if (sharedConnection != null && !sharedConnection.isClosed()) {
+                sharedConnection.close();
+            }
+            sharedConnection = DriverManager.getConnection(URL);
+        } catch (SQLException e) {
+            throw new RuntimeException("Failed to open in-memory DB", e);
+        }
+        init();
     }
 
     public static void init() {
@@ -40,10 +60,7 @@ public final class Database {
                 )
                 """;
 
-        Path dbPath = Paths.get("bugco.db").toAbsolutePath();
-        boolean existedBefore = Files.exists(dbPath);
-
-        try (Connection c = get(); Statement st = c.createStatement()) {
+        try (Statement st = get().createStatement()) {
             st.executeUpdate(ddlUsers);
             st.executeUpdate(ddlProgress);
 
@@ -62,13 +79,16 @@ public final class Database {
             throw new RuntimeException("Failed to init DB", e);
         }
 
-        boolean existsAfter = Files.exists(dbPath);
-        if (!existedBefore && existsAfter) {
+
+        if (URL.startsWith("jdbc:sqlite:bugco.db")) {
+            Path dbPath = Paths.get("bugco.db").toAbsolutePath();
+            if (Files.exists(dbPath)) {
+                System.out.println("DB: connected to existing database at " + dbPath);
+            } else {
             System.out.println("DB: created new database at " + dbPath);
-        } else if (existsAfter) {
-            System.out.println("DB: connected to existing database at " + dbPath);
+            }
         } else {
-            System.out.println("DB: WARNING – database file not found at " + dbPath);
+            System.out.println("DB: using in-memory database (" + URL + ")");
         }
     }
 
