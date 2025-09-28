@@ -61,8 +61,8 @@ public class HomeController {
 
         if (welcomeLabel != null) {
             String who = Session.isLoggedIn() ? Session.getCurrentUser() : "Guest";
-            int theScore = Database.getPointsForUser(who);
-            welcomeLabel.setText("Welcome, " + who + "  |  Points: " + theScore);
+            //int theScore = Database.getPointsForUser(who);
+            //welcomeLabel.setText("Welcome, " + who + "  |  Points: " + theScore);
         }
 
         terminalArea.setText(String.join("\n",
@@ -223,8 +223,8 @@ public class HomeController {
             com.cab302.bugco.db.UserDao dao = new com.cab302.bugco.db.UserDao();
             if (dao.updateUsernameByUsername(oldName, newName)) {
                 Session.setCurrentUser(newName);
-                int theScore = Database.getPointsForUser(newName);
-                welcomeLabel.setText("Welcome, " + newName + "  |  Points: " + theScore);
+                //int theScore = Database.getPointsForUser(newName);
+                //welcomeLabel.setText("Welcome, " + newName + "  |  Points: " + theScore);
                 appendTerminal("Username changed: " + oldName + " -> " + newName);
                 refreshLeaderboard();
             } else {
