@@ -37,7 +37,6 @@ public class HomeController {
 
     private ObservableList<Players> players = FXCollections.observableArrayList();
 
-    @FXML private ImageView logoImage;
     @FXML private TableView<Players> leaderboardTable;
     @FXML private TableColumn<Players, String> usernameColumn;
     @FXML private TableColumn<Players, String> achievementColumn;
