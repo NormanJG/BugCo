@@ -117,6 +117,7 @@ public class AuthController {
             Stage stage = (Stage) loginUsernameField.getScene().getWindow();
             Scene scene = loginUsernameField.getScene();
             scene.setRoot(home);
+            MusicService.playHome();
 
             var cssUrl = getClass().getResource("/com/cab302/bugco/styles.css");
             if (cssUrl != null) {

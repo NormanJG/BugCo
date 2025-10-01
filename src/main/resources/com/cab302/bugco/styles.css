@@ -240,16 +240,14 @@
     -fx-border-color: #18f018;
     -fx-border-width: 2;
     -fx-padding: 10 16;
-    -fx-font-size: 16px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-background-radius: 6;
-    -fx-border-radius: 6;
     -fx-font-family: "Share Tech Mono", monospace;
 }
 .term-button:hover  { -fx-background-color: #153715; }
 .term-button:pressed{ -fx-background-color: #1a441a; }
 
-/* Add subtle scanlines + vignette */
+/* CRT Effect */
 .crt-scanlines {
     /* Multiple stacked backgrounds: scanlines layer, then vignette */
     -fx-background-color:
@@ -306,26 +304,61 @@
     -fx-background-insets: 0;
 }
 
-/* Audio */
-.audio-bar {
-    -fx-background-color: rgba(0,0,0,0.55);
+/* Exit Confirmation Window */
+
+.dialog-pane.confirm-exit {
+    -fx-background-color: #061208;
     -fx-border-color: #18f018;
-    -fx-border-width: 2;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
-    -fx-padding: 6 10;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 18, 0.2, 0, 0);
+    -fx-border-width: 3;
+    -fx-background-insets: 0;
+    -fx-font-family: "Share Tech Mono", monospace;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.35), 18, 0.3, 0, 0);
 }
-.audio-bar .button {
+
+/* Title strip */
+.dialog-pane.confirm-exit > .header-panel {
+    -fx-background-color: #07150a;
+    -fx-border-color: #18f018;
+    -fx-border-width: 0 0 3 0;
+}
+.dialog-pane.confirm-exit > .header-panel .label {
+    -fx-text-fill: #6bff8a;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.5), 10, 0.4, 0, 0);
+}
+
+/* Body text */
+.dialog-pane.confirm-exit .content.label {
+    -fx-text-fill: #8aff97;
+    -fx-font-size: 13px;
+}
+
+/* Buttons */
+
+.dialog-pane.confirm-exit .button-bar {
+    -fx-alignment: center;
+}
+
+.dialog-pane.confirm-exit .button-bar .button {
     -fx-background-color: #0f280f;
     -fx-text-fill: #e8ffe8;
     -fx-border-color: #18f018;
-    -fx-border-width: 1.5;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-    -fx-padding: 4 8;
+    -fx-border-width: 2;
+    -fx-padding: 8 14;
+    -fx-font-weight: bold;
 }
-.audio-bar .button:hover { -fx-background-color: #153715; }
+
+.dialog-pane.confirm-exit .button-bar .button:hover { -fx-background-color: #153715; }
+.dialog-pane.confirm-exit .button-bar .button:pressed { -fx-background-color: #1a441a; }
+
+/* Exit button */
+.dialog-pane.confirm-exit .button-bar .button.danger {
+    -fx-background-color: #2a0f0f;
+    -fx-border-color: #ff0000;
+    -fx-text-fill: #ffecec;
+}
+.dialog-pane.confirm-exit .button-bar .button.danger:hover { -fx-background-color: #3a1515; }
 
 
 

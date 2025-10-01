@@ -128,6 +128,7 @@ public class HomeController {
 
             Scene scene = terminalArea.getScene();
             scene.setRoot((Parent) root);
+            MusicService.playLogin();
 
             var css = getClass().getResource("/com/cab302/bugco/styles.css");
             if (css != null) {
