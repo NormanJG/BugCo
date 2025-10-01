@@ -360,5 +360,46 @@
 }
 .dialog-pane.confirm-exit .button-bar .button.danger:hover { -fx-background-color: #3a1515; }
 
+/* Audio overlay container */
+.audio-bar {
+    -fx-background-color: rgba(7, 17, 10, 0.88);  /* matches your dark panel */
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
+    -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-padding: 8 10;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.35), 18, 0.3, 0, 0);
+}
+
+.audio-btn {
+    -fx-padding: 6 10;
+    -fx-font-size: 14px;
+}
+
+/* Checkbox + labels */
+.audio-bar .check-box .text,
+.audio-bar .label {
+    -fx-text-fill: #8aff97;
+    -fx-font-family: "Share Tech Mono", monospace;
+    -fx-font-size: 13px;
+}
+
+/* Slider terminal theme */
+.audio-bar .slider .track {
+    -fx-background-color: #0a150f;
+    -fx-background-insets: 0;
+    -fx-background-radius: 4;
+}
+.audio-bar .slider .thumb {
+    -fx-background-color: #18f018;
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.45), 10, 0.4, 0, 0);
+}
+
+.audio-btn:hover {
+    -fx-background-color: #123012;
+}
+
 
 

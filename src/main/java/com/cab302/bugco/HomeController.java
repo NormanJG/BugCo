@@ -5,9 +5,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.Node;
@@ -20,8 +18,6 @@ import java.util.ArrayList;
 import java.util.Optional;
 import java.util.List;
 
-import javafx.scene.control.TableView;
-import javafx.scene.control.TableColumn;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -36,6 +32,8 @@ public class HomeController {
     @FXML private Pane imagePane;
     @FXML private ImageView imageView;
     @FXML private Label welcomeLabel;
+    @FXML private Slider volSlider;
+    @FXML private CheckBox muteChk;
 
     private ObservableList<Players> players = FXCollections.observableArrayList();
 
@@ -58,6 +56,16 @@ public class HomeController {
         clip.widthProperty().bind(imagePane.widthProperty());
         clip.heightProperty().bind(imagePane.heightProperty());
         imagePane.setClip(clip);
+
+        if (volSlider != null) {
+            double v = MusicService.getVolume();
+            volSlider.setValue(v > 0 ? v : 0.35);
+            volSlider.valueProperty().addListener((obs, ov, nv) ->
+                    MusicService.setVolume(nv.doubleValue()));
+        }
+        if (muteChk != null) {
+            muteChk.setSelected(MusicService.isMute());
+        }
 
         if (welcomeLabel != null) {
             String who = Session.isLoggedIn() ? Session.getCurrentUser() : "Guest";
@@ -197,6 +205,15 @@ public class HomeController {
                 break;
             }
         }
+    }
+
+    // Audio Controls
+    @FXML
+    private void onTogglePlayPause() { MusicService.toggle(); }
+
+    @FXML
+    private void onToggleMute() {
+        MusicService.setMute(muteChk != null && muteChk.isSelected());
     }
 
     // Username change feature — one clean method

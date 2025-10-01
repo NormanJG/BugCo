@@ -5,6 +5,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 
+<?import javafx.geometry.Insets?>
 <StackPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
            fx:controller="com.cab302.bugco.HomeController"
            styleClass="root-terminal"
@@ -58,13 +59,6 @@
                         <Label text="BUGCO  INDUSTRIES ™  LEADERBOARD" styleClass="panel-title"/>
                     </HBox>
 
-
-
-
-
-
-
-
                     <TableView fx:id="leaderboardTable" prefWidth="600" prefHeight="400"
                                VBox.vgrow="ALWAYS"
                                style="-fx-background-color: black; -fx-border-color: #18f018; -fx-border-width: 3;">
@@ -74,12 +68,6 @@
                         </columns>
                     </TableView>
                 </VBox>
-
-
-
-
-
-
 
                 <VBox GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.columnSpan="2"
                       spacing="8" styleClass="panel" maxHeight="Infinity" maxWidth="Infinity" VBox.vgrow="ALWAYS">
@@ -107,10 +95,20 @@
                         <Button text="INITIALISE HACKING PROTOCOLS" maxWidth="Infinity"
                                 onAction="#onStart" styleClass="primary-btn"/>
 
-                        <Label text="WAITING FOR USER INPUT..." styleClass="status-label"/>
+                        <HBox fx:id="audioBar" spacing="10" alignment="CENTER_RIGHT" styleClass="panel audio-bar" StackPane.alignment="BOTTOM_RIGHT">
+                            <Label text="WAITING FOR USER INPUT..." styleClass="status-label" alignment="CENTER_LEFT"/>
+                        <Button text="⏯" onAction="#onTogglePlayPause" styleClass="term-button audio-btn"/>
+                        <CheckBox fx:id="muteChk" text="Mute" />
+                        <Label text="Vol" styleClass="terminal-label"/>
+                        <Slider fx:id="volSlider" min="0.0" max="1.0" prefWidth="160"/>
+                        <StackPane.margin>
+                            <Insets top="0" right="16" bottom="16" left="0"/>
+                        </StackPane.margin>
+                    </HBox>
                     </VBox>
                 </VBox>
             </GridPane>
         </center>
     </BorderPane>
+
 </StackPane>

@@ -88,6 +88,7 @@ public class HomeApplication extends Application {
                 Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm()
         );
         dp.getStyleClass().addAll("confirm-exit");
+        dp.setPrefSize(600, 400);
 
         Circle red   = new Circle(6);  red.getStyleClass().add("dot-red");
         Circle amber = new Circle(6);  amber.getStyleClass().add("dot-amber");
