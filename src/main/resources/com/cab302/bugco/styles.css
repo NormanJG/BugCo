@@ -57,14 +57,15 @@
 }
 .panel-body { -fx-padding: 12; }
 
+/* Mock Terminal Control Buttons */
 .dot-red {
-    -fx-fill: red;       /* fill color of the circle */
-    -fx-stroke: black;   /* optional outline */
+    -fx-fill: red;
+    -fx-stroke: black;
     -fx-stroke-width: 1;
 }
 
 .dot-amber {
-    -fx-fill: orange;    /* “amber” is orange in JavaFX */
+    -fx-fill: orange;
     -fx-stroke: black;
     -fx-stroke-width: 1;
 }
@@ -144,10 +145,9 @@
     -fx-font-size: 26px;
     -fx-font-weight: bold;
     -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.5), 14, 0.35, 0, 0);
-    /* subtle letter spacing similar to your banner-title */
 }
 
-/* Terminal window frame (use your .panel styling) */
+/* Terminal Window Frame */
 .terminal {
     -fx-border-color: #18f018;
     -fx-border-width: 3;
@@ -205,11 +205,6 @@
     -fx-font-size: 12.5px;
 }
 
-/* Window dots (your file had .dot-red/amber/green; add classnames used by FXML) */
-.dot.red    { -fx-fill: red;    -fx-stroke: black; -fx-stroke-width: 1; }
-.dot.yellow { -fx-fill: orange; -fx-stroke: black; -fx-stroke-width: 1; }
-.dot.green  { -fx-fill: green;  -fx-stroke: black; -fx-stroke-width: 1; }
-
 /* ToggleButtons styled like tabs */
 .toggle-button.tablike {
     -fx-background-color: rgba(24,240,24,0.10);
@@ -225,9 +220,8 @@
     -fx-background-color: rgba(24,240,24,0.22);
 }
 
-/* Inputs inside the terminal */
+/* Inputs inside the Login Terminal */
 .term-input {
-    /* reuse your .terminal-input look */
     -fx-background-color: #0a150f;
     -fx-text-fill: #aaffaa;
     -fx-border-color: #18f018;
@@ -239,28 +233,25 @@
     -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.45), 14, 0.4, 0, 0);
 }
 
-/* Primary neon button inside terminal */
+/* Primary neon button inside Login Terminal */
 .term-button {
-    /* based on your .primary-btn */
     -fx-background-color: #0f280f;
     -fx-text-fill: #76ff7a;
     -fx-border-color: #18f018;
     -fx-border-width: 2;
     -fx-padding: 10 16;
-    -fx-font-size: 16px;
+    -fx-font-size: 18px;
     -fx-font-weight: bold;
-    -fx-background-radius: 6;
-    -fx-border-radius: 6;
     -fx-font-family: "Share Tech Mono", monospace;
 }
 .term-button:hover  { -fx-background-color: #153715; }
 .term-button:pressed{ -fx-background-color: #1a441a; }
 
-/* Add subtle scanlines + vignette. Pure CSS. */
+/* CRT Effect */
 .crt-scanlines {
     /* Multiple stacked backgrounds: scanlines layer, then vignette */
     -fx-background-color:
-        /* 1) Scanlines (thin dark stripe every 3px) */
+        /* 1) Scanlines */
         linear-gradient(from 0% 0% to 0% 100%,
                         rgba(0,0,0,0.18) 49%,
                         rgba(0,0,0,0.40) 50%,
@@ -273,14 +264,34 @@
     /* Make scanlines repeat vertically */
     -fx-background-repeat: repeat, no-repeat;
     -fx-background-size: auto 3px, cover;
-    -fx-background-radius: 6;     /* match your .panel radius */
-    -fx-opacity: 0.9;              /* keep it subtle */
-    -fx-blend-mode: MULTIPLY;      /* darken the content slightly */
+    -fx-background-radius: 6;
+    -fx-opacity: 0.9;
+    -fx-blend-mode: MULTIPLY;
 }
 
 /* Glow on text inside the panel */
 .crt-text {
     -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.25), 8, 0.35, 0, 0);
+}
+
+/* TitledPane styling  */
+.titled-pane {
+    -fx-background-color: #0b120b;
+    -fx-text-fill: #77ff66;
+    -fx-border-color: #2aff2a;
+    -fx-border-width: 1;
+}
+
+.titled-pane > .title {
+    -fx-background-color: #0b120b;
+    -fx-text-fill: #77ff66;
+    -fx-font-family: "Consolas", "Menlo", monospace;
+    -fx-font-size: 14px;
+    -fx-padding: 6 8 6 8;
+}
+
+.titled-pane > .title > .arrow-button .arrow {
+    -fx-background-color: #77ff66;
 }
 
 /* Dark corners */
@@ -293,26 +304,102 @@
     -fx-background-insets: 0;
 }
 
-/* Audio */
-.audio-bar {
-    -fx-background-color: rgba(0,0,0,0.55);
+/* Exit Confirmation Window */
+
+.dialog-pane.confirm-exit {
+    -fx-background-color: #061208;
     -fx-border-color: #18f018;
-    -fx-border-width: 2;
-    -fx-background-radius: 10;
-    -fx-border-radius: 10;
-    -fx-padding: 6 10;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 18, 0.2, 0, 0);
+    -fx-border-width: 3;
+    -fx-background-insets: 0;
+    -fx-font-family: "Share Tech Mono", monospace;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.35), 18, 0.3, 0, 0);
 }
-.audio-bar .button {
+
+/* Title strip */
+.dialog-pane.confirm-exit > .header-panel {
+    -fx-background-color: #07150a;
+    -fx-border-color: #18f018;
+    -fx-border-width: 0 0 3 0;
+}
+.dialog-pane.confirm-exit > .header-panel .label {
+    -fx-text-fill: #6bff8a;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.5), 10, 0.4, 0, 0);
+}
+
+/* Body text */
+.dialog-pane.confirm-exit .content.label {
+    -fx-text-fill: #8aff97;
+    -fx-font-size: 13px;
+}
+
+/* Buttons */
+
+.dialog-pane.confirm-exit .button-bar {
+    -fx-alignment: center;
+}
+
+.dialog-pane.confirm-exit .button-bar .button {
     -fx-background-color: #0f280f;
     -fx-text-fill: #e8ffe8;
     -fx-border-color: #18f018;
-    -fx-border-width: 1.5;
+    -fx-border-width: 2;
+    -fx-padding: 8 14;
+    -fx-font-weight: bold;
+}
+
+.dialog-pane.confirm-exit .button-bar .button:hover { -fx-background-color: #153715; }
+.dialog-pane.confirm-exit .button-bar .button:pressed { -fx-background-color: #1a441a; }
+
+/* Exit button */
+.dialog-pane.confirm-exit .button-bar .button.danger {
+    -fx-background-color: #2a0f0f;
+    -fx-border-color: #ff0000;
+    -fx-text-fill: #ffecec;
+}
+.dialog-pane.confirm-exit .button-bar .button.danger:hover { -fx-background-color: #3a1515; }
+
+/* Audio overlay container */
+.audio-bar {
+    -fx-background-color: rgba(7, 17, 10, 0.88);  /* matches your dark panel */
+    -fx-border-color: #18f018;
+    -fx-border-width: 2;
     -fx-background-radius: 8;
     -fx-border-radius: 8;
-    -fx-padding: 4 8;
+    -fx-padding: 8 10;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.35), 18, 0.3, 0, 0);
 }
-.audio-bar .button:hover { -fx-background-color: #153715; }
+
+.audio-btn {
+    -fx-padding: 6 10;
+    -fx-font-size: 14px;
+}
+
+/* Checkbox + labels */
+.audio-bar .check-box .text,
+.audio-bar .label {
+    -fx-text-fill: #8aff97;
+    -fx-font-family: "Share Tech Mono", monospace;
+    -fx-font-size: 13px;
+}
+
+/* Slider terminal theme */
+.audio-bar .slider .track {
+    -fx-background-color: #0a150f;
+    -fx-background-insets: 0;
+    -fx-background-radius: 4;
+}
+.audio-bar .slider .thumb {
+    -fx-background-color: #18f018;
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.45), 10, 0.4, 0, 0);
+}
+
+.audio-btn:hover {
+    -fx-background-color: #123012;
+}
 
 
 

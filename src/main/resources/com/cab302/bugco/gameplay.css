@@ -1,0 +1,196 @@
+/* simple neon look */
+.gameplay-root {
+    -fx-background-color: #000000;
+    -fx-font-family: "JetBrains Mono", "Consolas", "Courier New", monospace;
+    -fx-text-fill: #a8ffb5;
+    -fx-accent: #18f018;
+    -fx-panel-bg: #050b06;
+}
+
+/* spacing */
+.gameplay-root .screen-pad { -fx-padding: 18 18 20 18; -fx-spacing: 18; }
+
+/* title bar */
+.gameplay-root .titlebar {
+    -fx-padding: 10 16;
+    -fx-background-color: linear-gradient(to bottom, #020402 0%, #000 100%);
+    -fx-border-color: transparent transparent #0b3a16 transparent;
+    -fx-border-width: 0 0 2 0;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.22), 20, 0.3, 0, 0);
+}
+.gameplay-root .banner-title { -fx-text-fill: #7eff92; -fx-font-size: 18px; -fx-font-weight: 700; }
+.gameplay-root .version-badge { -fx-text-fill: #61ff80; -fx-opacity: 0.8; }
+
+.gameplay-root .dot-red   { -fx-fill: #ff5d5d; }
+.gameplay-root .dot-amber { -fx-fill: #ffc23a; }
+.gameplay-root .dot-green { -fx-fill: #18f018; }
+
+/* panels */
+.gameplay-root .panel {
+    -fx-background-color: linear-gradient(to bottom, #071209 0%, #050b06 100%);
+    -fx-background-radius: 12;
+    -fx-border-radius: 12;
+    -fx-border-color: rgba(24,240,24,0.35);
+    -fx-border-width: 1.5;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.18), 18, 0.25, 0, 0);
+}
+.gameplay-root .side-panel { -fx-padding: 14; -fx-spacing: 14; }
+.gameplay-root .inner-panel {
+    -fx-background-color: #000000;
+    -fx-border-color: rgba(24,240,24,0.28);
+    -fx-border-width: 1;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+/* labels */
+.gameplay-root .small-cap { -fx-text-fill: #7eff92; -fx-font-size: 11.5px; -fx-letter-spacing: 1px; }
+
+/* inputs */
+.gameplay-root .username-field, .gameplay-root .text-field, .gameplay-root .text-area {
+    -fx-background-color: #000000;
+    -fx-text-fill: #b6ffbf;
+    -fx-highlight-fill: rgba(24,240,24,0.35);
+    -fx-highlight-text-fill: black;
+    -fx-prompt-text-fill: rgba(126,255,146,0.5);
+    -fx-border-color: rgba(24,240,24,0.35);
+    -fx-border-width: 1.25;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 8 10;
+    -fx-font-size: 13px;
+}
+.gameplay-root .username-field:focused,
+.gameplay-root .text-field:focused,
+.gameplay-root .text-area:focused {
+    -fx-border-color: #18f018;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.38), 18, 0.35, 0, 0);
+}
+
+/* difficulty */
+.gameplay-root .difficulty-box {
+    -fx-background-color: #000000;
+    -fx-text-fill: #b6ffbf;
+    -fx-border-color: rgba(24,240,24,0.35);
+    -fx-border-width: 1.25;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+.gameplay-root .difficulty-box .list-cell { -fx-background-color: #000000; -fx-text-fill: #b6ffbf; }
+.gameplay-root .difficulty-box .list-cell:hover { -fx-background-color: #0f2416; }
+.gameplay-root .difficulty-box .list-cell:selected { -fx-background-color: #10341a; }
+
+/* badges */
+.gameplay-root .badge {
+    -fx-background-color: linear-gradient(to bottom, #0d2817 0%, #0a1f12 100%);
+    -fx-text-fill: #7eff92;
+    -fx-padding: 3 10;
+    -fx-background-radius: 999;
+    -fx-border-radius: 999;
+    -fx-border-color: rgba(24,240,24,0.35);
+    -fx-border-width: 1;
+}
+
+/* buttons */
+.gameplay-root .q-btn, .gameplay-root .primary-btn {
+    -fx-background-color: linear-gradient(to bottom, #0e2a16 0%, #0b1f11 100%);
+    -fx-text-fill: #a8ffb5;
+    -fx-border-color: rgba(24,240,24,0.35);
+    -fx-border-width: 1.25;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-cursor: hand;
+}
+.gameplay-root .q-btn:hover, .gameplay-root .primary-btn:hover {
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.36), 18, 0.35, 0, 0);
+    -fx-border-color: #18f018;
+}
+.gameplay-root .primary-btn { -fx-padding: 10 18; -fx-font-weight: 700; }
+
+/* blocks */
+.gameplay-root .block {
+    -fx-background-color: linear-gradient(to bottom, #050b06 0%, #030704 100%);
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 14;
+    -fx-border-radius: 14;
+    -fx-border-color: rgba(24,240,24,0.32);
+    -fx-border-width: 1.5;
+    -fx-padding: 14;
+    -fx-spacing: 12;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.18), 22, 0.3, 0, 0);
+}
+.gameplay-root .block-header {
+    -fx-alignment: CENTER_LEFT;
+    -fx-spacing: 12;
+    -fx-padding: 0 0 10 0;
+    -fx-border-color: transparent transparent rgba(24,240,24,0.18) transparent;
+    -fx-border-width: 0 0 1 0;
+}
+
+/* code areas */
+.gameplay-root .code-area,
+.gameplay-root .text-area,
+.gameplay-root .text-area .content { -fx-background-color: #222938; }
+.gameplay-root .code-area {
+    -fx-text-fill: #bfffc8;
+    -fx-font-size: 13.5px;
+    -fx-border-color: rgba(24,240,24,0.30);
+    -fx-border-width: 1;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-highlight-fill: rgba(24,240,24,0.35);
+    -fx-highlight-text-fill: black;
+    -fx-padding: 10 12;
+}
+
+/* feedback */
+.gameplay-root .feedback-text { -fx-text-fill: #8fff9d; -fx-opacity: 0.9; -fx-font-size: 13px; }
+
+/* danger */
+.gameplay-root .danger-btn {
+    -fx-background-color: linear-gradient(to bottom, #3a0e0e 0%, #220a0a 100%);
+    -fx-text-fill: #ffb3b3;
+    -fx-border-color: #ff5d5d;
+    -fx-border-width: 1.25;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-cursor: hand;
+}
+.gameplay-root .danger-btn:hover {
+    -fx-effect: dropshadow(gaussian, rgba(255,93,93,0.36), 18, 0.35, 0, 0);
+    -fx-border-color: #ff5d5d;
+}
+
+/* highlight these three labels by id */
+.gameplay-root #pointsLabel,
+.gameplay-root #userSinceLabel,
+.gameplay-root #totalUsersLabel {
+    -fx-text-fill: #7eff92;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.50), 12, 0.30, 0, 0);
+    -fx-padding: 2 0 4 0;
+}
+.gameplay-root #pointsLabel {
+    -fx-text-fill: #18f018;
+    -fx-font-size: 16px;
+    -fx-font-weight: 700;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.65), 16, 0.35, 0, 0);
+}
+
+/* top-right nav */
+.gameplay-root .nav-btn {
+    -fx-background-color: linear-gradient(to bottom, #0e2a16 0%, #0b1f11 100%);
+    -fx-text-fill: #a8ffb5;
+    -fx-border-color: rgba(24,240,24,0.45);
+    -fx-border-width: 1.25;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-padding: 8 14;
+    -fx-font-weight: 700;
+    -fx-cursor: hand;
+}
+.gameplay-root .nav-btn:hover {
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.36), 18, 0.35, 0, 0);
+    -fx-border-color: #18f018;
+}

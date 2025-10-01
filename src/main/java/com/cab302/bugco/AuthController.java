@@ -1,44 +1,32 @@
 package com.cab302.bugco;
 
-import javafx.animation.Animation;
-import javafx.animation.KeyFrame;
-import javafx.animation.KeyValue;
-import javafx.animation.Timeline;
+import com.cab302.bugco.auth.AuthService;
+import javafx.animation.*;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
-import javafx.scene.control.*;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import javafx.util.Duration;
-import java.io.IOException;
-import java.util.Objects;
 
 public class AuthController {
-
-    // Panes
-    @FXML private VBox loginPane;
-    @FXML private VBox registerPane;
-    @FXML private Pane scanlineOverlay;
-    @FXML private ImageView backgroundImage;
-
-    // Login fields
     @FXML private TextField loginUsernameField;
     @FXML private PasswordField loginPasswordField;
     @FXML private Label loginErrorLabel;
 
-    // Register fields
-    @FXML private TextField regNameField;
-    @FXML private TextField regUsernameField;
-    @FXML private PasswordField regPasswordField;
-    @FXML private Label regErrorLabel;
+    @FXML private Pane scanlineOverlay;      // from FXML
+    @FXML private ImageView backgroundImage; // from FXML
+
+    private final AuthService auth = new AuthService();
 
     @FXML
     private void initialize() {
+        if (loginErrorLabel != null) loginErrorLabel.setText("");
+        if (loginPasswordField != null) loginPasswordField.setOnAction(e -> handleLogin());
+
         // CRT flicker
         Timeline flicker = new Timeline(
                 new KeyFrame(Duration.seconds(0.0),  new KeyValue(scanlineOverlay.opacityProperty(), 0.90)),
@@ -48,6 +36,8 @@ public class AuthController {
         flicker.setCycleCount(Animation.INDEFINITE);
         flicker.setAutoReverse(true);
         flicker.play();
+
+        // Background scaling
         var parent = (javafx.scene.layout.Region) backgroundImage.getParent();
         backgroundImage.fitWidthProperty().bind(parent.widthProperty());
         backgroundImage.fitHeightProperty().bind(parent.heightProperty());
@@ -55,64 +45,90 @@ public class AuthController {
     }
 
     @FXML
-    private void showRegister() {
-        toggle(registerPane, loginPane);
-        clearErrors();
-    }
-
-    @FXML
-    private void showLogin() {
-        toggle(loginPane, registerPane);
-        clearErrors();
-    }
-
-    @FXML
     private void handleLogin() {
-        String username = loginUsernameField.getText().trim();
-        String pwd   = loginPasswordField.getText();
+        String u = safe(loginUsernameField);
+        String p = safe(loginPasswordField);
 
-        if (username.isEmpty() || pwd.isEmpty()) {
-            loginErrorLabel.setText("Please Enter a Username and Password.");
+        if (!isUsernameValid(u) || p.isEmpty() || !auth.authenticate(u, p)) {
+            showInline("Invalid Credentials");
             return;
         }
-        goToHome(loginPane);
+
+        Session.setCurrentUser(u);
+        goHome();
     }
 
     @FXML
     private void handleRegister() {
-        String name = regNameField.getText().trim();
-        String username = regUsernameField.getText().trim();
-        String pwd = regPasswordField.getText();
-    }
+        String u = safe(loginUsernameField);
+        String p = safe(loginPasswordField);
 
-    private void toggle(Node show, Node hide) {
-        show.setVisible(true);
-        show.setManaged(true);
-        hide.setVisible(false);
-        hide.setManaged(false);
-    }
+        boolean userValid = isUsernameValid(u);
+        boolean passValid = auth.isPasswordStrong(p);
 
-    private void clearErrors() {
-        loginErrorLabel.setText("");
-        regErrorLabel.setText("");
-    }
-
-    private void goToHome(Node anyNodeInScene) {
-        Stage stage = (Stage) anyNodeInScene.getScene().getWindow();
         try {
-            Parent home = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("home-view.fxml")));
-            Scene scene = anyNodeInScene.getScene();
-            scene.setRoot(home);
-            if (!scene.getStylesheets().contains(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm())) {
-                scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("styles.css")).toExternalForm());
+            if (auth.usernameExists(u)) {
+                showInline("Username already exists.");
+                return;
             }
-            stage.setTitle("Home");
-        } catch (IOException e) {
-            e.printStackTrace();
-            // show an alert if home fails to load
-            Alert alert = new Alert(Alert.AlertType.ERROR, "Unable to load Home view.", ButtonType.OK);
-            alert.showAndWait();
+        } catch (Exception ignored) {
+        }
+
+        if (userValid && !passValid) {
+            showInline("Password too simple");
+            return;
+        }
+        if (!userValid && passValid) {
+            showInline("Username must be letters or numbers");
+            return;
+        }
+        if (!userValid) {
+            showInline("Username and Password invalid");
+            return;
+        }
+
+        try {
+            auth.register(u, p);
+            showInline("Registered! Please log in.");
+            loginPasswordField.clear();
+        } catch (IllegalStateException dup) {
+            showInline("Username already exists.");
+        } catch (IllegalArgumentException weak) {
+            showInline(weak.getMessage());
+        } catch (Exception ex) {
+            showInline("Registration failed.");
         }
     }
 
+    // helpers
+    private String safe(TextInputControl c) { return c == null || c.getText() == null ? "" : c.getText().trim(); }
+    private boolean isUsernameValid(String u) { return u != null && u.matches("^[A-Za-z0-9]{1,20}$"); }
+    private void showInline(String msg) { if (loginErrorLabel != null) loginErrorLabel.setText(msg); }
+
+    private void goHome() {
+        try {
+            var fxmlUrl = getClass().getResource("/com/cab302/bugco/home-view.fxml");
+            if (fxmlUrl == null) {
+                throw new IllegalStateException("home-view.fxml not found on classpath at /com/cab302/bugco/");
+            }
+
+            Parent home = FXMLLoader.load(fxmlUrl);
+
+            Stage stage = (Stage) loginUsernameField.getScene().getWindow();
+            Scene scene = loginUsernameField.getScene();
+            scene.setRoot(home);
+            MusicService.playHome();
+
+            var cssUrl = getClass().getResource("/com/cab302/bugco/styles.css");
+            if (cssUrl != null) {
+                String css = cssUrl.toExternalForm();
+                if (!scene.getStylesheets().contains(css)) scene.getStylesheets().add(css);
+            }
+
+            stage.setTitle("BugCo – Home");
+        } catch (Exception e) {
+            e.printStackTrace(); // <-- see exact cause in console
+            showInline("Failed to open home screen.");
+        }
+    }
 }
