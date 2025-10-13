@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"m":"com.cab302.bugco","l":"com.cab302.bugco"},{"m":"com.cab302.bugco","l":"com.cab302.bugco.auth"},{"m":"com.cab302.bugco","l":"com.cab302.bugco.db"}];updateSearchResults();
