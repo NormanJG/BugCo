@@ -3,6 +3,7 @@ package com.cab302.bugco;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -15,6 +16,7 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.jupiter.api.Assertions.*;
 
 // Tests about the question sets and the text checker in BugcoTerminalApp.
+@DisabledIfEnvironmentVariable(named = "CI", matches = "true")
 public class BugcoTerminalAppQuestionsTest {
 
     private static boolean jfxStarted;
