@@ -6,7 +6,9 @@ module com.cab302.bugco {
     requires jbcrypt;
     requires javafx.media;
 
-    opens com.cab302.bugco to javafx.fxml;
+    opens com.cab302.bugco;
     exports com.cab302.bugco;
+    exports com.cab302.bugco.auth;
     exports com.cab302.bugco.db;
+
 }
