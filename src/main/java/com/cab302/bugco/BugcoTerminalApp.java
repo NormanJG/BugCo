@@ -382,7 +382,7 @@ public class BugcoTerminalApp {
 
         // Reset
         Button resetButton = new Button("Reset All");
-        resetButton.getStyleClass().add("danger-btn");
+        resetButton.getStyleClass().setAll("primary-btn");
         resetButton.setMaxWidth(Double.MAX_VALUE);
         resetButton.setOnAction(e -> resetAllProgressAndPoints());
 
