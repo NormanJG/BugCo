@@ -12,6 +12,7 @@ import javafx.scene.Node;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import javafx.scene.layout.Pane;
+import javafx.scene.control.TableView;
 
 import java.util.Objects;
 import java.util.ArrayList;
@@ -87,7 +88,8 @@ public class HomeController {
         // Setup TableView columns
         usernameColumn.setCellValueFactory(new PropertyValueFactory<>("username"));
         achievementColumn.setCellValueFactory(new PropertyValueFactory<>("achievement"));
-
+        leaderboardTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        leaderboardTable.setTableMenuButtonVisible(false);
         leaderboardTable.setItems(players);
         loadPlayersFromDB();
     }

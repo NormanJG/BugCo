@@ -59,12 +59,12 @@
                         <Label text="BUGCO  INDUSTRIES ™  LEADERBOARD" styleClass="panel-title"/>
                     </HBox>
 
-                    <TableView fx:id="leaderboardTable" prefWidth="600" prefHeight="400"
+                    <TableView fx:id="leaderboardTable"
                                VBox.vgrow="ALWAYS"
-                               style="table-view">
+                               tableMenuButtonVisible="false">
                         <columns>
-                            <TableColumn fx:id="usernameColumn" text="USERNAME" prefWidth="400"/>
-                            <TableColumn fx:id="achievementColumn" text="ACHIEVEMENT" prefWidth="200"/>
+                            <TableColumn fx:id="usernameColumn" text="USERNAME"/>
+                            <TableColumn fx:id="achievementColumn" text="ACHIEVEMENT"/>
                         </columns>
                     </TableView>
                 </VBox>
