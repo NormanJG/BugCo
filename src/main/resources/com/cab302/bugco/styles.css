@@ -401,5 +401,52 @@
     -fx-background-color: #123012;
 }
 
+/* Leaderboard Table */
+.table-view {
+    -fx-background-color: #061208;
+    -fx-border-color: #18f018;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.35), 18, 0.3, 0, 0);
+    -fx-font-family: "Share Tech Mono", monospace;
+    -fx-font-size: 13px;
+    -fx-text-fill: #8aff97;
+}
+
+/* Table headers */
+.table-view .column-header {
+    -fx-background-color: #07150a;
+}
+.table-view .column-header .label {
+    -fx-text-fill: #6bff8a;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(24,240,24,0.45), 8, 0.3, 0, 0);
+}
+
+/* Table rows and cells */
+.table-row-cell {
+    -fx-background-color: #0a150f;
+    -fx-text-fill: #8aff97;
+}
+.table-row-cell:odd {
+    -fx-background-color: #08120b;
+}
+.table-row-cell:selected {
+    -fx-background-color: rgba(24,240,24,0.25);
+    -fx-text-fill: black;
+}
+.table-cell {
+    -fx-text-fill: #8aff97;
+    -fx-border-color: rgba(24,240,24,0.3);
+    -fx-border-width: 0 0 1 0;
+}
+
+/* Scrollbars */
+.table-view .scroll-bar:horizontal,
+.table-view .scroll-bar:vertical {
+    -fx-background-color: #0a150f;
+}
+.table-view .thumb {
+    -fx-background-color: #18f018;
+}
+
 
 

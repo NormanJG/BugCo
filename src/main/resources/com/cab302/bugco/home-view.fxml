@@ -61,10 +61,10 @@
 
                     <TableView fx:id="leaderboardTable" prefWidth="600" prefHeight="400"
                                VBox.vgrow="ALWAYS"
-                               style="-fx-background-color: black; -fx-border-color: #18f018; -fx-border-width: 3;">
+                               style="table-view">
                         <columns>
-                            <TableColumn fx:id="usernameColumn" text="Username" prefWidth="400"/>
-                            <TableColumn fx:id="achievementColumn" text="Achievement" prefWidth="200"/>
+                            <TableColumn fx:id="usernameColumn" text="USERNAME" prefWidth="400"/>
+                            <TableColumn fx:id="achievementColumn" text="ACHIEVEMENT" prefWidth="200"/>
                         </columns>
                     </TableView>
                 </VBox>
@@ -98,13 +98,12 @@
                         <HBox fx:id="audioBar" spacing="10" alignment="CENTER_RIGHT" styleClass="panel audio-bar" StackPane.alignment="BOTTOM_RIGHT">
                             <Label text="WAITING FOR USER INPUT..." styleClass="status-label" alignment="CENTER_LEFT"/>
                         <Button text="⏯" onAction="#onTogglePlayPause" styleClass="term-button audio-btn"/>
-                        <CheckBox fx:id="muteChk" text="Mute" />
                         <Label text="Vol" styleClass="terminal-label"/>
                         <Slider fx:id="volSlider" min="0.0" max="1.0" prefWidth="160"/>
                         <StackPane.margin>
                             <Insets top="0" right="16" bottom="16" left="0"/>
                         </StackPane.margin>
-                    </HBox>
+                        </HBox>
                     </VBox>
                 </VBox>
             </GridPane>
